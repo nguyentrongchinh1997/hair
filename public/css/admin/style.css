@@ -1,0 +1,22 @@
+.row {
+	margin: 0px;
+}
+.menu ul li {
+	padding: 10px;
+	display: inline-block;
+}
+.menu ul a {
+	text-decoration: none;
+}
+.menu ul {
+	margin-bottom: 0px;
+}
+.menu {
+	border-bottom: 1px solid #ccc
+}
+.employee-add table tr td {
+	padding: 15px 10px;
+}
+.login table tr td {
+	padding: 15px 10px;
+}

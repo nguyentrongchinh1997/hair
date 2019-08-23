@@ -1,0 +1,60 @@
+body {
+	background: #eee;
+}
+.row {
+	margin: 0px !important;
+}
+.top-header {
+	background: #000;
+	width: 100%;
+	height: auto;
+	padding: 10px 0px;
+	border-bottom: 4px solid #9b9b9b;
+}
+.menu ul {
+	padding-left: 0px;
+	height: 60px;
+	margin-bottom: 0px;
+	list-style-type: none;
+}
+.menu ul i {
+	line-height: 60px;
+	color: #000;
+	font-size: 30px;
+}
+.menu {
+	background: #fff;
+	height: 60px;
+}
+.menu ul a li {
+	font-size: 20px;
+	color: #000;
+	font-weight: bold;
+	padding: 0px 10px;
+	line-height: 60px;
+	float: left;
+}
+.slide img {
+	width: 100%;
+}
+footer{
+	padding: 15px 0px;
+	background: #000;
+}
+footer p{
+	margin-bottom: 0px;
+	line-height: 30px;
+	font-size: 18px;
+	color: #fff;
+}
+footer .time-word {
+	color: #fbd629;
+	font-weight: bold;
+
+	margin-top: 10px;
+}
+
+.order form {
+	margin: auto;
+	max-width: 50%;
+}

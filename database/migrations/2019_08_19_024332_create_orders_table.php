@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('customer_id')->comment('id khách đặt');
             $table->integer('employee_id')->nullable()->comment('id nhân viên phục vụ');
-            $table->dateTime('time')->comment('thời gian khách đặt');
+            $table->integer('time_id')->comment('thời gian khách đặt');
             $table->timestamps();
         });
     }

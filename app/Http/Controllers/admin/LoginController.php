@@ -24,7 +24,7 @@ class LoginController extends Controller
     	} else if (Auth::guard('employees')->attempt(['phone' => $username, 'password' => $password], true)){
     		return redirect()->route('admin.home');
     	} else {
-    		dd(2);
+    		return redirect()->route('login')->with('thongbao', 'Đăng nhập thất bại.');
     	}
     }
 

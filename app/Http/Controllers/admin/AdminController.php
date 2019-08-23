@@ -109,4 +109,18 @@ class AdminController extends Controller
         return back()->with('thongbao', 'Sửa thành công');
     }
 /*end*/
+
+/*sửa nhân viên*/
+    public function orderListView()
+    {
+        return view('admin.pages.order.list', $this->adminService->orderListView());
+    }
+/*end*/
+
+/*Hóa đơn*/
+    public function billList()
+    {
+        return view('admin.pages.bill.list', $this->adminService->billList());
+    }
+/*end*/
 }

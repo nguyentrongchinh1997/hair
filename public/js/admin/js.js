@@ -12,5 +12,32 @@ $(document).ready(function(){
       var n2 = n.replace(/\d\d\d(?!$)/g, "$&,");    
       return  n2.split('').reverse().join('');
   }
+
+  $('#search-input').keyup(function(){
+    var keySerach = $('#search-input').val();
+    if (keySerach != '') {
+      $.get('admin/dat-lich/tim-kiem/' + keySerach, function(data){
+        $('.order-list').html(data);
+      });
+    } 
+  })
+
+  $('#key-search').keyup(function(){
+    var keySerach = $('#key-search').val();
+    if (keySerach != '') {
+      $.get('admin/hoa-don/tim-kiem/' + keySerach, function(data){
+        $('.order-list').html(data);
+      });
+    } 
+  })
+
+  $('.order').click(function(){
+    var orderId = $(this).val();
+    $.get('admin/dat-lich/detail/' + orderId, function(data){
+      $('.detail-order').html(data);
+    });
+  })
 });
+
+
 

@@ -23,4 +23,14 @@ class Employee extends Authenticatable
         'status',
         'password',
     ];
+
+    public function service()
+    {
+        return $this->belongsTo('App\Model\Service', 'type', 'id');
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

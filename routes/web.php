@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'client\ClientController@homeView')->name('client.home');
+Route::get('nhan-vien/{type}', 'client\AjaxController@getEmployee');
+Route::post('dat-lich', 'client\ClientController@order')->name('order');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(){
     Route::get('trang-chu', 'admin\AdminController@homeView')->name('admin.home');
@@ -31,6 +31,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::get('danh-sach', 'admin\AdminController@serviceListView')->name('service.list');
         Route::get('sua/{id}', 'admin\AdminController@serviceEditView')->name('service.edit');
         Route::post('sua/{id}', 'admin\AdminController@serviceEdit')->name('service.edit');
+    });
+
+    Route::group(['prefix' => 'dat-lich'], function(){
+        Route::get('danh-sach', 'admin\AdminController@orderListView')->name('order.list');
+        Route::get('tim-kiem/{key}', 'admin\AjaxController@resultList');
+        Route::get('detail/{orderId}', 'admin\AjaxController@orderDetail');
+    });
+
+    Route::group(['prefix' => 'khach-hang'], function(){
+        Route::get('check/{orderId}', 'admin\AjaxController@checkIn')->name('check-in');
+        Route::get('cap-nhat/{id}/{ten}/{birthday}', 'admin\AjaxController@updateCustomer');
+    });
+
+    Route::group(['prefix' => 'hoa-don'], function(){
+        Route::get('danh-sach', 'admin\AdminController@billList')->name('bill.list');
+        Route::get('tim-kiem/{keySearch}', 'admin\AjaxController@search');
     });
 });
 

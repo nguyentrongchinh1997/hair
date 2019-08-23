@@ -11,4 +11,14 @@ class Service extends Model
         'name', 
         'price', 
     ];
+
+    public function employee()
+    {
+    	return $this->hasMany('App\Model\Employee', 'type', 'id');
+    }
+
+    public function order()
+    {
+    	return $this->hasMany(Order::class);
+    }
 }

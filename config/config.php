@@ -11,4 +11,11 @@ return [
             'doing' => 1,
         ],
     ],
+    'order' => [
+        'status' => [
+            'create' => 0,
+            'check-in' => 1,
+            'check-out' => 2,
+        ],
+    ],
 ];

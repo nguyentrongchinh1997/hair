@@ -60,15 +60,16 @@
                             </tr>
                             <tr>
                                 <td>
-                                    Loại nhân viên
+                                    Làm dịch vụ
                                 </td>
                                 <td>
                                     :
                                 </td>
                                 <td>
                                     <select name="type" class="form-control">
-                                        <option value="0">Gội</option>
-                                        <option value="1">Cắt</option>
+                                        @foreach ($serviceList as $service)
+                                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
                             </tr>
@@ -92,6 +93,17 @@
                                 </td>
                                 <td>
                                     <input type="number" value="{{ old('percent') }}" name="percent" class="form-control">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Mật khẩu đăng nhập 
+                                </td>
+                                <td>
+                                    :
+                                </td>
+                                <td>
+                                    <input type="password" value="{{ old('password') }}" name="password" class="form-control">
                                 </td>
                             </tr>
                             <tr>
@@ -139,7 +151,7 @@
                         </td>
                         <td>
                             {{
-                                ($employee->type == config('config.employee.type.skinner')) ? 'Gội' : 'Cắt' 
+                                $employee->service->name
                             }}
                         </td>
                         <td>

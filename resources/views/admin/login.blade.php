@@ -3,6 +3,18 @@
 <div class="row login" style="padding-left: 40px; padding-top: 40px">
 	<div class="col-lg-6">
 		<h3>Đăng nhập</h3>
+		<!-- <input type="file" class="test" onchange="my()" name="">
+		<script type="text/javascript">
+			function my(){
+				var x = $(".test").val();
+				alert(x);
+			}
+		</script> -->
+		@if (session('thongbao'))
+            <div class="alert alert-danger">
+                {{ session('thongbao') }}
+            </div>
+        @endif
 		<form method="post" action="{{ route('login') }}">
 		{{csrf_field()}}
 			<table>

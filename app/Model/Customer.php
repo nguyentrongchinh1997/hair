@@ -11,6 +11,7 @@ class Customer extends Model
         'full_name', 
         'phone', 
         'balance',
+        'birthday',
     ];
 
     public function order()
@@ -23,3 +24,4 @@ class Customer extends Model
     	return $this->hasMany(Bill::class);
     }
 }
+

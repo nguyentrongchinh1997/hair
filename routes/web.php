@@ -35,18 +35,25 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
 
     Route::group(['prefix' => 'dat-lich'], function(){
         Route::get('danh-sach', 'admin\AdminController@orderListView')->name('order.list');
-        Route::get('tim-kiem/{key}', 'admin\AjaxController@resultList');
-        Route::get('detail/{orderId}', 'admin\AjaxController@orderDetail');
+        Route::post('danh-sach', 'admin\AdminController@postOrderListView')->name('order.post.list');
+        Route::get('tim-kiem/{key}/{date}', 'admin\AjaxController@resultList');
+        Route::get('chi-tiet/{orderId}', 'admin\AjaxController@orderDetail');
     });
 
     Route::group(['prefix' => 'khach-hang'], function(){
-        Route::get('check/{orderId}', 'admin\AjaxController@checkIn')->name('check-in');
+        Route::post('check/{orderId}', 'admin\AdminController@checkIn')->name('check-in');
         Route::get('cap-nhat/{id}/{ten}/{birthday}', 'admin\AjaxController@updateCustomer');
     });
-
+    Route::get('test/{id}', function(){
+        echo "hihi";
+    });
     Route::group(['prefix' => 'hoa-don'], function(){
         Route::get('danh-sach', 'admin\AdminController@billList')->name('bill.list');
-        Route::get('tim-kiem/{keySearch}', 'admin\AjaxController@search');
+        Route::post('danh-sach', 'admin\AdminController@postBillList')->name('bill.post.list');
+        Route::get('tim-kiem/{keySearch}/{date}', 'admin\AjaxController@search');
+        Route::get('chi-tiet/{billId}', 'admin\AjaxController@billDetail');
+        Route::get('tong/{billId}/{price_total}', 'admin\AjaxController@total');
+        Route::get('them/{billId}/{employeeId}/{price_total}/{number}', 'admin\AjaxController@pay');
     });
 });
 

@@ -6,17 +6,21 @@ use App\Model\Employee;
 use App\Model\Service;
 use App\Model\Order;
 use App\Model\Bill;
+use App\Model\Customer;
+use App\Model\BillDetail;
 
 class AdminService
 {
-    protected $employeeModel, $serviceModel, $orderModel, $billModel;
+    protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel;
 
-    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill)
+    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail)
     {
         $this->employeeModel = $employee;
         $this->serviceModel = $service;
         $this->orderModel = $order;
         $this->billModel = $bill;
+        $this->customerModel = $customer;
+        $this->billDetailModel = $billDetail;
     }
 
     public function employeeAdd($request)
@@ -63,11 +67,90 @@ class AdminService
 
     public function orderListView()
     {
-        $orderList = $this->orderModel->where('status', config('config.order.status.create'))->orderBy('created_at', 'desc')->paginate(20);
+        $day = date('d');
+        $month = date('m');
+        $year = date('Y');
+        $orderList = $this->orderModel->where('status', config('config.order.status.create'))->where('date', date('Y-m-d'))->orderBy('created_at', 'desc')->paginate(20);
         $bill = $this->billModel->where('status', config('config.order.status.check-in'))->paginate(20);
         $data = [
             'orderList' => $orderList,
             'billList' => $bill,
+            'day' => $day,
+            'month' => $month,
+            'year' => $year,
+        ];
+
+        return $data;
+    }
+
+    public function postOrderListView($request)
+    {
+        $day = $request->day;
+        $month = $request->month;
+        $year = $request->year;
+        if ($month < 10) {
+            $month = '0'.$month;
+        }
+        if ($day < 10) {
+            $day = '0'.$day;
+        }
+        $date = $year . '-' . $month . '-' . $day;
+        $orderList = $this->orderModel->where('status', config('config.order.status.create'))->where('date', $date)->orderBy('created_at', 'desc')->paginate(20);
+
+        $data = [
+            'orderList' => $orderList,
+            'day' => $day,
+            'month' => $month,
+            'year' => $year,
+        ];
+
+        return $data;
+    }
+
+    public function billList()
+    {
+        $day = date('d');
+        $month = date('m');
+        $year = date('Y');
+        $date = date('Y-m-d');
+        $bill = $this->billModel
+                    ->where('status', '>', config('config.order.status.create'))
+                    ->with('order')
+                    ->paginate(20);
+        $data = [
+            'billList' => $bill,
+            'day' => $day,
+            'month' => $month,
+            'year' => $year,
+            'date' => $date,
+        ];
+
+        return $data;
+    }
+
+    public function postBillList($request)
+    {
+        $day = $request->day;
+        $month = $request->month;
+        $year = $request->year;
+        if ($month < 10) {
+            $month = '0'.$month;
+        }
+        if ($day < 10) {
+            $day = '0'.$day;
+        }
+        $date = $year . '-' . $month . '-' . $day;
+        $bill = $this->billModel
+                    ->where('status', '>', config('config.order.status.create'))
+                    ->with('order')
+                    ->paginate(20);
+
+        $data = [
+            'billList' => $bill,
+            'day' => $day,
+            'month' => $month,
+            'year' => $year,
+            'date' => $date,
         ];
 
         return $data;
@@ -110,13 +193,36 @@ class AdminService
         return $service->save();
     }
 
-    public function billList()
+    public function checkIn($orderId, $request)
     {
-        $bill = $this->billModel->paginate(20);
-        $data = [
-            'billList' => $bill,
-        ];
+        $order = $this->orderModel->findOrFail($orderId);
+        $this->customerModel->updateOrCreate(
+            ['id' => $order->customer_id],
+            [
+                'full_name' => $request->full_name,
+                'birthday' => $request->birthday,
+            ]
+        );
+        $bill_id = $this->billModel->insertGetId([
+            'customer_id' => $order->customer_id,
+            'order_id' => $orderId,
+            'price' => $order->service->price,
+            'status' => config('config.order.status.check-in'),
+        ]);
 
-        return $data;
+        $this->billDetailModel->create([
+            'bill_id' => $bill_id,
+            'service_id' => $order->service_id,
+            'employee_id' => $order->employee_id,
+            'money' => $order->service->price,
+        ]);
+
+        return $this->orderModel->updateOrCreate(
+            ['id' => $orderId],
+            [
+                'status' => config('config.order.status.check-in'),
+                'bill_id' => $bill_id,
+            ]
+        );
     }
 }

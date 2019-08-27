@@ -29,4 +29,9 @@ class Bill extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function billDetail()
+    {
+        return $this->hasMany(BillDetail::class);
+    }
 }

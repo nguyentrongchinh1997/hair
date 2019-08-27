@@ -15,18 +15,18 @@ class AjaxController extends Controller
         $this->ajaxService = $ajax;
     }
 
-    public function resultList($key)
+    public function resultList($key, $date)
     {
         $data = [
-            'orderList' => $this->ajaxService->resultList($key),
+            'orderList' => $this->ajaxService->resultList($key, $date),
         ];
 
         return view('admin.ajax.order_list', $data);
     }
 
-    public function search($keySearch)
+    public function search($keySearch, $date)
     {
-        return view('admin.ajax.bill_list', $this->ajaxService->billList($keySearch));
+        return view('admin.ajax.bill_list', $this->ajaxService->billList($keySearch, $date));
     }
 
     public function orderDetail($orderId)
@@ -49,10 +49,21 @@ class AjaxController extends Controller
                 <span style='font-weight: bold;'>Ngày sinh</span>: $date</td>";
     }
 
-/*check-in*/
-    public function checkIn($idOrder)
+    public function billDetail($billId)
     {
-        $this->ajaxService->checkIn($idOrder);
+        return view('admin.pages.bill.detail', $this->ajaxService->billDetail($billId));
     }
-/*end*/
+
+    public function total($price, $price2)
+    {
+        $total = number_format(str_replace(',', '', $price) + $price2);
+
+        return view('admin.pages.bill.total', ['total' => $total]);
+    }
+
+    public function pay($billId, $employeeId, $price_total, $number)
+    {
+        $this->ajaxService->pay($billId, $employeeId, $price_total, $number);
+        echo "<h3 style='color: #007bff'>Thành toán thành công</h3>";
+    }
 }

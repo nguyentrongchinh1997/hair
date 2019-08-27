@@ -43,7 +43,7 @@
                         </a>
                         <a href="{{ route('bill.list') }}">
                             <li>
-                                Quản lý hóa đơn
+                                Quản lý thanh toán
                             </li>
                         </a>
                         @if (auth()->check())

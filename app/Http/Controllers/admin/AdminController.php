@@ -101,7 +101,7 @@ class AdminController extends Controller
     }
 /*end*/
 
-/*sửa nhân viên*/
+/*sửa dịch vụ*/
     public function serviceEdit(Request $request, $id)
     {
         $this->adminService->serviceEdit($request->all(), $id);
@@ -110,17 +110,38 @@ class AdminController extends Controller
     }
 /*end*/
 
-/*sửa nhân viên*/
+/*Danh sách đặt lịch khách hàng*/
     public function orderListView()
     {
         return view('admin.pages.order.list', $this->adminService->orderListView());
     }
 /*end*/
 
+/*Danh sách đặt lịch khách hàng khi tìm kiếm theo thời gian*/
+    public function postOrderListView(Request $request)
+    {
+        return view('admin.pages.order.list', $this->adminService->postOrderListView($request));
+    }
+/*end*/
+
+    public function postBillList(Request $request)
+    {
+        return view('admin.pages.bill.list', $this->adminService->postBillList($request));
+    }
+
 /*Hóa đơn*/
     public function billList()
     {
         return view('admin.pages.bill.list', $this->adminService->billList());
+    }
+/*end*/
+
+/*check-in*/
+    public function checkIn($idOrder, Request $request)
+    {
+        $this->adminService->checkIn($idOrder, $request);
+
+        return back()->with('thongbao', 'Check-in thành công');
     }
 /*end*/
 }

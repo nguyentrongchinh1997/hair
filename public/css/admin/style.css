@@ -20,3 +20,43 @@
 .login table tr td {
 	padding: 15px 10px;
 }
+.left ul{
+	list-style-type: none;
+	margin-bottom: 0px;
+	padding-left: 0px;
+}
+.left ul li{
+	background: #f9f9f9;
+	cursor: pointer;
+	margin-bottom: 5px;
+	border-radius: 4px;
+	padding-left: 20px;
+	height: 50px;
+}
+/*.left ul .create{
+	background: #f1f1f1;
+}
+.left ul .check-in{
+	color: #fff;
+	background: #FB8C00;
+}
+.check-in table{
+	color: #fff;
+}
+.check-out{
+	background: #007bff;
+	color: #fff;
+}*/
+.left ul li table{
+	width: 100%;
+	line-height: 50px;
+}
+.active{
+	background: #d9edfe !important;
+}
+.detail-order table tr td {
+	padding: 15px;
+}
+.table-bordered{
+	background: #fff;
+}

@@ -13,4 +13,14 @@ class BillDetail extends Model
         'employee_id',
         'money',
     ];
+
+    public function bill()
+    {
+    	return $this->belongsTo(Bill::class);
+    }
+
+    public function service()
+    {
+    	return $this->belongsTo(Service::class);
+    }
 }

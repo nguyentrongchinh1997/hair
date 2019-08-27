@@ -55,8 +55,19 @@
 	background: #d9edfe !important;
 }
 .detail-order table tr td {
-	padding: 15px;
+	padding: 15px 0px;
 }
 .table-bordered{
 	background: #fff;
+}
+.service-fee{
+	display: none;
+}
+#list-service{
+	width: 50%;
+}
+#list-service tr td{
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 1px solid #e5e5e5;
 }

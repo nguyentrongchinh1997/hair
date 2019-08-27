@@ -78,7 +78,6 @@
                             <th scope="col">STT</th>
                             <th scope="col">SĐT</th>
                             <th scope="col">Khách hàng</th>
-                            <th scope="col">Thợ</th>
                             <th scope="col">Trạng thái</th>
                         </tr>
                     </thead>
@@ -95,9 +94,6 @@
                                     <td>
                                         {{ $bill->customer->full_name }}
                                     </td>    
-                                    <td>
-                                        {{ $bill->order->employee->full_name }}
-                                    </td> 
                                     <td>
                                         @if ($bill->status == config('config.order.status.check-in'))
                                             <span style="color: red">Chưa thanh toán</span>

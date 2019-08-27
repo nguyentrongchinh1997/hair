@@ -54,13 +54,6 @@ class AjaxController extends Controller
         return view('admin.pages.bill.detail', $this->ajaxService->billDetail($billId));
     }
 
-    public function total($price, $price2)
-    {
-        $total = number_format(str_replace(',', '', $price) + $price2);
-
-        return view('admin.pages.bill.total', ['total' => $total]);
-    }
-
     public function pay($billId, $employeeId, $price_total, $number)
     {
         $this->ajaxService->pay($billId, $employeeId, $price_total, $number);

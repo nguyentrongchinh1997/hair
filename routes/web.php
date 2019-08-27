@@ -52,7 +52,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::post('danh-sach', 'admin\AdminController@postBillList')->name('bill.post.list');
         Route::get('tim-kiem/{keySearch}/{date}', 'admin\AjaxController@search');
         Route::get('chi-tiet/{billId}', 'admin\AjaxController@billDetail');
-        Route::get('tong/{billId}/{price_total}', 'admin\AjaxController@total');
         Route::get('them/{billId}/{employeeId}/{price_total}/{number}', 'admin\AjaxController@pay');
     });
 });

@@ -6,7 +6,7 @@ use App\Model\Employee;
 
 class AjaxService
 {
-	protected $employeeModel;
+    protected $employeeModel;
 
     public function __construct(Employee $employee)
     {
@@ -15,11 +15,11 @@ class AjaxService
 
     public function employeeList($type)
     {
-    	$employee = $this->employeeModel->where('type', $type)->get();
-    	$data = [
-    		'employeeList' => $employee,
-    	];
+        $employee = $this->employeeModel->where('type', $type)->get();
+        $data = [
+            'employeeList' => $employee,
+        ];
 
-    	return $data; 
+        return $data; 
     }
 }

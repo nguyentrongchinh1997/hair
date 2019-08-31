@@ -64,10 +64,30 @@
 	display: none;
 }
 #list-service{
-	width: 50%;
+	margin-top: 50px;
+	width: 100%;
 }
 #list-service tr td{
 	padding-left: 15px;
 	padding-right: 15px;
+	border: 1px solid #e5e5e5;
+}
+#list-service tr th{
+	padding: 15px;
+	border: 1px solid #e5e5e5;
+}
+.tong-gia{
+	width: 100%;
+}
+.tong-gia tr td {
+	text-align: right;
+	width: 33%;
+	padding: 15px !important;
+}
+.rate{
+	width: 100%;
+}
+.rate tr td{
+	padding: 10px;
 	border: 1px solid #e5e5e5;
 }

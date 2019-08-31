@@ -26,9 +26,7 @@
                     ($bill->customer->full_name == '') ? 'Chưa điền thông tin' : $bill->customer->full_name 
                 }}
             </td>              
-            <td>
-                {{ $bill->order->employee->full_name }}
-            </td>
+            
             <td>
                 @if ($bill->status == config('config.order.status.check-in'))
                     <span style="color: red">Chưa thanh toán</span>

@@ -14,6 +14,15 @@
 Route::get('/', 'client\ClientController@homeView')->name('client.home');
 Route::get('nhan-vien/{type}', 'client\AjaxController@getEmployee');
 Route::post('dat-lich', 'client\ClientController@order')->name('order');
+Route::get('danh-gia', 'client\ClientController@rate')->name('client.rate');
+Route::get('danh-gia/noi-dung/{billID}', 'client\ClientController@rateContent');
+Route::get('danh-gia/load', 'client\ClientController@load');
+Route::get('khach-hang/danh-gia/{noiDung}/{billId}', 'client\ClientController@updateRate');
+Route::get('khach-hang/binh-luan/{noiDung}/{billId}', 'client\ClientController@updateComment');
+Route::get('input', 'client\ClientController@input');
+Route::get('xac-nhan/hoa-don', 'client\ClientController@billAccept');
+// Route::get('danh-gia/buoc/{BillId}', 'client\ClientController@')
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(){
     Route::get('trang-chu', 'admin\AdminController@homeView')->name('admin.home');
@@ -49,10 +58,35 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
     });
     Route::group(['prefix' => 'hoa-don'], function(){
         Route::get('danh-sach', 'admin\AdminController@billList')->name('bill.list');
+
         Route::post('danh-sach', 'admin\AdminController@postBillList')->name('bill.post.list');
+
         Route::get('tim-kiem/{keySearch}/{date}', 'admin\AjaxController@search');
+
         Route::get('chi-tiet/{billId}', 'admin\AjaxController@billDetail');
+
         Route::get('them/{billId}/{employeeId}/{price_total}/{number}', 'admin\AjaxController@pay');
+
+        Route::get('dich-vu/them/{billId}/{serviceId}/{employeeID}/{money}', 'admin\AjaxController@serviceAdd');
+
+        Route::get('xoa/dich-vu/{billDetailId}', 'admin\AjaxController@serviceDelete');
+
+        Route::get('dich-vu-khac/them/{billId}/{serviceId}/{employeeID}/{money}/{percent}', 'admin\AjaxController@serviceOtherAdd');
+
+        Route::post('thanh-toan/{billId}', 'admin\AdminController@pay')->name('bill.pay');
+
+        Route::get('khach-hang/danh-gia/{billID}', 'admin\AdminController@getRate');
+
+        Route::get('khach-hang/binh-luan/{billID}', 'admin\AdminController@getComment');
+
+        Route::get('giam-gia/cap-nhat/{sale}/{saleDetail}/{billID}', 'admin\AjaxController@updateSale');
+
+        Route::get('tong-gia/{billId}', 'admin\AdminController@priceTotal');
+    });
+
+    Route::group(['prefix' => 'danh-gia'], function(){
+        Route::get('danh-sach', 'admin\AdminController@getRateList')->name('rate.list');
+        Route::post('danh-sach/{rateId}', 'admin\AdminController@postRate')->name('rate.post');
     });
 });
 

@@ -144,4 +144,45 @@ class AdminController extends Controller
         return back()->with('thongbao', 'Check-in thành công');
     }
 /*end*/
+
+    public function getRate($billId)
+    {
+        $rate = $this->adminService->getRate($billId);
+
+        if ($rate->rate_id != '') {
+            echo $rate->rate->name;
+        } else {
+            echo "<i>Đợi đánh giá</i>";
+        }
+    }
+
+    public function getComment($billId)
+    {
+        $comment = $this->adminService->getComment($billId);
+        echo $comment->comment . "<br>";
+    }
+
+    public function priceTotal($billId)
+    {
+        echo $this->adminService->priceTotal($billId);
+    }
+
+    public function getRateList()
+    {
+        return view('admin.pages.rate.list', $this->adminService->getRateList());
+    }
+
+    public function postRate(Request $request, $rateId)
+    {
+        $this->adminService->postRate($request, $rateId);
+
+        return back()->with('thongbao', 'Sửa phần trăm thành công');
+    }
+
+    public function pay(Request $request, $billId)
+    {
+        $this->adminService->pay($billId, $request->price_service);
+
+        return back();
+    }
 }

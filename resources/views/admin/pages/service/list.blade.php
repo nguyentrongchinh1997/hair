@@ -57,6 +57,17 @@
                                     <input type="text" id="formattedNumberField" class="form-control" required="required" name="price">
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    Chiết khấu (%)
+                                </td>
+                                <td>
+                                    :
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" required="required" name="percent">
+                                </td>
+                            </tr>
                             
                             <tr>
                                 <td></td>
@@ -83,6 +94,7 @@
                     <th scope="col">STT</th>
                     <th scope="col">Tên dịch vụ</th>
                     <th scope="col">Giá</th>
+                    <th scope="col">Chiết khấu (%)</th>
                     <th scope="col">Sửa</th>
                 </tr>
               </thead>
@@ -96,6 +108,9 @@
                         </td>
                         <td>
                             {{ number_format($service->price) }}<sup>đ</sup>
+                        </td>
+                        <td>
+                            {{ $service->percent }} %
                         </td>
                         <td>
                             <a href="{{ route('service.edit', ['id' => $service->id]) }}">

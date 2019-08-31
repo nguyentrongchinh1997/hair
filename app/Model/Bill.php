@@ -8,7 +8,7 @@ class Bill extends Model
 {
     protected $table = 'bills';
     protected $fillable = [
-        'rate', 
+        'rate_id', 
         'customer_id',
         'order_id',
         'price', 
@@ -33,5 +33,10 @@ class Bill extends Model
     public function billDetail()
     {
         return $this->hasMany(BillDetail::class);
+    }
+
+    public function rate()
+    {
+        return $this->belongsTo(Rate::class);
     }
 }

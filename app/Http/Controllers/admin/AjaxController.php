@@ -59,4 +59,24 @@ class AjaxController extends Controller
         $this->ajaxService->pay($billId, $employeeId, $price_total, $number);
         echo "<h3 style='color: #007bff'>Thành toán thành công</h3>";
     }
+
+    public function serviceAdd($billId, $serviceId, $employeeId, $money)
+    {
+        echo $this->ajaxService->serviceAdd($billId, $serviceId, $employeeId, $money);
+    }
+
+    public function serviceDelete($billDetailId)
+    {
+        echo $this->ajaxService->serviceDelete($billDetailId);
+    }
+
+    public function serviceOtherAdd($billId, $serviceId, $employeeId, $money, $percent)
+    {
+        echo $this->ajaxService->serviceOtherAdd($billId, $serviceId, $employeeId, $money, $percent);
+    }
+
+    public function updateSale($sale, $saleDetail, $billId)
+    {
+        $this->ajaxService->updateSale($sale, $saleDetail, $billId);
+    }
 }

@@ -43,7 +43,12 @@
                         </a>
                         <a href="{{ route('bill.list') }}">
                             <li>
-                                Quản lý thanh toán
+                                Quản lý hóa đơn
+                            </li>
+                        </a>
+                        <a href="{{ route('rate.list') }}">
+                            <li>
+                                Quản lý đánh giá
                             </li>
                         </a>
                         @if (auth()->check())
@@ -73,3 +78,4 @@
                 </div>
             </div>
         </header>
+        

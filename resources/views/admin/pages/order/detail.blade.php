@@ -22,6 +22,9 @@
             <td style="font-weight: bold;">
                 {{ $orderDetail->service->name }}
             </td>
+            <td>
+                Giá: <span style="font-weight: bold;">{{ number_format($orderDetail->service->price) }}<sup>đ</sup></span>
+            </td>
         </tr>
         <tr class="update-customer-ajax">
             <script type="text/javascript">
@@ -110,7 +113,7 @@
             <td>
                 Thời gian phục vụ
             </td>
-            <td>:</td>
+            <td style="padding: 15px">:</td>
             <td style="font-weight: bold;">
                 {{ $orderDetail->time->time }}
             </td>
@@ -119,14 +122,14 @@
             <td>
                 Giá dịch vụ
             </td>
-            <td>:</td>
+            <td style="padding: 15px">:</td>
             <td style="font-weight: bold;">
                 {{ number_format($orderDetail->service->price) }}<sup>đ</sup>
             </td>
         </tr>
         <tr>
             <td>Trạng thái</td>
-            <td>:</td>
+            <td style="padding: 15px">:</td>
             <td class="status-ajax" style="font-weight: bold;">
                 @if ($orderDetail->status == config('config.order.status.create'))
                     <span>Đợi check in</span>

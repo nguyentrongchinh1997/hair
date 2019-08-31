@@ -6,23 +6,29 @@ use App\Model\Time;
 use App\Model\Customer;
 use App\Model\Order;
 use App\Model\Service;
+use App\Model\Bill;
+use App\Model\BillDetail;
+use App\Model\Rate;
 
 class HomeService
 {
-    protected $timeModel, $customerModel, $orderModel, $serviceModel;
+    protected $timeModel, $customerModel, $orderModel, $serviceModel, $billModel, $billDetailModel, $rateModel;
 
-    public function __construct(Time $time, Customer $customer, Order $order, Service $service)
+    public function __construct(Time $time, Customer $customer, Order $order, Service $service, Bill $bill, BillDetail $billDetail, Rate $rate)
     {
         $this->timeModel = $time;
         $this->customerModel = $customer;
         $this->orderModel = $order;
         $this->serviceModel = $service;
+        $this->billModel = $bill;
+        $this->billDetailModel = $billDetail;
+        $this->rateModel = $rate;
     }
 
     public function timeList()
     {
         $timeList = $this->timeModel->all();
-        $serviceList = $this->serviceModel->all();
+        $serviceList = $this->serviceModel->where('id', '<=', 2)->get();
         $data = [
             'time' => $timeList,
             'serviceList' => $serviceList,
@@ -43,7 +49,7 @@ class HomeService
                                         ->where('customer_id', $customer->id)
                                         ->first();
             if (isset($check)) {
-                /*update số dư*/
+                /*update order*/
                     return $this->orderModel->updateOrCreate(
                         [
                             'customer_id' => $customer->id,
@@ -56,18 +62,6 @@ class HomeService
                     );
                 /*end*/
             } else {
-                $balance = $customer->balance - $service->price;
-                /*update số dư*/
-                    $this->customerModel->updateOrCreate(
-                        [
-                            'phone' => $request->phone,
-                        ],
-                        [
-                            'balance' => $balance,
-                        ]
-                    );
-                /*end*/
-
                 /*insert vào bảng orders*/
                     return $this->orderModel->create([
                         'customer_id' => $customer->id,
@@ -90,5 +84,96 @@ class HomeService
                 'service_id' => $request->service,
             ]);
         }
+    }
+
+    public function updateRate($rate, $billId)
+    {
+        return $this->billModel->updateOrCreate(
+            ['id' => $billId],
+            [
+                'rate_id' => $rate,
+            ]
+        );
+    }
+
+    public function updateComment($comment, $billId)
+    {
+        $bill = $this->billModel->findOrFail($billId);
+
+        if ($bill->comment == '') {
+            $commentUpdate = $comment;
+        } else {
+            $replace = str_replace($comment, '', $bill->comment);
+            $commentUpdate = $replace . $comment;
+        }
+        
+        return $this->billModel->updateOrCreate(
+            ['id' => $billId],
+            [
+                'comment' => $commentUpdate,
+            ]
+        );
+    }
+
+    public function load()
+    {
+        $bill = $this->billModel->where('rate_status', 1)->first();
+        $data = [
+            'bill' => $bill,
+        ];
+
+        return $data;
+    }
+
+    public function rateContent($billId)
+    {
+        $bill = $this->billModel->findOrFail($billId);
+        $bill->rate_status = 1;
+        $bill->save();
+
+        return $this->billModel->where('id', '<>', $billId)->update(['rate_status' => 0]);
+    }
+
+    public function billAccept()
+    {
+        $bill = $this->billModel->where('rate_status', 1)
+                                ->with(['order' => function($query){
+                                    $query->where('date', date('Y-m-d'));
+                                }])
+                                ->first();
+        $billDetail = $this->billDetailModel->where('bill_id', $bill->id)->get();
+        $sum = $this->billDetailModel->where('bill_id', $bill->id)->sum('money');
+        $data = [
+            'bill' => $bill,
+            'billDetail' => $billDetail,
+            'sum' => $sum - $bill->sale,
+        ];
+
+        return $data;
+        
+    }
+
+    public function checkRateStatus()
+    {
+        $bill = $this->billModel->where('rate_status', 1)->get();
+
+        return $bill->count();
+    }
+
+    public function getInput()
+    {
+        return $this->billModel->where('rate_status', 1)->first();
+    }
+
+    public function getRate()
+    {
+        $rateList = $this->rateModel->all();
+        $bill = $this->billModel->where('rate_status', 1)->first();
+        $data = [
+            'bill' => $bill, 
+            'rateList' => $rateList,
+        ];
+
+        return $data;
     }
 }

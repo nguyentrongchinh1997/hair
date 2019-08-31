@@ -12,6 +12,7 @@ class BillDetail extends Model
         'service_id', 
         'employee_id',
         'money',
+        'other_service',
     ];
 
     public function bill()
@@ -22,5 +23,10 @@ class BillDetail extends Model
     public function service()
     {
     	return $this->belongsTo(Service::class);
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
     }
 }

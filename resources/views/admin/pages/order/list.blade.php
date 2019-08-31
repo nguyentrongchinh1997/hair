@@ -101,7 +101,7 @@
                     @endforeach
                 </ul>
             </div> -->
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="max-height: 500px; overflow: auto;">
                 <div class="offset-lg-8">
                     <label>Tìm kiếm tại đây:</label>
                     <div class="input-group">
@@ -131,7 +131,16 @@
                             <td>{{ $order->customer->phone }}</td>
                             <td>{{ $order->employee->full_name }}</td>
                             <td>
-                                {{ ($order->customer->full_name == '') ? 'Chưa có thông tin' : $order->customer->full_name }}
+                               
+                                @if ($order->customer->full_name == '')
+                                    <span>
+                                        <i>Chưa có thông tin</i>
+                                    </span>
+                                @else
+                                    <span style="font-weight: bold;">
+                                        {{ $order->customer->full_name }}
+                                    </span>
+                                @endif
                             </td>
                           <td>
                               {{ $order->time->time }}

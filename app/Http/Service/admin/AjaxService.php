@@ -7,18 +7,20 @@ use App\Model\Customer;
 use App\Model\Bill;
 use App\Model\BillDetail;
 use App\Model\Service;
+use App\Model\Employee;
 
 class AjaxService
 {
-    protected $orderModel, $customerModel, $billModel, $billDetailModel, $serviceModel;
+    protected $orderModel, $customerModel, $billModel, $billDetailModel, $serviceModel, $employeeModel;
 
-    public function __construct(Order $order, Customer $customer, Bill $bill, BillDetail $billDetail, Service $service)
+    public function __construct(Order $order, Customer $customer, Bill $bill, BillDetail $billDetail, Service $service, Employee $employee)
     {
         $this->orderModel = $order;
         $this->customerModel = $customer;
         $this->billModel = $bill;
         $this->billDetailModel = $billDetail;
         $this->serviceModel = $service;
+        $this->employeeModel = $employee;
     }
 
     public function resultList($key, $date1)
@@ -72,12 +74,16 @@ class AjaxService
     public function billDetail($billId)
     {
         $bill = $this->billModel->findOrFail($billId);
+        $employeeList = $this->employeeModel->all();
         $serviceList = $this->serviceModel->where('id', '!=', $bill->order->service_id)->get();
         $moneyServiceTotal = $this->billDetailModel->where('bill_id', $billId)->sum('money');
+        $serviceListUse = $this->billDetailModel->where('bill_id', $billId)->get();
         $data = [
+            'employeeList' => $employeeList,
             'serviceList' => $serviceList,
             'bill' => $bill,
             'moneyServiceTotal' => $moneyServiceTotal,
+            'serviceListUse' => $serviceListUse,
         ];
 
         return $data;
@@ -116,5 +122,51 @@ class AjaxService
                 ]
             );
         }
+    }
+
+    public function serviceAdd($billId, $serviceId, $employeeId, $money)
+    {
+        $id = $this->billDetailModel->insertGetId([
+            'bill_id' => $billId,
+            'service_id' => $serviceId,
+            'employee_id' => $employeeId,
+            'money' => $money,
+        ]);
+
+        return $id;
+    }
+
+    public function serviceOtherAdd($billId, $serviceName, $employeeId, $money, $percent)
+    {
+        $convertMoney = str_replace(',', '', $money);
+        $id = $this->billDetailModel->insertGetId([
+            'bill_id' => $billId,
+            'other_service' => $serviceName,
+            'employee_id' => $employeeId,
+            'money' => $convertMoney,
+            'other_service_percent' => $percent,
+        ]);
+
+        return $id;
+    }
+
+    public function serviceDelete($billDetailId)
+    {
+        $billDetail = $this->billDetailModel->findOrFail($billDetailId);
+        $price = $billDetail->money;
+        $billDetail->delete();
+
+        return $price;
+    }
+
+    public function updateSale($sale, $saleDetail, $billId)
+    {
+        return $this->billModel->updateOrCreate(
+            ['id' => $billId],
+            [
+                'sale' => str_replace(',', '', $sale),
+                'sale_detail' => $saleDetail,
+            ]
+        );
     }
 }

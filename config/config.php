@@ -18,4 +18,10 @@ return [
             'check-out' => 2,
         ],
     ],
+    'rate' => [
+        'type' => [
+            'substract' => 0,
+            'plus' => 1,
+        ],
+    ]
 ];

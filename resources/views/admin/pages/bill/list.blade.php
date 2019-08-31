@@ -3,17 +3,14 @@
 @section('content')
 <div class="row" style="padding-left: 40px; margin-top: 20px">
     <div class="col-lg-6 left">
-        <div class="row" style="background: #f8f8f8; border: 1px solid #e5e5e5; padding: 15px">
-            <div class="col-lg-12" style="margin-bottom: 20px">
-                <h2>QUẢN LÝ THANH TOÁN</h2>
+        <div class="col-lg-5" style="background: #f8f8f8; border: 1px solid #e5e5e5; padding: 15px; position: fixed; height: 100%">
+            <div class="col-lg-12" style="margin-bottom: 20px;">
+                <h2>QUẢN LÝ THANH TOÁN</h2><br>
                 @if (session('thongbao'))
                     <div class="alert alert-success">
                         {{ session('thongbao') }}
                     </div>
                 @endif
-            </div>
-
-            <div class="col-lg-12" style="margin-bottom: 20px">
                 <form method="post" action="{{ route('bill.post.list') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <table>
@@ -58,9 +55,7 @@
                             </td>
                         </tr>
                     </table>
-                </form>
-            </div>
-            <div class="col-lg-12">
+                </form><br>
                 <div class="offset-lg-8">
                     <label>Tìm kiếm tại đây:</label>
                     <div class="input-group">
@@ -85,6 +80,7 @@
                         @php $stt = 0; @endphp
                         @foreach ($billList as $bill)
                             @if ($bill->order->date == $date)
+                            <a href="">
                                 <tr style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
                                     <td>{{ ++$stt }}</td>  
                                              
@@ -102,6 +98,7 @@
                                         @endif
                                     </td>
                                 </tr>
+                            </a>
                             @endif
                         @endforeach
                     </tbody>
@@ -114,6 +111,4 @@
         
     </div>
 </div>
-
-<hr>
 @endsection

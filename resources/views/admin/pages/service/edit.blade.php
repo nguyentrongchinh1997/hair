@@ -41,6 +41,15 @@
 						<input type="text" value="{{ $oldData->price }}" id="formattedNumberField" class="form-control" required="required" name="price">
 					</td>
 				</tr>
+				<tr>
+					<td>
+						Chiết khấu (%)
+					</td>
+					<td>:</td>
+					<td>
+						<input type="number" value="{{ $oldData->percent }}" class="form-control" required="required" name="percent">
+					</td>
+				</tr>
 				
 				<tr>
 					<td></td>

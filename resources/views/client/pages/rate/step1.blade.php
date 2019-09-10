@@ -1,16 +1,32 @@
 @extends('client.pages.rate.layouts.index')
 
 @section('content')
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     setTimeout(function(){
         var href = 'danh-gia';
        window.location.href = href;
    },10000);
+</script> -->
+<script type="text/javascript">
+    setTimeout(function(){
+        location.reload();
+    },5000);
+    $(function(){
+        billId = $('#bill-id').val();
+
+        if (billId == 0) {
+            window.location.href = 'rate';
+        }
+    })
 </script>
 <div class="container">
+    <input type="hidden" id="bill-id" value="@if(isset($bill)){{ $bill->id }}@else{{ '0' }}@endif">
+    <div id="load-input">
+        
+    </div>
     <div class="col-xs-12 col-sm-12 col-lg-12">
         <h2 style="text-align: center;">
-            MỜI ANH {{ mb_strtoupper($bill->order->customer->full_name, 'UTF-8') }}
+            MỜI ANH {{ mb_strtoupper($bill->customer->full_name, 'UTF-8') }}
         </h2>
         <h4 style="text-align: center;">XÁC NHẬN LẠI THÔNG TIN HÓA ĐƠN GIÚP CHÚNG EM</h4>
         <table style="width: 100%; background: #F9FBE7;">
@@ -18,6 +34,7 @@
                 <td style="text-align: center; padding: 10px">Anh vui lòng chỉ thanh toán đúng số tiền<br>
                     <span  style="color: red; font-weight: bold; font-size: 30px">
                         {{ number_format($sum) }} Đ
+                        
                     </span>
                 </td>
                 <td style="text-align: right; padding: 10px">
@@ -30,21 +47,30 @@
         </p>
         <table style="width: 100%">
             @php $stt = 0; @endphp
-            @foreach ($billDetail as $bill)
+            @foreach ($billDetail as $bill1)
                 <tr>
                     <td>
-                        {{ ++$stt }}.
-                        @if ($bill->service_id == '') 
-                            {{ $bill->other_service }}
+                        @php $sothutu = ++$stt; @endphp
+                        {{ $sothutu }}.
+                        @if ($bill1->service_id == '') 
+                            {{ $bill1->other_service }}
                         @else
-                            {{ $bill->service->name }}
+                            {{ $bill1->service->name }}
                         @endif
                     </td>
                     <td style="text-align: right;">
-                        {{ number_format($bill->money) }} Đ
+                        {{ number_format($bill1->money) }} Đ
                     </td>
                 </tr>
             @endforeach
+            @if ($bill->sale != '')
+                <tr>
+                    <td>{{ $sothutu + 1 }}. Được tặng</td>
+                    <td style="text-align: right;">
+                        {{ number_format($bill->sale) }} Đ
+                    </td>
+                </tr>
+            @endif
         </table>
         
     </div>

@@ -9,12 +9,15 @@ use App\Model\Bill;
 use App\Model\Customer;
 use App\Model\BillDetail;
 use App\Model\Rate;
+use App\Model\Time;
+use App\Model\OrderDetail;
+use Carbon\Carbon;
 
 class AdminService
 {
-    protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel;
+    protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $orderDetailModel;
 
-    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate)
+    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate, Time $time, OrderDetail $orderDetail)
     {
         $this->employeeModel = $employee;
         $this->serviceModel = $service;
@@ -23,6 +26,8 @@ class AdminService
         $this->customerModel = $customer;
         $this->billDetailModel = $billDetail;
         $this->rateModel = $rate;
+        $this->timeModel = $time;
+        $this->orderDetailModel = $orderDetail;
     }
 
     public function employeeAdd($request)
@@ -30,10 +35,11 @@ class AdminService
         return $this->employeeModel->create([
             'full_name' => $request->full_name,
             'phone' => $request->phone,
-            'type' => $request->type,
+            'service_id' => $request->type,
             'address' => $request->address,
             'percent' => $request->percent,
             'password' => bcrypt($request->password),
+            'salary' => str_replace(',', '', $request->salary),
         ]);
     }
 
@@ -48,7 +54,7 @@ class AdminService
 
     public function employeeListView()
     {
-        $employeeList = $this->employeeModel->orderBy('created_at', 'desc')->paginate(20);
+        $employeeList = $this->employeeModel->orderBy('created_at', 'desc')->paginate(10);
         $serviceList = $this->serviceModel->all();
         $data = [
             'employeeList' => $employeeList,
@@ -73,14 +79,22 @@ class AdminService
         $day = date('d');
         $month = date('m');
         $year = date('Y');
-        $orderList = $this->orderModel->where('status', config('config.order.status.create'))->where('date', date('Y-m-d'))->orderBy('created_at', 'desc')->get();
+        $date = date('d/m/Y');
+        $orderList = $this->orderModel->where('date', date('Y-m-d'))->orderBy('created_at', 'desc')->with('orderDetail')->get();
         $bill = $this->billModel->where('status', config('config.order.status.check-in'))->paginate(20);
+        $stylist = $this->employeeModel->where('service_id', config('config.service.cut'))->get();
+        $skinner = $this->employeeModel->where('service_id', config('config.service.wash'))->get();
+        $time = $this->timeModel->all();
         $data = [
             'orderList' => $orderList,
             'billList' => $bill,
             'day' => $day,
             'month' => $month,
             'year' => $year,
+            'date' => $date,
+            'stylist' => $stylist,
+            'skinner' => $skinner,
+            'time' => $time,
         ];
 
         return $data;
@@ -98,13 +112,14 @@ class AdminService
             $day = '0'.$day;
         }
         $date = $year . '-' . $month . '-' . $day;
-        $orderList = $this->orderModel->where('status', config('config.order.status.create'))->where('date', $date)->orderBy('created_at', 'desc')->paginate(20);
+        $orderList = $this->orderModel->where('date', $date)->orderBy('created_at', 'desc')->paginate(20);
 
         $data = [
             'orderList' => $orderList,
             'day' => $day,
             'month' => $month,
             'year' => $year,
+            'date' => $day . '/' . $month . '/' . $year,
         ];
 
         return $data;
@@ -118,9 +133,16 @@ class AdminService
         $date = date('Y-m-d');
         $bill = $this->billModel
                     ->where('status', '>', config('config.order.status.create'))
+                    ->orderBy('created_at', 'DESC')
                     ->with('order')
-                    ->paginate(20);
+                    ->get();
+        $serviceList = $this->serviceModel->all();
+        $timeList = $this->timeModel->all();
+        $employeeList = $this->employeeModel->all();
         $data = [
+            'employeeList' => $employeeList,
+            'timeList' => $timeList,
+            'serviceList' => $serviceList,
             'billList' => $bill,
             'day' => $day,
             'month' => $month,
@@ -146,9 +168,14 @@ class AdminService
         $bill = $this->billModel
                     ->where('status', '>', config('config.order.status.create'))
                     ->with('order')
-                    ->paginate(20);
-
+                    ->get();
+        $serviceList = $this->serviceModel->all();
+        $timeList = $this->timeModel->all();
+        $employeeList = $this->employeeModel->all();
         $data = [
+            'employeeList' => $employeeList,
+            'timeList' => $timeList,
+            'serviceList' => $serviceList,
             'billList' => $bill,
             'day' => $day,
             'month' => $month,
@@ -181,10 +208,27 @@ class AdminService
 
     public function employeeEdit($request, $id)
     {
-        $this->employeeModel->updateOrCreate(
-            ['id' => $id],
-            $request->all()
-        );
+        $orderPhone = $this->employeeModel->findOrFail($id);
+        $check = $this->employeeModel->where('phone', $request->phone)->count();
+
+        if ($check == 0 || $orderPhone->phone == $request->phone) {
+            $this->employeeModel->updateOrCreate(
+                ['id' => $id],
+                [
+                    'full_name' => $request->full_name,
+                    'phone' => $request->phone,
+                    'service_id' => $request->service_id,
+                    'address' => $request->address,
+                    'percent' => $request->percent,
+                    'salary' => str_replace(',', '', $request->salary),
+                    'status' => $request->status,
+                ]
+            );
+            return 1;
+        } else {
+            return 0;
+        }
+
     }
 
     public function serviceEdit($inputs, $id)
@@ -200,6 +244,7 @@ class AdminService
     public function checkIn($orderId, $request)
     {
         $order = $this->orderModel->findOrFail($orderId);
+        $orderDetail = $this->orderDetailModel->where('order_id', $orderId)->get();
         $customer = $this->customerModel->findOrFail($order->customer_id);
 
         if ($customer->full_name == '' && $customer->birthday == '') {
@@ -212,19 +257,29 @@ class AdminService
             );
         }
 
+        // $this->orderModel->updateOrCreate(
+        //     ['id' => $orderId],
+        //     [
+        //         'employee_id' => $request->employee_id,
+        //         'service_id' => $request->service_id,
+        //     ]
+        // );
+
         $bill_id = $this->billModel->insertGetId([
             'customer_id' => $order->customer_id,
             'order_id' => $orderId,
-            'price' => $order->service->price,
+            'created_at' => date('Y-m-d H:i:s'),
             'status' => config('config.order.status.check-in'),
         ]);
-
-        $this->billDetailModel->create([
-            'bill_id' => $bill_id,
-            'service_id' => $order->service_id,
-            'employee_id' => $order->employee_id,
-            'money' => $order->service->price,
-        ]);
+        foreach ($orderDetail as $service) {
+            $this->billDetailModel->create([
+                'bill_id' => $bill_id,
+                'service_id' => $service->service_id,
+                'employee_id' => $service->employee_id,
+                'money' => $service->service->price,
+                'date' => date('Y-m-d'),
+            ]);
+        }
 
         return $this->orderModel->updateOrCreate(
             ['id' => $orderId],
@@ -233,34 +288,6 @@ class AdminService
                 'bill_id' => $bill_id,
             ]
         );
-    }
-
-    public function getRate($billId)
-    {
-        return $this->billModel->findOrFail($billId);
-    }
-
-    public function getComment($billId)
-    {
-        return $this->billModel->findOrFail($billId);
-    }
-
-    public function priceTotal($billId)
-    {
-        $sum = $this->billDetailModel->where('bill_id', $billId)->sum('money');
-        $bill = $this->billModel->findOrFail($billId);
-        $customer = $this->customerModel->findOrFail($bill->customer_id);
-        $balance = $customer->balance;
-        $total = $sum - $bill->sale; // số tiền phải trả
-        if ($balance >= $total) {
-            $payPrice = $customer->balance - $total;
-        } elseif ($balance > 0 && $balance < $total) {
-            $payPrice = $total - $balance;
-        } else {
-            $payPrice = $total;
-        }
-
-        return number_format($payPrice) . ' Đ';
     }
 
     public function getRateList()
@@ -353,5 +380,287 @@ class AdminService
         );
 
         return $this->billModel->where('id', '>', 0)->update(['rate_status' => 0]);
+    }
+    public function getRate($billId)
+    {
+        return $this->billModel->findOrFail($billId);
+    }
+
+    public function getComment($billId)
+    {
+        return $this->billModel->findOrFail($billId);
+    }
+
+    public function bill($billId)
+    {
+        return $this->billModel->findOrFail($billId);
+    }
+
+    public function priceTotal($billId)
+    {
+        $sum = $this->billDetailModel->where('bill_id', $billId)->sum('money');
+        $bill = $this->billModel->findOrFail($billId);
+        $customer = $this->customerModel->findOrFail($bill->customer_id);
+        $balance = $customer->balance;
+        $total = $sum - $bill->sale; // số tiền phải trả
+        if ($balance >= $total) {
+            $payPrice = $customer->balance - $total;
+        } elseif ($balance > 0 && $balance < $total) {
+            $payPrice = $total - $balance;
+        } else {
+            $payPrice = $total;
+        }
+
+        // return number_format($payPrice) . ' Đ';
+        return $payPrice;
+    }
+
+    public function payView($billId) {
+        $rate = $this->billModel->findOrFail($billId);;
+        $comment = $this->billModel->findOrFail($billId);
+        $sum = $this->billDetailModel->where('bill_id', $billId)->sum('money');
+        $bill = $this->billModel->findOrFail($billId);
+        $customer = $this->customerModel->findOrFail($bill->customer_id);
+        $serviceListUse = $this->billDetailModel->where('bill_id', $billId)->get();
+            $balance = $customer->balance;
+        $total = $sum - $bill->sale; // số tiền phải trả
+
+        if ($balance >= $total) {
+            $payPrice = $customer->balance - $total;
+        } elseif ($balance > 0 && $balance < $total) {
+            $payPrice = $total - $balance;
+        } else {
+            $payPrice = $total;
+        }
+        $data = [
+            'serviceListUse' => $serviceListUse,
+            'rate' => $rate,
+            'comment' => $comment,
+            'payPrice' => $payPrice,
+            'billId' => $billId,
+            'bill' => $bill,
+        ];
+
+        return $data;
+    }
+
+    public function finish($billId)
+    {
+        $bill = $this->billModel->findOrFail($billId);
+        $customer = $this->customerModel->findOrFail($bill->customer_id);
+        $sumService = $this->billDetailModel->where('bill_id', $billId)->sum('money');
+        $total = $sumService - $bill->sale;
+        $balance = $customer->balance;
+
+        if ($balance >= $total) {
+            $balanceUpdate = $balance - $total;
+        } else {
+            $balanceUpdate = 0;
+        }
+
+        if ($bill->rate_id == '') {
+            $rate_id = 5;
+        } else {
+            $rate_id = $bill->rate_id;
+        }
+        if ($bill->comment == '') {
+            $comment = 'Tất cả đều tốt, không có góp ý gì;';
+        } else {
+            $comment = $bill->comment;
+        }
+        $this->billModel->updateOrCreate(
+            ['id' => $billId],
+            [
+                'rate_id' => $rate_id,
+                'comment' => $comment,
+                'status' => 2,
+                'total' => $sumService,
+                'rate_status' => 0,
+            ]
+        );
+
+        $this->orderModel->updateOrCreate(
+            ['id' => $bill->order_id],
+            [
+                'status' => 2,
+            ]
+        );
+        return $this->customerModel->updateOrCreate(
+            ['id' => $bill->customer_id],
+            ['balance' => $balanceUpdate]
+        );
+    }
+
+    public function addBill($request)
+    {
+        $phone = $request->phone;
+        $service_id = $request->service_id;
+        $employee = $request->employee_id;
+        $date = $request->date;
+        $time = $request->time_id;
+        $status = 1;
+
+        $checkPhone = $this->customerModel->where('phone', $phone)->first();
+        $service = $this->serviceModel->findOrFail($service_id);
+        // if (isset($checkPhone)) {
+        //     $this->customerModel->updateOrCreate(
+        //         ['id' => $checkPhone->id],
+        //         [
+        //             'full_name' => $request->full_name,
+        //         ]
+        //     );
+            
+
+        // } else {
+        //     $this->customerModel->create(
+        //         [
+        //             'full_name' => $request->full_name,
+        //             'phone' => $phone,
+        //         ]
+        //     );
+        // }
+
+        if (!isset($checkPhone)) {
+            $customer_id = $this->customerModel->insertGetId([
+                'full_name' => $request->full_name,
+                'phone' => $phone,
+            ]);
+        } else {
+            $customer_id = $checkPhone->id;
+        }
+
+        $orderId = $this->orderModel->insertGetId([
+            'customer_id' => $customer_id,
+            'employee_id' => $employee,
+            'date' => $date,
+            'service_id' => $service_id,
+            'time_id' => $time,
+            'status' => $status,
+        ]);
+
+        $billId = $this->billModel->insertGetId([
+            'customer_id' => $customer_id,
+            'order_id' => $orderId,
+            'price' => $service->price,
+            'status' => $status,
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->orderModel->updateOrCreate(
+            ['id' => $orderId],
+            [
+                'bill_id' => $billId,
+            ]
+        );
+
+        return $this->billDetailModel->create([
+            'bill_id' => $billId,
+            'service_id' => $service_id,
+            'employee_id' => $employee,
+            'money' => $service->price,
+            'date' => $date,
+        ]);
+    }
+
+    public function salary($employeeId)
+    {
+        $today = date('Y-m');
+        $employee = $this->employeeModel->findOrFail($employeeId);
+        $billDetail = $this->billDetailModel
+                            ->where('date', 'like', $today . '%')
+                            ->where('employee_id', $employeeId)->orderBy('date', 'DESC')
+                            ->get();
+        $month = date('m');
+        $year =date('Y');
+        $data = [
+            'billDetail' => $billDetail,
+            'month' => $month,
+            'year' => $year,
+            'employee' => $employee,
+        ];
+
+        return $data;
+    }
+
+    public function postSalary($employeeId, $request)
+    {
+        $today = $request->year . '-' . $request->month;
+        $employee = $this->employeeModel->findOrFail($employeeId);
+        $billDetail = $this->billDetailModel->where('date', 'like', $today . '%')->where('employee_id', $employeeId)->get();
+        $month = $request->month;
+        $year = $request->year;
+        $data = [
+            'billDetail' => $billDetail,
+            'month' => $month,
+            'year' => $year,
+            'employee' => $employee,
+        ];
+
+        return $data;
+    }
+
+    public function customerListview()
+    {
+        $customerList = $this->customerModel->paginate(10);
+        $data = [
+            'customerList' => $customerList
+        ];
+
+        return $data;
+    }
+
+    public function postDeposit($request)
+    {
+        $customer = $this->customerModel->findOrFail($request->customer_id);
+        $money = $customer->balance + str_replace(',', '', $request->money);
+
+        return $this->customerModel->updateOrCreate(
+            ['id' => $request->customer_id],
+            [
+                'balance' => $money,
+            ]
+        );
+    }
+
+    public function addOrder($request)
+    {
+        $phone = $request->phone;
+        $cutService = $request->cut;
+        $washService = $request->wash;
+        $time_id = $request->time_id;
+        $date = $request->date;
+        $checkPhone = $this->customerModel->where('phone', $phone)->first();
+
+        if (isset($checkPhone)) {
+            $fullName = $checkPhone->full_name;
+        } else {
+            $fullName = $request->full_name;
+            $customerId = $this->customerModel->insertGetId(
+                [
+                    'full_name' => $fullName,
+                    'phone' => $phone,
+                    'password' => bcrypt($phone),
+                ]
+            );
+        }
+
+        $this->orderModel->create(
+            [
+                'customer_id' => $customer_id,
+                'date' => $date,
+                'time_id' => $time_id,
+                'status' => config('config.order.status.create'),
+            ]
+        );
+
+        if (count($washService) > 1) {  
+            foreach ($wash as $key => $wash) {
+                $this->orderDetailModel->create(
+                    [
+                        'service_id' => $wash
+                    ]
+                );
+            }
+        }
     }
 }

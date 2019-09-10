@@ -17,16 +17,18 @@ class Employee extends Authenticatable
     protected $fillable = [
         'full_name', 
         'phone', 
-        'type',
+        'service_id',
         'address',
         'percent',
         'status',
         'password',
+        'balance',
+        'salary',
     ];
 
     public function service()
     {
-        return $this->belongsTo('App\Model\Service', 'type', 'id');
+        return $this->belongsTo(Service::class);
     }
 
     public function order()
@@ -37,5 +39,15 @@ class Employee extends Authenticatable
     public function billDetail()
     {
         return $this->hasMany(BillDetail::class);
+    }
+
+    public function bill()
+    {
+        return $this->hasMany('App\Model\Bill', 'cashier', 'id');
+    }
+
+    public function orderDetail()
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

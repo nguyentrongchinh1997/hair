@@ -11,8 +11,12 @@ class BillDetail extends Model
         'bill_id', 
         'service_id', 
         'employee_id',
+        'other_service_percent',
         'money',
         'other_service',
+        'date',
+        'created_at',
+        'updated_at',
     ];
 
     public function bill()

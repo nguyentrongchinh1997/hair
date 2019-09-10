@@ -5,7 +5,19 @@
 	padding: 10px;
 	display: inline-block;
 }
+.menu ul li:hover{
+	background: #BDBDBD;
+	transition: 0.3s;
+}
+.menu{
+	background: #e6e6e6;
+}
+.menu-active{
+	background: #BDBDBD;
+}
 .menu ul a {
+	color: rgba(0,0,0,.65);
+	font-weight: bold;
 	text-decoration: none;
 }
 .menu ul {
@@ -53,6 +65,7 @@
 }
 .active{
 	background: #d9edfe !important;
+	color: #000 !important;
 }
 .detail-order table tr td {
 	padding: 15px 0px;
@@ -89,5 +102,24 @@
 }
 .rate tr td{
 	padding: 10px;
+	border: 1px solid #e5e5e5;
+}
+.detail-order{
+	min-height: 680px;
+	border: 1px solid #e5e5e5;
+	padding: 15px;
+}
+.add-bill tr td{
+	padding: 15px;
+}
+.list-service-order{
+	width: 100%;
+}
+.list-service-order tr th {
+	border: 1px solid #e5e5e5;
+	padding: 10px;
+}
+.list-service-order tr td{
+	padding: 10px !important;
 	border: 1px solid #e5e5e5;
 }

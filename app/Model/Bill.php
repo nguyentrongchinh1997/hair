@@ -18,6 +18,10 @@ class Bill extends Model
         'comment',
         'time',
         'status',
+        'cashier',
+        'rate_status',
+        'created_at',
+        'updated_at',
     ];
 
     public function customer()
@@ -38,5 +42,10 @@ class Bill extends Model
     public function rate()
     {
         return $this->belongsTo(Rate::class);
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo('App\Model\Employee', 'cashier', 'id');
     }
 }

@@ -1,27 +1,27 @@
 function validateForm()
 {
-	var phone = document.getElementById('phone').value;
-	var checkbox = document.getElementsByClassName('service');
-	var employee = document.getElementsByClassName('employee');
-	var time = document.getElementsByClassName('time');
-	var len1 = employee.length;
-	var len2 = time.length;
-	var len = checkbox.length;
-	var anyChecked = false;
-	var employeeChecked = false;
-	var timeChecked = false;
-	for (var i = 0; i < len; i++) {
+    var phone = document.getElementById('phone').value;
+    var checkbox = document.getElementsByClassName('service');
+    var employee = document.getElementsByClassName('employee');
+    var time = document.getElementsByClassName('time');
+    var len1 = employee.length;
+    var len2 = time.length;
+    var len = checkbox.length;
+    var anyChecked = false;
+    var employeeChecked = false;
+    var timeChecked = false;
+    for (var i = 0; i < len; i++) {
     	if (checkbox[i].checked){
           anyChecked = true;
           break;
        	}
     }
-    for (var i = 0; i < len1; i++) {
-    	if (employee[i].checked){
-          employeeChecked = true;
-          break;
-       	}
-    }
+    // for (var i = 0; i < len1; i++) {
+    // 	if (employee[i].checked){
+    //       employeeChecked = true;
+    //       break;
+    //    	}
+    // }
     for (var i = 0; i < len2; i++) {
     	if (time[i].checked){
           timeChecked = true;
@@ -44,10 +44,10 @@ function validateForm()
 	   	alert('Bạn chưa chọn dịch vụ');
 
 	   	return false;
-	} else if (!employeeChecked) {
-    	alert('Bạn chưa chọn nhân viên phục vụ');
+	  // } else if (!employeeChecked) {
+   //  	alert('Bạn chưa chọn nhân viên phục vụ');
 
-	   	return false;
+	  //  	return false;
     } else if (!timeChecked) {
     	alert('Bạn chưa chọn khung giờ');
 
@@ -68,3 +68,8 @@ $(function(){
 	})
 	
 })
+
+function pick(id)
+{
+    alert("sad");
+}

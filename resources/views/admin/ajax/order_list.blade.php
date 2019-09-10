@@ -24,10 +24,7 @@
             <td>
                 {{ $o->customer->phone }}
             </td>
-            <td>
-                {{ $o->employee->full_name }}
-            </td>
-            <td>
+            <td style="font-weight: bold;">
                 {{ 
                     ($o->customer->full_name == '') ? 'Chưa điền thông tin' : $o->customer->full_name 
                 }}

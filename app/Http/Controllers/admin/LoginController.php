@@ -18,11 +18,10 @@ class LoginController extends Controller
     	$username = $request->username;
     	$password = $request->password;
 
-
-    	if (Auth::attempt(['email' => $username, 'password' => $password])) {
-    		return redirect()->route('admin.home');
+    	if (Auth::attempt(['email' => $username, 'password' => $password], true)) {
+    		return redirect()->route('order.list');
     	} else if (Auth::guard('employees')->attempt(['phone' => $username, 'password' => $password], true)){
-    		return redirect()->route('admin.home');
+    		return redirect()->route('order.list');
     	} else {
     		return redirect()->route('login')->with('thongbao', 'Đăng nhập thất bại.');
     	}

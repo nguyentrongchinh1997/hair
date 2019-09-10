@@ -75,8 +75,35 @@ class AjaxController extends Controller
         echo $this->ajaxService->serviceOtherAdd($billId, $serviceId, $employeeId, $money, $percent);
     }
 
-    public function updateSale($sale, $saleDetail, $billId)
+    public function updateSale(Request $request, $billId)
     {
-        $this->ajaxService->updateSale($sale, $saleDetail, $billId);
+        echo $this->ajaxService->updateSale($request, $billId);
+    }
+
+    public function updateCashier($billId)
+    {
+        $this->ajaxService->updateCashier($billId);
+    }
+
+    public function rateUpdate($billId)
+    {
+        return view('admin.ajax.rate', $this->ajaxService->rateUpdate($billId));
+    }
+
+    public function deleteOrder($orderDetailId, $orderId)
+    {
+        $notification = $this->ajaxService->deleteOrder($orderDetailId, $orderId);
+
+        echo $notification;
+    }
+
+    public function editService($serviceId, $orderDetailId)
+    {
+        $this->ajaxService->editService($serviceId, $orderDetailId);
+    }
+
+    public function editEmployee($employeeId, $orderDetailId)
+    {
+        $this->ajaxService->editEmployee($employeeId, $orderDetailId);
     }
 }

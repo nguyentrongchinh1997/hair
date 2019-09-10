@@ -2,26 +2,35 @@
 
 @section('content')
     <script type="text/javascript">
-       setTimeout(function(){
-           location.reload();
-       },15000);
+        // billId = $('#bill-id').val();
+        // setTimeout(function(){
+        //    location.reload();
+        // },15000);
+        
 
-        var auto_refresh = setInterval(function (){
-            $('#load-input').load("input").fadeIn("slow");
-            }, 2000);
-        var billId = $('#bill-id').val();
-        if (billId != '') {
+        // var auto_refresh = setInterval(function (){
+        //     $('#load-input').load("input").fadeIn("slow");
+        //     }, 2000);
+        // var billId = $('#bill-id').val();
+        // if (billId != '') {
+        //     setTimeout(function(){
+        //         var href = 'danh-gia?step=1';
+        //        window.location.href = href;
+        //    },3000);
+        // }
+    </script>
+    <script type="text/javascript">
+        $(function(){
             setTimeout(function(){
-                var href = 'danh-gia?step=1';
-               window.location.href = href;
-           },3000);
-            // var auto_refresh = setInterval(function (){
-            // $('#load_tweets').load("xac-nhan/hoa-don/?bill_id=" + billId).fadeIn("slow");
-            // }, 3000);
-        }
+               location.reload();
+            },3000);
+            if ($('#bill-id').val() != 0) {
+                window.location.href = 'danh-gia?step=1';
+            }
+        })
     </script>
     <div id="load-input">
-        <input type="hidden" id="bill-id" value="@if(isset($bill)){{ $bill->id }}@else {{ '' }}@endif" name="">
+        <input type="hidden" id="bill-id" value="@if(isset($bill)){{ $bill->id }}@else{{ '0' }}@endif">
     </div>
     <div id="load_tweets">
         <center>

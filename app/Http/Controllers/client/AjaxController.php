@@ -20,4 +20,24 @@ class AjaxController extends Controller
     {
     	return view('client.view_ajax.employee_list', $this->ajaxService->employeeList($type));
     }
+
+    public function updateComment(Request $request, $billId)
+    {
+        $this->ajaxService->updateComment($request, $billId);
+    }
+
+    public function deleteComment(Request $request, $billId)
+    {
+        $this->ajaxService->deleteComment($request, $billId);
+    }
+
+    public function getService($serviceId)
+    {
+        return view('client.view_ajax.service_list', $this->ajaxService->getService($serviceId));
+    }
+
+    public function getSkinner($serviceId)
+    {
+        return view('client.view_ajax.skinner_list', $this->ajaxService->getSkinner($serviceId));
+    }
 }

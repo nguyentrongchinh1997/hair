@@ -3,7 +3,7 @@
 @section('content')
 <div class="row" style="padding-left: 40px; margin-top: 20px">
     <div class="col-lg-6 left">
-        <div class="row" style="background: #f8f8f8; border: 1px solid #e5e5e5; padding: 15px">
+        <div class="col-lg-5" style="background: #f8f8f8; border: 1px solid #e5e5e5; padding: 15px; position: fixed; height: 100%">
             <div class="col-lg-12" style="margin-bottom: 20px">
                 <h2>QUẢN LÝ LỊCH ĐẶT</h2>
                 @if (session('thongbao'))
@@ -12,7 +12,6 @@
                     </div>
                 @endif
             </div>
-
             <div class="col-lg-12" style="margin-bottom: 20px">
                 <form method="post" action="{{ route('order.post.list') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -60,49 +59,8 @@
                     </table>
                 </form>
             </div>
-<!--             <div class="col-lg-12" style="margin-bottom: 20px">
-                <h4>Thống kê lịch đặt</h4>
-                <table style="width: 100%">
-                    <tr>
-                        <td>
-                            <i style="color: red; font-size: 25px" class="fas fa-exclamation-circle"></i> Đặt lịch
-                        </td>
-                        <td>
-                            <i style="color: green; font-size: 25px" class="fas fa-check-circle"></i> Đã check-in
-                        </td>
-                        <td>
-                            <i style="color: #2392ec; font-size: 25px" class="fas fa-thumbs-up"></i> Đã thanh toán
-                        </td>
-                    </tr>
-                </table>
-            </div> -->
-            <!-- <div class="col-lg-12">
-                <ul>
-                    @foreach ($orderList as $order)
-                        <li value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
-                            <table>
-                                <tr>
-                                    <td style="color: #2392ec; font-weight: 700">
-                                        {{ $order->customer->phone }}
-                                    </td>
-                                    <td style="text-align: right; padding-right: 10px" id="status{{ $order->id }}">
-                                        @if ($order->status == config('config.order.status.create'))
-                                            <i style="color: red; font-size: 25px" class="fas fa-exclamation-circle"></i>
-                                        @elseif ($order->status == config('config.order.status.check-in'))
-                                            <i style="color: green; font-size: 25px" class="fas fa-check-circle"></i>
-                                        @else
-                                            <i style="color: #2392ec; font-size: 25px" class="fas fa-thumbs-up"></i>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                            
-                        </li>
-                    @endforeach
-                </ul>
-            </div> -->
             <div class="col-lg-12" style="max-height: 500px; overflow: auto;">
-                <div class="offset-lg-8">
+                <div class="offset-lg-6">
                     <label>Tìm kiếm tại đây:</label>
                     <div class="input-group">
                         <input type="text" id="search-input" class="form-control" placeholder="Nhập số điện thoại...">
@@ -111,25 +69,28 @@
                             <i class="fas fa-search"></i>
                           </button>
                         </div>
-                    </div>
+                    </div><br>
+                    @if ($date == date('d/m/Y'))
+                        <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm lịch đặt</button><br>
+                    @endif
                 </div><br>
                 <table class="table table-bordered">
                   <thead>
                     <tr>
                       <th scope="col">STT</th>
                       <th scope="col">SĐT</th>
-                      <th scope="col">Thợ</th>
+                      <!-- <th scope="col">Thợ</th> -->
                       <th scope="col">Khách hàng</th>
                       <th scope="col">Thời gian hẹn</th>
+                      <th scope="col">Dịch vụ + Thợ</th>
                     </tr>
                   </thead>
                   <tbody class="order-list">
                     @php $stt = 0; @endphp
                     @foreach ($orderList as $order)
-                        <tr style="cursor: pointer;" value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
-                            <th scope="row">{{ ++$stt }}</th>
+                        <tr style="cursor: pointer; @if ($order->status == config('config.order.status.check-in')) {{ 'background: #4c9d2f; color: #fff;' }} @endif" value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
+                            <th scope="row">{{ $order->id }}</th>
                             <td>{{ $order->customer->phone }}</td>
-                            <td>{{ $order->employee->full_name }}</td>
                             <td>
                                
                                 @if ($order->customer->full_name == '')
@@ -142,9 +103,26 @@
                                     </span>
                                 @endif
                             </td>
-                          <td>
-                              {{ $order->time->time }}
-                          </td>
+                            <td>
+                                {{ $order->time->time }}
+                            </td>
+                            <td>
+                                @foreach ($order->orderDetail as $orderDetail)
+                                    @if ($orderDetail->employee_id != '')
+                                        <p>
+                                            <span style="font-weight: bold;">
+                                                »
+                                            </span> {{ $orderDetail->service->name }} + {{ $orderDetail->employee->full_name }}
+                                        </p>
+                                    @else
+                                        <p>
+                                            <span style="font-weight: bold;">
+                                                »
+                                            </span> {{ $orderDetail->service->name }} + <i>Chưa chọn</i>
+                                        </p>
+                                    @endif
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
                   </tbody>
@@ -153,10 +131,125 @@
             
         </div>
     </div>
-    <div class="col-lg-6 detail-order right">
+    <div class="col-lg-6" id="right">
         
     </div>
 </div>
+<div class="modal fade" id="billAdd">
+    <div class="modal-dialog">
+        <div class="modal-content">
+      <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm đơn đặt</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+          <!-- Modal body -->
+            <div class="modal-body">
+                <form onsubmit = "return validateAddOrder()" method="post" action="{{ route('order.add') }}">
+                    @csrf
+                    <table class="add-bill" style="width: 100%">
+                        <tr>
+                            <td>Số điện thoại</td>
+                            <td>:</td>
+                            <td>
+                                <input id="phone" required="required" placeholder="Nhập SĐT..." type="text" class="form-control" name="phone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tên khách hàng</td>
+                            <td>:</td>
+                            <td>
+                                <input placeholder="Nhập tên khách hàng..." type="text" required="required" class="form-control" name="full_name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Dịch vụ
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td style="width: 30%">
+                                            <input id="cut" value="{{ config('config.service.cut') }}" type="checkbox" name="cut[]"> Cắt
+                                        </td>
+                                        <td style="width: 70%">
+                                            <select id="cut-stylist" name="cut[]" class="form-control">
+                                                <option value="0">Chọn thợ</option>
+                                                @foreach ($stylist as $stylist)
+                                                    <option value="{{ $stylist->id }}">
+                                                        {{ $stylist->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="wash" value="{{ config('config.service.wash') }}" type="checkbox" name="wash[]"> Gội
+                                        </td>
+                                        
+                                        <td>
+                                            <select id="cut-skinner" name="wash[]" class="form-control">
+                                                <option value="0">Chọn thợ</option>
+                                                @foreach ($skinner as $skinner)
+                                                    <option value="{{ $skinner->id }}">
+                                                        {{ $skinner->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Thời gian phục vụ
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <select id="time-id" name="time_id" class="form-control">
+                                    <option value="0">
+                                        Chọn thời gian
+                                    </option>
+                                    @foreach ($time as $time)
+                                        <option value="{{ $time->id }}">
+                                            {{ $time->time }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày thực hiện</td>
+                            <td>:</td>
+                            <td>
+                                <input required="required" value="{{ date('Y-m-d') }}" type="date" class="form-control" name="date">
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input class="btn btn-primary" type="submit" value="Thêm" name="">
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </form>
+            </div>
+          <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
 
-<hr>
+        </div>
+  </div>
+</div>
 @endsection

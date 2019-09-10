@@ -95,9 +95,13 @@ class AdminController extends Controller
 /*sửa nhân viên*/
     public function employeeEdit(Request $request, $id)
     {
-        $this->adminService->employeeEdit($request, $id);
+        $check = $this->adminService->employeeEdit($request, $id);
         
-        return back()->with('thongbao', 'Sửa thành công');
+        if ($check == 0) {
+            return back()->with('error', 'Số điện thoại đã bị trùng');
+        } else {
+            return back()->with('thongbao', 'Sửa thành công');
+        }
     }
 /*end*/
 
@@ -145,27 +149,27 @@ class AdminController extends Controller
     }
 /*end*/
 
-    public function getRate($billId)
-    {
-        $rate = $this->adminService->getRate($billId);
+    // public function getRate($billId)
+    // {
+    //     $rate = $this->adminService->getRate($billId);
 
-        if ($rate->rate_id != '') {
-            echo $rate->rate->name;
-        } else {
-            echo "<i>Đợi đánh giá</i>";
-        }
-    }
+    //     if ($rate->rate_id != '') {
+    //         echo $rate->rate->name;
+    //     } else {
+    //         echo "<i>Đợi đánh giá</i>";
+    //     }
+    // }
 
-    public function getComment($billId)
-    {
-        $comment = $this->adminService->getComment($billId);
-        echo $comment->comment . "<br>";
-    }
+    // public function getComment($billId)
+    // {
+    //     $comment = $this->adminService->getComment($billId);
+    //     echo $comment->comment . "<br>";
+    // }
 
-    public function priceTotal($billId)
-    {
-        echo $this->adminService->priceTotal($billId);
-    }
+    // public function priceTotal($billId)
+    // {
+    //     echo $this->adminService->priceTotal($billId);
+    // }
 
     public function getRateList()
     {
@@ -184,5 +188,51 @@ class AdminController extends Controller
         $this->adminService->pay($billId, $request->price_service);
 
         return back();
+    }
+
+    public function payView($billId)
+    {
+        return view('admin.pages.bill.bill', $this->adminService->payView($billId));
+    }
+
+    public function finish($billId)
+    {
+        $this->adminService->finish($billId);
+
+        return back();
+    }
+
+    public function addBill(Request $request)
+    {
+        $this->adminService->addBill($request);
+
+        return back();
+    }
+
+    public function salary($employeeId)
+    {
+        return view('admin.pages.employee.salary_list', $this->adminService->salary($employeeId));
+    }
+
+    public function postSalary(Request $request, $employeeId)
+    {
+        return view('admin.pages.employee.salary_list', $this->adminService->postSalary($employeeId, $request));
+    }
+
+    public function customerListview()
+    {
+        return view('admin.pages.customer.list', $this->adminService->customerListview());
+    }
+
+    public function postDeposit(Request $request)
+    {
+        $this->adminService->postDeposit($request);
+
+        return back()->with('thongbao', 'Nạp tiền thành công');
+    }
+
+    public function addOrder(Request $request)
+    {
+        $this->adminService->addOrder($request);
     }
 }

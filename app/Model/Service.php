@@ -15,7 +15,7 @@ class Service extends Model
 
     public function employee()
     {
-    	return $this->hasMany('App\Model\Employee', 'type', 'id');
+    	return $this->hasMany(Employee::class);
     }
 
     public function order()
@@ -26,5 +26,10 @@ class Service extends Model
     public function billDetail()
     {
         return $this->hasMany(BillDetail::class);
+    }
+
+    public function orderDetail()
+    {
+        return $this->hasMany(OrderDetail::class);
     }
 }

@@ -7,12 +7,11 @@
 		<link rel="stylesheet" type="text/css" href="{{ asset('/css/client/style.css') }}">
 		<link rel="stylesheet" href="{{ asset('/font/fontawesome-free-5.10.0-web/css/all.css') }}" crossorigin="anonymous">
 		<script src="{{ asset('/js/jquery.min.js') }}"></script>
-
   		<script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
-        
-        <script src="{{ asset('/js/client/js.js') }}"></script>
-
-
+        <script src="{{ asset('/js/client/client.js') }}"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ asset('/css/client/slick.css') }}">
+        <script src="{{ asset('/js/client/slick.js') }}"></script>
 	</head>
 	<body>
 		<header>
@@ -47,6 +46,11 @@
 							<a href="">
 								<li>TUYỂN DỤNG</li>
 							</a>
+							@if (auth('customers')->check())
+						        <a href="" style="float: right;">
+									<li>Số dư: {{ auth('customers')->user()->balance }}</li>
+								</a>
+						    @endif
 						</ul>
 					</div>
 				</div>

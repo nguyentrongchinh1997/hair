@@ -6,12 +6,8 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/font/fontawesome-free-5.10.0-web/css/all.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/admin/style.css') }}">
-        <script src="{{ asset('/js/jquery.min.js') }}"></script>
-
-        <script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
-        
-        <script src="{{ asset('/js/admin/js.js') }}"></script>
-
+        <link rel="stylesheet" type="text/css" href="{{ asset('/css/admin/choosen.css') }}">  
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 
     </head>
     <body>
@@ -19,35 +15,33 @@
             <div class="row menu">
                 <div class="col-lg-12">
                     <ul>
-                        <a href="{{ route('admin.home') }}">
-                            <li>
-                                Trang chủ
-                            </li>
-                        </a>
-                        
-                        <a href="{{ route('service.list') }}">
-                            <li>
-                                Quản lý dịch vụ
-                            </li>
-                        </a>
-                
-                        <a href="{{ route('employee.list') }}">
-                            <li>
-                                Quản lý nhân viên
-                            </li>
-                        </a>
                         <a href="{{ route('order.list') }}">
-                            <li>
+                            <li @if(Request::is('admin/dat-lich/danh-sach')) {{"class=menu-active"}} @endif>
                                 Quản lý đặt lịch
                             </li>
                         </a>
                         <a href="{{ route('bill.list') }}">
-                            <li>
+                            <li @if(Request::is('admin/hoa-don/danh-sach')) {{"class=menu-active"}} @endif>
                                 Quản lý hóa đơn
                             </li>
                         </a>
+                        <a href="{{ route('service.list') }}">
+                            <li @if(Request::is('admin/dich-vu/danh-sach')) {{"class=menu-active"}} @endif>
+                                Bảng giá dịch vụ
+                            </li>
+                        </a>
+                        <a href="{{ route('customer.list') }}">
+                            <li @if(Request::is('admin/khach-hang/danh-sach')) {{"class=menu-active"}} @endif>
+                                Quản lý khách hàng
+                            </li>
+                        </a>
+                        <a href="{{ route('employee.list') }}">
+                            <li @if(Request::is('admin/nhan-vien/danh-sach')) {{"class=menu-active"}} @endif>
+                                Quản lý nhân viên
+                            </li>
+                        </a>
                         <a href="{{ route('rate.list') }}">
-                            <li>
+                            <li @if(Request::is('admin/danh-gia/danh-sach')) {{"class=menu-active"}} @endif>
                                 Quản lý đánh giá
                             </li>
                         </a>
@@ -57,7 +51,7 @@
                                     Đăng xuất
                                 </li>
                             </a>
-                            <a style="float: right;" href="{{ route('employee.list') }}">
+                            <a style="float: right;">
                                 <li>
                                     {{ auth()->user()->name }}
                                 </li>
@@ -68,7 +62,7 @@
                                     Đăng xuất
                                 </li>
                             </a>
-                            <a style="float: right;" href="{{ route('employee.list') }}">
+                            <a style="float: right;">
                                 <li>
                                     {{ auth('employees')->user()->full_name }}
                                 </li>

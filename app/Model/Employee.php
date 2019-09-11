@@ -50,4 +50,9 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(OrderDetail::class);
     }
+
+    public function billDetailAssistant()
+    {
+        return $this->hasMany('App\Model\BillDetail', 'assistant_id', 'id');
+    }
 }

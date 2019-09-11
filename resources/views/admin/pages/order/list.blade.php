@@ -60,7 +60,13 @@
                 </form>
             </div>
             <div class="col-lg-12" style="max-height: 500px; overflow: auto;">
-                <div class="offset-lg-6">
+                <div class="row">
+                <div class="col-lg-6" style="padding: 2px 0px 0px 0px;">
+                    <span style="padding: 2px 13px; border: 1px solid #ccc; background: #FFF; margin-top: 10px; margin-right: 10px"></span> Chưa check-in <br><br>
+                    <span style="padding: 2px 13px; background: #4c9d2f; margin-top: 10px; margin-right: 10px"></span> Đã check-in <br><br>
+                    <span style="padding: 2px 13px; background: #007bff; margin-right: 10px"></span> Hoàn thành <br>
+                </div>
+                <div class="col-lg-6">
                     <label>Tìm kiếm tại đây:</label>
                     <div class="input-group">
                         <input type="text" id="search-input" class="form-control" placeholder="Nhập số điện thoại...">
@@ -71,10 +77,11 @@
                         </div>
                     </div><br>
                     @if ($date == date('d/m/Y'))
-                        <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm lịch đặt</button><br>
+                        <button style="float: right; margin-bottom: 10px" type="button" class="btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm lịch đặt</button>
                     @endif
-                </div><br>
-                <table class="table table-bordered">
+                </div>
+                </div>
+                <table class="table table-bordered" style="margin-top: 20px">
                   <thead>
                     <tr>
                       <th scope="col">STT</th>
@@ -88,7 +95,14 @@
                   <tbody class="order-list">
                     @php $stt = 0; @endphp
                     @foreach ($orderList as $order)
-                        <tr style="cursor: pointer; @if ($order->status == config('config.order.status.check-in')) {{ 'background: #4c9d2f; color: #fff;' }} @endif" value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
+                        <tr 
+                            style="cursor: pointer; 
+                                @if ($order->status == config('config.order.status.check-in')) 
+                                    {{ 'background: #4c9d2f; color: #fff;' }} 
+                                @elseif ($order->status == config('config.order.status.check-out')) 
+                                    {{ 'background: #007bff; color: #fff;' }} 
+                                @endif" 
+                            value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
                             <th scope="row">{{ $order->id }}</th>
                             <td>{{ $order->customer->phone }}</td>
                             <td>
@@ -173,10 +187,10 @@
                                 <table>
                                     <tr>
                                         <td style="width: 30%">
-                                            <input id="cut" value="{{ config('config.service.cut') }}" type="checkbox" name="cut[]"> Cắt
+                                            <input id="cut" value="{{ config('config.service.cut') }}" type="checkbox" name="service[]"> Cắt
                                         </td>
                                         <td style="width: 70%">
-                                            <select id="cut-stylist" name="cut[]" class="form-control">
+                                            <select id="cut-stylist" name="employee[]" class="form-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($stylist as $stylist)
                                                     <option value="{{ $stylist->id }}">
@@ -188,11 +202,11 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input id="wash" value="{{ config('config.service.wash') }}" type="checkbox" name="wash[]"> Gội
+                                            <input id="wash" value="{{ config('config.service.wash') }}" type="checkbox" name="service[]"> Gội
                                         </td>
                                         
                                         <td>
-                                            <select id="cut-skinner" name="wash[]" class="form-control">
+                                            <select id="cut-skinner" name="employee[]" class="form-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($skinner as $skinner)
                                                     <option value="{{ $skinner->id }}">
@@ -225,14 +239,6 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Ngày thực hiện</td>
-                            <td>:</td>
-                            <td>
-                                <input required="required" value="{{ date('Y-m-d') }}" type="date" class="form-control" name="date">
-                            </td>
-                        </tr>
-                        
                         <tr>
                             <td></td>
                             <td></td>

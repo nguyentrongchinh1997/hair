@@ -16,12 +16,10 @@
                     $(this).find('.check').hide();
                 }
             })
-            // $('.checkbox').click(function(){
-            //     $(this).find('.check').show();
-            // })
-            setTimeout(function(){
-               window.location.href='rate';
-            }, 5000);
+
+            // setTimeout(function(){
+            //    window.location.href='rate';
+            // }, 5000);
         })
     </script>
     <style type="text/css">
@@ -36,6 +34,15 @@
         }
         p{
             margin-bottom: 0px;
+            font-size: 30px;
+        }
+        .checkbox{
+            width: 35px; height: 35px; 
+            border: 1px solid #ccc; 
+            position: relative;
+        }
+        .checkbox i {
+            position: absolute; top: 4px; left: 4px; font-size: 25px; color: #000; display: none;
         }
     </style>
     <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
@@ -49,9 +56,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment " value="Tất cả đều tốt, không có góp ý gì;" type="checkbox" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -66,9 +73,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment" type="checkbox" value="Chất lượng cắt và kiểu tóc;" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -85,9 +92,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment " value="Thái độ phục vụ;" type="checkbox" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -102,9 +109,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment " value="Thời gian chờ đợi;" type="checkbox" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -121,9 +128,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment " value="Nhân viên bớt làm ồn trong khi phục vụ;" type="checkbox" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -138,9 +145,9 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <div class="checkbox" style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
+                                        <div class="checkbox">
                                             <input class="comment " value="Cảm thấy bị làm phiền bởi việc tư vấn dịch vụ/bán hàng;" type="checkbox" name="">
-                                            <i id="check1" style="position: absolute; top: 3px; left: 3px; font-size: 13px; color: #000; display: none;" class="fas fa-check check"></i>
+                                            <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
                                     <td>
@@ -152,7 +159,9 @@
                     </td>
                 </tr>
             </table>
-            <p style="color: #ff1500">Tiến trình sẽ tự động hoàn tất sau 5s</p>
+            <a href="" class="btn btn-primary" style="margin-top: 20px; font-size: 30px">
+                XÁC NHẬN
+            </a>
         </center>
     </div>
 @endsection

@@ -105,6 +105,9 @@ class AdminService
         $day = $request->day;
         $month = $request->month;
         $year = $request->year;
+        $stylist = $this->employeeModel->where('service_id', config('config.service.cut'))->get();
+        $skinner = $this->employeeModel->where('service_id', config('config.service.wash'))->get();
+
         if ($month < 10) {
             $month = '0'.$month;
         }
@@ -113,6 +116,7 @@ class AdminService
         }
         $date = $year . '-' . $month . '-' . $day;
         $orderList = $this->orderModel->where('date', $date)->orderBy('created_at', 'desc')->paginate(20);
+        $time = $this->timeModel->all();
 
         $data = [
             'orderList' => $orderList,
@@ -120,6 +124,9 @@ class AdminService
             'month' => $month,
             'year' => $year,
             'date' => $day . '/' . $month . '/' . $year,
+            'stylist' => $stylist,
+            'skinner' => $skinner,
+            'time' => $time,
         ];
 
         return $data;
@@ -134,6 +141,7 @@ class AdminService
         $bill = $this->billModel
                     ->where('status', '>', config('config.order.status.create'))
                     ->orderBy('created_at', 'DESC')
+                    ->with('billDetail')
                     ->with('order')
                     ->get();
         $serviceList = $this->serviceModel->all();
@@ -415,15 +423,25 @@ class AdminService
         return $payPrice;
     }
 
-    public function payView($billId) {
-        $rate = $this->billModel->findOrFail($billId);;
-        $comment = $this->billModel->findOrFail($billId);
+    public function payView($billId, $request) {
+        $sale = $request->get('sale');
+        if ($request->get('saleDetail') == '0') {
+            $saleDetail = '';
+        } else {
+            $saleDetail = $request->get('saleDetail');
+        }
+        // $bill = $this->billModel->findOrFail($billId);;
+        // $comment = $this->billModel->findOrFail($billId);
         $sum = $this->billDetailModel->where('bill_id', $billId)->sum('money');
         $bill = $this->billModel->findOrFail($billId);
         $customer = $this->customerModel->findOrFail($bill->customer_id);
         $serviceListUse = $this->billDetailModel->where('bill_id', $billId)->get();
             $balance = $customer->balance;
         $total = $sum - $bill->sale; // số tiền phải trả
+
+        $bill->sale = str_replace(',', '', $sale);
+        $bill->sale_detail = $saleDetail;
+        $bill->save();
 
         if ($balance >= $total) {
             $payPrice = $customer->balance - $total;
@@ -434,8 +452,8 @@ class AdminService
         }
         $data = [
             'serviceListUse' => $serviceListUse,
-            'rate' => $rate,
-            'comment' => $comment,
+            'rate' => $bill,
+            'comment' => $bill,
             'payPrice' => $payPrice,
             'billId' => $billId,
             'bill' => $bill,
@@ -625,14 +643,15 @@ class AdminService
     public function addOrder($request)
     {
         $phone = $request->phone;
-        $cutService = $request->cut;
-        $washService = $request->wash;
+        $service = $request->service;
+        $employee = $request->employee;
         $time_id = $request->time_id;
-        $date = $request->date;
+        $date = date('Y-m-d');
         $checkPhone = $this->customerModel->where('phone', $phone)->first();
 
         if (isset($checkPhone)) {
             $fullName = $checkPhone->full_name;
+            $customerId = $checkPhone->id;
         } else {
             $fullName = $request->full_name;
             $customerId = $this->customerModel->insertGetId(
@@ -644,23 +663,24 @@ class AdminService
             );
         }
 
-        $this->orderModel->create(
+        $orderId = $this->orderModel->insertGetId(
             [
-                'customer_id' => $customer_id,
+                'customer_id' => $customerId,
                 'date' => $date,
                 'time_id' => $time_id,
                 'status' => config('config.order.status.create'),
+                'created_at' => date('Y-m-d H:i:s'),
             ]
         );
 
-        if (count($washService) > 1) {  
-            foreach ($wash as $key => $wash) {
-                $this->orderDetailModel->create(
-                    [
-                        'service_id' => $wash
-                    ]
-                );
-            }
+        for ($i = 0; $i < count($service); $i++) {
+            $this->orderDetailModel->create(
+                [
+                    'service_id' => $service[$i],
+                    'employee_id' => $employee[$i],
+                    'order_id' => $orderId,
+                ]
+            );
         }
     }
 }

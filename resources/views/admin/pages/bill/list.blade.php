@@ -56,54 +56,79 @@
                         </tr>
                     </table>
                 </form><br>
-                <div class="offset-lg-6">
-                    <label>Tìm kiếm tại đây:</label>
-                    <div class="input-group">
-                        <input type="text" id="key-search" class="form-control" placeholder="Nhập số điện thoại...">
-                        <div class="input-group-append">
-                          <button class="btn btn-secondary" type="button">
-                            <i class="fas fa-search"></i>
-                          </button>
-                        </div>
+                <div class="row">
+                    <div class="col-lg-6" style="padding: 2px 0px 0px 0px;">
+                        <span style="padding: 2px 13px; border: 1px solid #ccc; background: #FFF; margin-top: 10px; margin-right: 10px"></span> Chưa thanh toán <br><br>
+                        <span style="padding: 2px 13px; background: #007bff; margin-right: 10px"></span> Đã thanh toán <br>
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Tìm kiếm tại đây:</label>
+                        <div class="input-group">
+                            <input type="text" id="key-search" class="form-control" placeholder="Nhập số điện thoại...">
+                            <div class="input-group-append">
+                              <button class="btn btn-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                              </button>
+                            </div>
+                        </div><br>
+                        @if ($date == date('Y-m-d'))
+                            <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm hóa đơn</button><br>
+                        @endif
                     </div><br>
-                    @if ($date == date('Y-m-d'))
-                        <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm hóa đơn</button><br>
-                    @endif
-                </div><br>
-                <table class="table table-bordered">
+                </div>
+                <table class="table table-bordered" style="margin-top: 20px">
                     <thead>
                         <tr>
                             <th scope="col">STT</th>
                             <th scope="col">SĐT</th>
                             <th scope="col">Khách hàng</th>
                             <th scope="col">Trạng thái</th>
+                            <th scope="col">Số tiền</th>
                         </tr>
                     </thead>
                     <tbody class="order-list">
-                        @php $stt = 0; @endphp
+                        @php $stt = 0; $total = 0;@endphp
                         @foreach ($billList as $bill)
                             @if ($bill->order->date == $date)
-                                <a href="">
-                                    <tr style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
-                                        <td>{{ ++$stt }}</td>  
-                                                 
-                                        <td>
-                                            {{ $bill->customer->phone }}
-                                        </td>
-                                        <td>
-                                            {{ $bill->customer->full_name }}
-                                        </td>    
-                                        <td>
-                                            @if ($bill->status == config('config.order.status.check-in'))
-                                                <span style="color: red">Chưa thanh toán</span>
-                                            @else
-                                                <span style="color: green">Đã thanh toán</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </a>
+                                <tr style="cursor: pointer; @if ($bill->status == config('config.order.status.check-out')) {{ 'background: #007bff; color: #fff' }} @endif" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
+                                    <td>{{ $bill->id }}</td>  
+                                             
+                                    <td>
+                                        {{ $bill->customer->phone }}
+                                    </td>
+                                    <td>
+                                        {{ $bill->customer->full_name }}
+                                    </td>    
+                                    <td>
+                                        @if ($bill->status == config('config.order.status.check-in'))
+                                            <span style="color: red">Chưa thanh toán</span>
+                                        @else
+                                            <span style="@if ($bill->status == config('config.order.status.check-out')) {{ 'color: #fff' }} @endif">Đã thanh toán</span>
+                                        @endif
+                                    </td>
+                                    <td style="text-align: right; font-weight: bold;">
+                                        @php $tong = 0; @endphp
+                                        @foreach ($bill->billDetail as $servicePrice)
+                                            @php 
+                                                $tong = $tong + $servicePrice->money; 
+                                            @endphp
+                                        @endforeach
+                                        @php 
+                                            $total = $total + $tong;
+                                        @endphp
+                                        {{ number_format($tong) }}<sup>đ</sup>
+                                    </td>
+                                </tr>
                             @endif
                         @endforeach
+                        <tr>
+                            <td style="text-align: right; font-size: 25px" colspan="4">
+                                TỔNG
+                            </td>
+                            <td style="text-align: right; font-size: 25px">
+                                {{ number_format($total) }}<sup>đ</sup>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

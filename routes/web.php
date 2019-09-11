@@ -86,11 +86,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
 
         Route::get('them/{billId}/{employeeId}/{price_total}/{number}', 'admin\AjaxController@pay');
 
-        Route::get('dich-vu/them/{billId}/{serviceId}/{employeeID}/{money}', 'admin\AjaxController@serviceAdd');
+        Route::get('dich-vu/them/{billId}/{serviceId}/{employeeID}/{assistantId}/{money}', 'admin\AjaxController@serviceAdd');
 
         Route::get('xoa/dich-vu/{billDetailId}', 'admin\AjaxController@serviceDelete');
 
-        Route::get('dich-vu-khac/them/{billId}/{serviceId}/{employeeID}/{money}/{percent}', 'admin\AjaxController@serviceOtherAdd');
+        Route::get('dich-vu-khac/them/{billId}/{serviceId}/{employeeID}/{assistantId}/{money}/{percent}', 'admin\AjaxController@serviceOtherAdd');
 
         Route::post('thanh-toan/{billId}', 'admin\AdminController@pay')->name('bill.pay');
         Route::get('thanh-toan/{billID}', 'admin\AdminController@payView');

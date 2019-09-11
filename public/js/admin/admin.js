@@ -137,6 +137,14 @@ function validateAddOrder()
       alert('Chưa chọn thợ cắt');
 
       return false;
+  } else if (cutLength == 0 && stylist != 0) {
+      alert('Chư chọn dịch vụ cắt');
+
+      return false;
+  } else if (washLength == 0 && skinner != 0) {
+      alert('Chưa chọn dịch vụ gội');
+
+      return false;
   } else if (timeId == 0) {
       alert('Chưa chọn thời gian phục vụ');
 

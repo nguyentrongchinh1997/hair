@@ -60,9 +60,11 @@ class AjaxController extends Controller
         echo "<h3 style='color: #007bff'>Thành toán thành công</h3>";
     }
 
-    public function serviceAdd($billId, $serviceId, $employeeId, $money)
+    public function serviceAdd($billId, $serviceId, $employeeId, $assistantId, $money)
     {
-        echo $this->ajaxService->serviceAdd($billId, $serviceId, $employeeId, $money);
+        $data = $this->ajaxService->serviceAdd($billId, $serviceId, $employeeId, $assistantId, $money);
+
+        return view('admin.ajax.add_service', ['data' => $data]);
     }
 
     public function serviceDelete($billDetailId)
@@ -70,9 +72,11 @@ class AjaxController extends Controller
         echo $this->ajaxService->serviceDelete($billDetailId);
     }
 
-    public function serviceOtherAdd($billId, $serviceId, $employeeId, $money, $percent)
+    public function serviceOtherAdd($billId, $serviceId, $employeeId, $assistantId, $money, $percent)
     {
-        echo $this->ajaxService->serviceOtherAdd($billId, $serviceId, $employeeId, $money, $percent);
+        $data = $this->ajaxService->serviceOtherAdd($billId, $serviceId, $employeeId, $assistantId, $money, $percent);
+        
+        return view('admin.ajax.add_service_other', ['data' => $data]);
     }
 
     public function updateSale(Request $request, $billId)

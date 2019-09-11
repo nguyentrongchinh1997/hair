@@ -161,7 +161,9 @@
                         <th>Dịch vụ</th>
                         <th>Thợ phục vụ</th>
                         <th>Giá</th>
-                        <th>Xóa</th>
+                        @if ($orderDetail->status == config('config.order.status.check-in'))
+                            <th>Xóa</th>
+                        @endif
                     </tr>
                     @php $stt = 0; @endphp
                     @foreach ($orderDetail->orderDetail as $serviceOrder)
@@ -201,19 +203,23 @@
                             <td style="text-align: right;">
                                 {{ number_format($serviceOrder->service->price) }}<sup>đ</sup>
                             </td>
-                            <td style="text-align: center; color: red">
-                                <a style="color: red" onclick="return deleteService({{ $serviceOrder->id }})">
-                                    <i style="cursor: pointer;"  class="fas fa-times"></i>
-                                </a>
-                            </td>
+                            @if ($orderDetail->status == config('config.order.status.create'))
+                                <td style="text-align: center; color: red">
+                                    <a style="color: red" onclick="return deleteService({{ $serviceOrder->id }})">
+                                        <i style="cursor: pointer;"  class="fas fa-times"></i>
+                                    </a>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                     <input type="hidden" value="{{ $tong }}" name="">
 
                 </table>
-                <center class="test" style="margin-top: 30px">
-                    <input style="width: 140px; height: 50px; font-size: 20px" type="submit" value="CHECK-IN" class="btn btn-primary" name="">
-                </center>
+                @if ($orderDetail->status == config('config.order.status.create'))
+                    <center class="test" style="margin-top: 30px">
+                        <input style="width: 140px; height: 50px; font-size: 20px" type="submit" value="CHECK-IN" class="btn btn-primary" name="">
+                    </center>
+                @endif
             </form>
         </div>
     </div>

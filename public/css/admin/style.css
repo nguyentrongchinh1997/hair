@@ -67,6 +67,9 @@
 	background: #d9edfe !important;
 	color: #000 !important;
 }
+.active span{
+	color: #000 !important;
+}
 .detail-order table tr td {
 	padding: 15px 0px;
 }

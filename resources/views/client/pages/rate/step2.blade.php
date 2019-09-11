@@ -15,25 +15,12 @@
         table{
             margin-top: 50px
         }
-        /*@media screen and (min-width: 425px) and (max-width: 768px) {
-            .rate{
-                font-size: 80px;
-            }
-        }
-        @media screen and (max-width: 425px) {
-            table span{
-                font-size: 13px;
-            }
-            .rate{
-                font-size: 50px;
-            }
-        }*/
     </style>
     <script type="text/javascript">
         $(function(){
-            setTimeout(function(){
-               window.location.href='danh-gia?step=3';
-            },10000);
+            // setTimeout(function(){
+            //    window.location.href='danh-gia?step=3';
+            // },10000);
             $('.rate').click(function(){
                 $('.rate').css({"color":"#ccc"});
                 $(this).css({"color":"yellow"});

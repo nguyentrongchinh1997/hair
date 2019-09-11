@@ -15,6 +15,7 @@ class BillDetail extends Model
         'money',
         'other_service',
         'date',
+        'assistant_id',
         'created_at',
         'updated_at',
     ];
@@ -32,5 +33,10 @@ class BillDetail extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function employeeAssistant()
+    {
+        return $this->belongsTo('App\Model\Employee', 'assistant_id', 'id');
     }
 }

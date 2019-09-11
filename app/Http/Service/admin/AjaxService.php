@@ -145,28 +145,38 @@ class AjaxService
         }
     }
 
-    public function serviceAdd($billId, $serviceId, $employeeId, $money)
+    public function serviceAdd($billId, $serviceId, $employeeId, $assistantId, $money)
     {
         $bill = $this->billModel->findOrFail($billId);
+
+        if ($assistantId == 0) {
+            $assistantId = NULL;
+        }
 
         if ($bill->status != config('config.order.status.check-out')) {
             $id = $this->billDetailModel->insertGetId([
                 'bill_id' => $billId,
                 'service_id' => $serviceId,
                 'employee_id' => $employeeId,
+                'assistant_id' => $assistantId,
                 'money' => $money,
                 'date' => date('Y-m-d'),
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-            return $id;
+            return $this->billDetailModel->findOrFail($id);
         } else {
             return '';
         }
     }
 
-    public function serviceOtherAdd($billId, $serviceName, $employeeId, $money, $percent)
+    public function serviceOtherAdd($billId, $serviceName, $employeeId, $assistantId, $money, $percent)
     {
         $bill = $this->billModel->findOrFail($billId);
+
+        if ($assistantId == 0) {
+            $assistantId = NULL;
+        }
 
         if ($bill->status != config('config.order.status.check-out')) {
             $convertMoney = str_replace(',', '', $money);
@@ -174,12 +184,14 @@ class AjaxService
                 'bill_id' => $billId,
                 'other_service' => $serviceName,
                 'employee_id' => $employeeId,
+                'assistant_id' => $assistantId,
                 'money' => $convertMoney,
                 'other_service_percent' => $percent,
                 'date' => date('Y-m-d'),
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-            return $id;
+            return $this->billDetailModel->findOrFail($id);
         } else {
             return '';
         }

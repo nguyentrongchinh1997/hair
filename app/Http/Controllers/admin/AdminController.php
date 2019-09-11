@@ -190,9 +190,9 @@ class AdminController extends Controller
         return back();
     }
 
-    public function payView($billId)
+    public function payView(Request $request, $billId)
     {
-        return view('admin.pages.bill.bill', $this->adminService->payView($billId));
+        return view('admin.pages.bill.bill', $this->adminService->payView($billId, $request));
     }
 
     public function finish($billId)
@@ -234,5 +234,7 @@ class AdminController extends Controller
     public function addOrder(Request $request)
     {
         $this->adminService->addOrder($request);
+
+        return back()->with('thongbao', 'Thêm lịch thành công');
     }
 }

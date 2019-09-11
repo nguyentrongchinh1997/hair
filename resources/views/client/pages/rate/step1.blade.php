@@ -19,6 +19,11 @@
         }
     })
 </script>
+<style type="text/css">
+    table tr td {
+        font-size: 30px;
+    }
+</style>
 <div class="container">
     <input type="hidden" id="bill-id" value="@if(isset($bill)){{ $bill->id }}@else{{ '0' }}@endif">
     <div id="load-input">
@@ -66,7 +71,7 @@
             @if ($bill->sale != '')
                 <tr>
                     <td>{{ $sothutu + 1 }}. Được tặng</td>
-                    <td style="text-align: right;">
+                    <td style="text-align: right; color: red">
                         {{ number_format($bill->sale) }} Đ
                     </td>
                 </tr>

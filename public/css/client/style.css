@@ -160,19 +160,19 @@ footer .time-word {
 .employee-list{
 	height: 120px;
 	overflow: auto;
-	background: #fafafa;
+	/*background: #fafafa;*/
 }
 .stylist {
 	border: 1px solid #e5e5e5;
-	padding: 10px;
-	background: #fafafa;
+	/*padding: 10px;*/
+	/*background: #fafafa;*/
 	height: 120px;
 	overflow: auto;
 }
 .skinner {
 	border: 1px solid #e5e5e5;
 	background: #fafafa;
-	padding: 10px;
+	/*padding: 10px;*/
 	height: 120px;
 	overflow: auto;
 }

@@ -20,14 +20,14 @@ class ClientController extends Controller
 
     public function homeView()
     {
-    	return view('client.pages.home', $this->clientService->timeList());
+    	return view('client.pages.home');
     }
 
     public function postPhone(Request $request)
     {
         $this->clientService->postPhone($request);
 
-        return redirect()->route('order.view');
+        return redirect()->route('order.view', ['phone' => $request->phone]);
     }
 
     public function order(Request $request)
@@ -100,9 +100,9 @@ class ClientController extends Controller
         $this->clientService->updateRate($rate, $billId);
     }
 
-    public function orderView()
+    public function orderView($phone)
     {
-        return view('client.pages.order.book', $this->clientService->timeList());
+        return view('client.pages.order.book', $this->clientService->timeList($phone));
     }
 
     public function book(Request $request)
@@ -110,5 +110,12 @@ class ClientController extends Controller
         $this->clientService->book($request);
 
         return back();
+    }
+
+    public function logout()
+    {
+        auth('customers')->logout();
+
+        return back()->route('client.home');
     }
 }

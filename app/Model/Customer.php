@@ -22,7 +22,6 @@ class Customer extends Authenticatable
         'password',
     ];
 
-
     public function order()
     {
     	return $this->hasMany(Order::class);
@@ -32,5 +31,14 @@ class Customer extends Authenticatable
     {
     	return $this->hasMany(Bill::class);
     }
-}
 
+    public function card()
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    public function cardDetail()
+    {
+        return $this->hasMany(CardDetail::class);
+    }
+}

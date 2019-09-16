@@ -1,15 +1,21 @@
-<tr id="row{{ $data->id }}"> 
-    <td>{{ $data->service->name }}</td> 
-    <td>{{ $data->employee->full_name }}</td>
+<tr id="row{{ $billDetail->id }}"> 
+    <td>{{ $billDetail->service->name }}</td> 
+    <td>{{ $billDetail->employee->full_name }}</td>
     <td>
-        @if ($data->assistant_id != '')
-            {{ $data->employeeAssistant->full_name }}
+        @if ($billDetail->assistant_id != '')
+            {{ $billDetail->employeeAssistant->full_name }}
         @endif
     </td>
     <td style="text-align: right">
-        {{ number_format($data->money) }}<sup>đ</sup>
+        {{ number_format($billDetail->sale_money) }}<sup>đ</sup>
     </td>
     <td>
-        <i onclick="xoa({{ $data->id }})" style="cursor: pointer; color: red" class="fas fa-times" id="close{{ $data->id }}"></i>
+        @if ($billDetail->sale_money < $billDetail->money)
+            tặng <b>{{ number_format($billDetail->money - $billDetail->sale_money) }}<sup>đ</sup></b><br>
+            <span style="color: red">({{ $cardName }})</span>
+        @endif
+    </td>
+    <td>
+        <i onclick="xoa({{ $billDetail->id }})" style="cursor: pointer; color: red" class="fas fa-times" id="close{{ $billDetail->id }}"></i>
     </td>
 </tr>

@@ -30,15 +30,17 @@ class ClientService
         $this->orderDetailModel = $orderDetail;
     }
 
-    public function timeList()
+    public function timeList($phone)
     {
         $timeList = $this->timeModel->all();
         $listStylist = $this->employeeModel
                             ->where('service_id', config('config.employee.type.skinner'))
-                            ->orWhere('service_id', config('config.employee.type.stylist'))->get();
+                            ->orWhere('service_id', config('config.employee.type.stylist'))
+                            ->get();
         $serviceList = $this->serviceModel->where('id', '<=', 2)->get();
         $hairCut = $this->serviceModel->findOrFail(config('config.service.cut'));
         $wash = $this->serviceModel->findOrFail(config('config.service.wash'));
+
         if (auth('customers')->check()) {
             $nearestOrder = $this->orderModel->where('customer_id', auth('customers')->user()->id)->orderBy('id', 'DESC')->take(1)->first();
         }
@@ -46,6 +48,7 @@ class ClientService
         if (isset($nearestOrder)) {
             $employee = $this->employeeModel->where('service_id', $nearestOrder->service_id)->get();
             $data = [
+                'phone' => $phone,
                 'hairCut' => $hairCut,
                 'wash' => $wash,
                 'nearestOrder' => $nearestOrder,
@@ -57,6 +60,7 @@ class ClientService
         } else {
             $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
             $data = [
+                'phone' => $phone,
                 'hairCut' => $hairCut,
                 'wash' => $wash,
                 'nearestOrder' => '',
@@ -101,12 +105,33 @@ class ClientService
 
     public function book($request)
     {
+        $phone = $request->phone;
         $service = $request->service;
         $stylist = $request->stylist;
+        if ($stylist == NULL) {
+            $requestInsert = config('config.request.no');
+        } else {
+            $requestInsert = config('config.request.yes');
+        }
+        $checkPhone = $this->customerModel->where('phone', $phone)->first();
+
+        if (isset($checkPhone)) {
+            $customerId = $checkPhone->id;
+        } else {
+            $customerId = $this->customerModel->insertGetId(
+                [
+                    'phone' => $phone,
+                    'password' => bcrypt($phone),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]
+            );
+        }
+
         $orderId = $this->orderModel->insertGetId([
-            'customer_id' => auth('customers')->user()->id,
+            'customer_id' => $customerId,
             'time_id' => $request->time,
             'date' => date('Y-m-d'),
+            'request' => $requestInsert,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
         for ($i = 0; $i < count($service) ; $i++) {

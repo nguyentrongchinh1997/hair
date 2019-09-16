@@ -63,8 +63,8 @@
                 <div class="row">
                 <div class="col-lg-6" style="padding: 2px 0px 0px 0px;">
                     <span style="padding: 2px 13px; border: 1px solid #ccc; background: #FFF; margin-top: 10px; margin-right: 10px"></span> Chưa check-in <br><br>
-                    <span style="padding: 2px 13px; background: #4c9d2f; margin-top: 10px; margin-right: 10px"></span> Đã check-in <br><br>
-                    <span style="padding: 2px 13px; background: #007bff; margin-right: 10px"></span> Hoàn thành <br>
+                    <span style="padding: 2px 13px; background: #7CB342; margin-top: 10px; margin-right: 10px"></span> Đã check-in <br><br>
+                    <span style="border: 1px solid #ccc; padding: 2px 13px; background: #d9edfe; margin-right: 10px"></span> Hoàn thành <br>
                 </div>
                 <div class="col-lg-6">
                     <label>Tìm kiếm tại đây:</label>
@@ -82,30 +82,31 @@
                 </div>
                 </div>
                 <table class="table table-bordered" style="margin-top: 20px">
-                  <thead>
-                    <tr>
-                      <th scope="col">STT</th>
-                      <th scope="col">SĐT</th>
-                      <!-- <th scope="col">Thợ</th> -->
-                      <th scope="col">Khách hàng</th>
-                      <th scope="col">Thời gian hẹn</th>
-                      <th scope="col">Dịch vụ + Thợ</th>
-                    </tr>
-                  </thead>
+                    <thead>
+                        <tr>
+                          <th scope="col">STT</th>
+                          <th scope="col">SĐT</th>
+                          <!-- <th scope="col">Thợ</th> -->
+                          <!-- <th scope="col">KH</th> -->
+                          <th scope="col">Lịch hẹn</th>
+                          <th scope="col">Dịch vụ + Thợ</th>
+                          <th scope="col">Trạng thái</th>
+                        </tr>
+                    </thead>
                   <tbody class="order-list">
                     @php $stt = 0; @endphp
                     @foreach ($orderList as $order)
                         <tr 
                             style="cursor: pointer; 
                                 @if ($order->status == config('config.order.status.check-in')) 
-                                    {{ 'background: #4c9d2f; color: #fff;' }} 
+                                    {{ 'background: #7CB342; color: #fff;' }} 
                                 @elseif ($order->status == config('config.order.status.check-out')) 
-                                    {{ 'background: #007bff; color: #fff;' }} 
+                                    {{ 'background: #d9edfe; color: #000;' }} 
                                 @endif" 
                             value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
                             <th scope="row">{{ $order->id }}</th>
                             <td>{{ $order->customer->phone }}</td>
-                            <td>
+                            <!-- <td>
                                
                                 @if ($order->customer->full_name == '')
                                     <span>
@@ -116,7 +117,7 @@
                                         {{ $order->customer->full_name }}
                                     </span>
                                 @endif
-                            </td>
+                            </td> -->
                             <td>
                                 {{ $order->time->time }}
                             </td>
@@ -137,6 +138,15 @@
                                     @endif
                                 @endforeach
                             </td>
+                            <td>
+                                @if ($order->status == config('config.order.status.create'))
+                                    Chưa check-in
+                                @elseif ($order->status == config('config.order.status.check-in'))
+                                    Đã check-in
+                                @else
+                                    Hoàn thành
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                   </tbody>
@@ -154,7 +164,7 @@
         <div class="modal-content">
       <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Thêm đơn đặt</h4>
+                <h4 class="modal-title">THÊM LỊCH CHO KHÁCH</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
           <!-- Modal body -->
@@ -164,14 +174,12 @@
                     <table class="add-bill" style="width: 100%">
                         <tr>
                             <td>Số điện thoại</td>
-                            <td>:</td>
                             <td>
                                 <input id="phone" required="required" placeholder="Nhập SĐT..." type="text" class="form-control" name="phone">
                             </td>
                         </tr>
                         <tr>
                             <td>Tên khách hàng</td>
-                            <td>:</td>
                             <td>
                                 <input placeholder="Nhập tên khách hàng..." type="text" required="required" class="form-control" name="full_name">
                             </td>
@@ -179,9 +187,6 @@
                         <tr>
                             <td>
                                 Dịch vụ
-                            </td>
-                            <td>
-                                :
                             </td>
                             <td>
                                 <table>
@@ -224,9 +229,6 @@
                                 Thời gian phục vụ
                             </td>
                             <td>
-                                :
-                            </td>
-                            <td>
                                 <select id="time-id" name="time_id" class="form-control">
                                     <option value="0">
                                         Chọn thời gian
@@ -240,7 +242,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
                             <td></td>
                             <td>
                                 <input class="btn btn-primary" type="submit" value="Thêm" name="">

@@ -55,4 +55,15 @@ class Employee extends Authenticatable
     {
         return $this->hasMany('App\Model\BillDetail', 'assistant_id', 'id');
     }
+    
+    public function orderDetailAssistant()
+    {
+        return $this->hasMany('App\Model\OrderDetail', 'assistant_id', 'id');
+    }
+
+    public function employeeCommision()
+    {
+        return $this->hasMany(EmployeeCommision::class);
+    }
 }
+

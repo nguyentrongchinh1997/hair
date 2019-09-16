@@ -52,10 +52,10 @@
 <div class="col-lg-12 detail-order">
     <div class="row">
         <div class="col-lg-6">
-            <p style="font-weight: bold;">
+            <p style="font-weight: bold; margin-bottom: 0px">
                 CHI TIẾT ĐƠN {{ $bill->id }}
             </p>
-            <p>
+            <p style="margin-bottom: 0px">
                 @php 
                     $date = date_create($bill->date)
                 @endphp
@@ -149,7 +149,7 @@
             @endforeach
         </table>
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12" style="padding: 0px">
         @if ($bill->status != config('config.order.status.check-out'))
             <button style="float: right; margin-bottom: 20px; height: 50px" type="button" class="add-service btn btn-primary" data-toggle="modal" data-target="#myModal">
                 THÊM DỊCH VỤ
@@ -168,13 +168,10 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <table>
+                    <table class="service-other">
                         <tr>
                             <td>
                                 Tên dịch vụ
-                            </td>
-                            <td>
-                                :
                             </td>
                             <td>
                                 <input type="text" id="service-dif" placeholder="Nhập tên dịch vụ..." class="form-control" name="">
@@ -184,7 +181,6 @@
                             <td>
                                 Chọn thợ chính
                             </td>
-                            <td style="padding: 15px 15px">:</td>
                             <td>
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-employee-other{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
@@ -197,13 +193,16 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                <label style="margin-top: 8px; font-weight: bold">
+                                    Chiết khấu % thợ chính
+                                </label>
+                                <input id="percent-employee" placeholder="% thợ chính" type="number" class="form-control" name="">
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 Chọn thợ phụ
                             </td>
-                            <td style="padding: 15px 15px">:</td>
                             <td>
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-assistant-other{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
@@ -216,14 +215,15 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                <label style="margin-top: 8px; font-weight: bold">
+                                    Chiết khấu % thợ phụ
+                                </label>
+                                <input id="percent-assistant" placeholder="% thợ phụ" type="number" class="form-control" name="">
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 Giá dịch vụ
-                            </td>
-                            <td>
-                                :
                             </td>
                             <td>
                                 <input type="text" id="price-dif" id="formattedNumberField" placeholder="Điền giá dịch vụ..." class="form-control" name="">
@@ -233,14 +233,12 @@
                             <td>
                                 Chiết khấu (%)
                             </td>
-                            <td>:</td>
                             <td>
                                 <input type="number" id="percent-dif" placeholder="chiết khấu phần trăm" name="" class="form-control">
                             </td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="padding: 15px 15px"></td>
                             <td>
                                 <button data-dismiss="modal" style="font-weight: normal; float: left; height: 50px; width: 50%; font-size: 23px; background: #007bff; color: #fff; opacity: 1;" id="add-other-service" class="close btn btn-primary">
                                     THÊM
@@ -262,6 +260,8 @@
                             }
                             $('#add-other-service').click(function(){
                                 var bill_id = $('#bill_id').val();
+                                var percentAssistant = $('#percent-assistant').val();
+                                var percentEmployee = $('#percent-employee').val();
                                 var serviceDif = $('#service-dif').val();
                                 var priceDif = $('#price-dif').val();
                                 var percentDif = $('#percent-dif').val();
@@ -277,9 +277,13 @@
                                     alert('Cần điền % chiết khấu'); 
                                 } else if (employeeId == 0) {
                                     alert('Cần chọn thợ chính');
+                                } else if (percentEmployee == '') {
+                                    alert('Cần điền % cho thợ chính');
+                                } else if (percentAssistant == '') {
+                                    alert('Cần điền % cho thợ phụ');
                                 } else {
                                     var convertPrice = priceDif.replace(/[,]/g,'');
-                                    $.get('admin/hoa-don/dich-vu-khac/them/' + bill_id + '/' + serviceDif + '/' + employeeId + '/' + assistantId + '/' + priceDif + '/' + percentDif, function(data){
+                                    $.get('admin/hoa-don/dich-vu-khac/them?billId=' + bill_id + '&serviceName=' + serviceDif + '&employeeId=' + employeeId + '&assistantId=' + assistantId + '&money=' + priceDif + '&percent=' + percentDif + '&percentEmployee=' + percentEmployee + '&percentAssistant=' + percentAssistant, function(data){
                                         if (data != '') {
                                             if (assistantId == 0) {
                                                 nameAssistant = '';
@@ -310,13 +314,10 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <table>
+                    <table class="service-other">
                         <tr>
                             <td>
                                 Dịch vụ
-                            </td>
-                            <td style="padding: 15px 15px">
-                                :
                             </td>
                             <td>
                                 @foreach ($serviceList as $service)
@@ -337,7 +338,6 @@
                             <td>
                                 Chọn thợ chính
                             </td>
-                            <td style="padding: 15px 15px">:</td>
                             <td>
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-employee{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
@@ -356,7 +356,6 @@
                             <td>
                                 Chọn thợ phụ
                             </td>
-                            <td style="padding: 15px 15px">:</td>
                             <td>
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-assistant{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
@@ -399,33 +398,19 @@
                                   });
                                 });
                                 $('#add-service').click(function(){
-                                    var pricePrimary = $('#total-all').val();
                                     var serviceId = $('.option-service').val();
                                     var employeeId = optionEmployee();
                                     var assistantId = optionAssistant();
-                                    var nameService = $('#name-service' + serviceId).val();
                                     var servicePrice = $('#name-service' + serviceId).attr("data");
-                                    var nameEmployee = $('#name-employee' + employeeId).val();
-                                    var nameAssistant = $('#name-assistant' + assistantId).val();
-                                    var serviceDif = $('#service-dif').val();
                                     var bill_id = $('#bill_id').val();
-                                    var priceDif = $('#price-dif').val();
-                                    var percentDif = $('#percent-dif').val();
-
-                                    if (serviceId != 0 && employeeId != 0) {
-                                        var priceChange = parseInt(pricePrimary) + parseInt(servicePrice);
-                                        $.get('admin/hoa-don/dich-vu/them/' + bill_id + '/' + serviceId + '/' + employeeId + '/' + assistantId + '/' + servicePrice, function(data){
-                                            if (data != '') {
-                                                if (assistantId == 0) {
-                                                    nameAssistant = '';
-                                                }
-                                                $('#list-service').append(data);
-                                            } else {
-                                                alert('Hóa đơn đã được thanh toán, bạn không thể thêm dịch vụ.');
-                                            }
-                                        });
+                                    if (serviceId == 0) {
+                                        alert('Cần chọn dịch vụ sử dụng');
+                                    } else if (employeeId == 0) {
+                                        alert('Cần chọn thợ chính');
                                     } else {
-                                        alert('Cần điền đầy đủ thông tin');
+                                        $.get('admin/hoa-don/dich-vu/them?billId=' + bill_id + '&serviceId=' + serviceId + '&employeeId=' + employeeId + '&assistantId=' + assistantId, function(data){
+                                                $('#list-service').append(data);
+                                        });
                                     }
                                 })
                                 
@@ -450,7 +435,6 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="padding: 15px 15px"></td>
                             <td>
                                 <button data-dismiss="modal" style="font-weight: normal; float: left; height: 50px; width: 50%; font-size: 23px; background: #007bff; color: #fff; opacity: 1;" id="add-service" class="close btn btn-primary">
                                     THÊM
@@ -466,11 +450,12 @@
             </div>
           </div>
         <table id="list-service">
-            <tr>
+            <tr style="background: #eee">
                 <th>Dịch vụ</th>
                 <th>Thợ chính</th>
                 <th>Thợ phụ</th>
                 <th>Giá</th>
+                <th>Ghi chú</th>
             </tr>
             @foreach ($serviceListUse as $service)
                 <tr>
@@ -490,7 +475,15 @@
                         @endif
                     </td>
                     <td style="text-align: right;">
-                        {{ number_format($service->money) }}<sup>đ</sup>
+                        {{ number_format($service->sale_money) }}<sup>đ</sup>
+                    </td>
+                    <td>
+                        @if ($service->sale_money < $service->money)
+                            <span>
+                                tặng {{ (number_format($service->money - $service->sale_money)) }}<sup>đ</sup><br>
+                                <span style="color: red">({{ $cardName }})</span>
+                            </span>
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -553,26 +546,7 @@
             @if ($bill->status != config('config.order.status.check-out'))
                 <!-- <h2 class="btn btn-primary pay" data-toggle="modal" data-target="#rate">Thanh toán</h2> -->
                 <h2 style="width: 100%" data-toggle="modal" data-target="#rate" class="rate pay btn btn-primary">Thanh toán</h2>
-                <script type="text/javascript">
-                    $('.pay').click(function(){
-                        billId = $('#bill_id').val();
-                        sale_detail = $('#sale_detail').val();
-                        sale = $('#sale').val();
-                        $.get('danh-gia/noi-dung/' + billId);
-                        $.get('admin/hoa-don/cap-nhat/thu-ngan/' + billId);
-                        
-                        if (sale == '') {
-                            sale = 0;
-                        }
-                        if (sale_detail == '') {
-                            sale_detail = 0;
-                        }
-                        $.get("admin/hoa-don/thanh-toan/" + billId + '?sale=' + sale + '&saleDetail=' + sale_detail, function(data){
-                            $('#modal-body').html(data);
-                        });
-                        // window.open("admin/hoa-don/thanh-toan/" + billId, "_blank", "width=500, height=600");
-                    })
-                </script>
+                
             @endif
         </center>
         <div class="modal fade" id="rate">
@@ -590,3 +564,23 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('.pay').click(function(){
+        billId = $('#bill_id').val();
+        sale_detail = $('#sale_detail').val();
+        sale = $('#sale').val();
+        $.get('danh-gia/noi-dung/' + billId);
+        $.get('admin/hoa-don/cap-nhat/thu-ngan/' + billId);
+        
+        if (sale == '') {
+            sale = 0;
+        }
+        if (sale_detail == '') {
+            sale_detail = 0;
+        }
+        $.get("admin/hoa-don/thanh-toan/" + billId + '?sale=' + sale + '&saleDetail=' + sale_detail, function(data){
+            $('#modal-body').html(data);
+        });
+        // window.open("admin/hoa-don/thanh-toan/" + billId, "_blank", "width=500, height=600");
+    })
+</script>

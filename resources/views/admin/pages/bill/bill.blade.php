@@ -20,33 +20,6 @@
                 </div>
             @endif
             <table style="width: 100%" class="update-rate">
-                <!-- <tr>
-                    <td style="width: 40%">
-                        Khách hàng
-                    </td>
-                    <td style="width: 10%">:</td>
-                    <td style="width: 50%">
-                        {{ $bill->customer->full_name }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        SĐT
-                    </td>
-                    <td>:</td>
-                    <td>
-                        {{ $bill->customer->phone }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Thu ngân
-                    </td>
-                    <td>:</td>
-                    <td>
-                        {{ $bill->employee->full_name }}
-                    </td>
-                </tr> -->
                 <tr>
                     <td style="width: 40%">
                         Đánh giá
@@ -96,9 +69,14 @@
                             {{ $service->employee->full_name }}
                         </td>
                         <td style="text-align: right;">
-                            {{ number_format($service->money) }}<sup>đ</sup>
+                            {{ number_format($service->sale_money) }}<sup>đ</sup>
                         </td>
-                        <td></td>
+                        <td>
+                            @if ($service->sale_money < $service->money)
+                                tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b><br>
+                                <span style="color: red">({{ $cardName }})</span>
+                            @endif
+                        </td>
                     </tr>
                     @php $totalPrice = $totalPrice + $service->money @endphp
                 @endforeach

@@ -17,34 +17,40 @@
                     <ul>
                         <a href="{{ route('order.list') }}">
                             <li @if(Request::is('admin/dat-lich/danh-sach')) {{"class=menu-active"}} @endif>
-                                Quản lý đặt lịch
+                                LỊCH ĐẶT
                             </li>
                         </a>
                         <a href="{{ route('bill.list') }}">
                             <li @if(Request::is('admin/hoa-don/danh-sach')) {{"class=menu-active"}} @endif>
-                                Quản lý hóa đơn
+                                HÓA ĐƠN
                             </li>
                         </a>
                         <a href="{{ route('service.list') }}">
                             <li @if(Request::is('admin/dich-vu/danh-sach')) {{"class=menu-active"}} @endif>
-                                Bảng giá dịch vụ
+                                DỊCH VỤ
                             </li>
                         </a>
                         <a href="{{ route('customer.list') }}">
                             <li @if(Request::is('admin/khach-hang/danh-sach')) {{"class=menu-active"}} @endif>
-                                Quản lý khách hàng
+                                QL.KHÁCH HÀNG
                             </li>
                         </a>
                         <a href="{{ route('employee.list') }}">
                             <li @if(Request::is('admin/nhan-vien/danh-sach')) {{"class=menu-active"}} @endif>
-                                Quản lý nhân viên
+                                QL.NHÂN VIÊN
                             </li>
                         </a>
                         <a href="{{ route('rate.list') }}">
                             <li @if(Request::is('admin/danh-gia/danh-sach')) {{"class=menu-active"}} @endif>
-                                Quản lý đánh giá
+                                ĐÁNH GIÁ
                             </li>
                         </a>
+                        <a href="{{ route('cart.list') }}">
+                            <li @if(Request::is('admin/the/danh-sach')) {{"class=menu-active"}} @endif>
+                                QL.THẺ
+                            </li>
+                        </a>
+
                         @if (auth()->check())
                             <a style="float: right;" href="{{ route('logout') }}">
                                 <li>

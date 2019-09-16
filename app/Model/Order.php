@@ -15,6 +15,7 @@ class Order extends Model
         'date',
         'service_id',
         'status',
+        'request',
     ];
 
     public function customer()

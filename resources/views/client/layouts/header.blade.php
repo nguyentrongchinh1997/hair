@@ -47,9 +47,13 @@
 								<li>TUYỂN DỤNG</li>
 							</a>
 							@if (auth('customers')->check())
-						        <a href="" style="float: right;">
-									<li>Số dư: {{ auth('customers')->user()->balance }}</li>
+								<a href="logout" style="float: right;">
+									<li style="color: #727272">Đăng xuất</li>
 								</a>
+						        <a href="" style="float: right;">
+									<li>Số dư: {{ number_format(auth('customers')->user()->balance) }}<sup>đ</sup></li>
+								</a>
+								
 						    @endif
 						</ul>
 					</div>

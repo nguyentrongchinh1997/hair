@@ -15,6 +15,7 @@
                                 <div class="label-input">
                                     <label>
                                         <b>CHỌN DỊCH VỤ:</b>
+                                        <input type="hidden" value="{{ $phone }}" name="phone">
                                     </label>
                                 </div>
                             </div>

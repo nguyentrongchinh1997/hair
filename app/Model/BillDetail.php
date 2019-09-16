@@ -13,6 +13,7 @@ class BillDetail extends Model
         'employee_id',
         'other_service_percent',
         'money',
+        'sale_money',
         'other_service',
         'date',
         'assistant_id',
@@ -38,5 +39,10 @@ class BillDetail extends Model
     public function employeeAssistant()
     {
         return $this->belongsTo('App\Model\Employee', 'assistant_id', 'id');
+    }
+
+    public function employeeCommision()
+    {
+        return $this->hasMany(BillDetail::class);
     }
 }

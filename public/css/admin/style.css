@@ -64,7 +64,8 @@
 	line-height: 50px;
 }
 .active{
-	background: #d9edfe !important;
+	/*d9edfe*/
+	background: #E0E0E0 !important;
 	color: #000 !important;
 }
 .active span{
@@ -80,7 +81,7 @@
 	display: none;
 }
 #list-service{
-	margin-top: 50px;
+/*	margin-top: 50px;*/
 	width: 100%;
 }
 #list-service tr td{
@@ -125,4 +126,68 @@
 .list-service-order tr td{
 	padding: 10px !important;
 	border: 1px solid #e5e5e5;
+}
+.history-customer tr td{
+	border: 1px solid #e5e5e5;
+}
+.history-customer tr th {
+	padding: 15px;
+	border: 1px solid #e5e5e5;
+}
+#cart table tr td {
+	border: 1px solid #e5e5e5;
+}
+#cart table tr td:nth-child(1){
+	background: #eee;
+}
+.add-bill tr td:nth-child(1){
+	font-weight: bold;
+	background: #eee;
+}
+.add-bill tr td {
+	border: 1px solid #e5e5e5;
+}
+.service-other tr td:nth-child(1){
+	font-weight: bold;
+	background: #eee;
+}
+.service-other tr td {
+	padding: 15px !important;
+	border: 1px solid #e5e5e5;
+}
+.service-other {
+	width: 100%;
+}
+.order-list tr:hover{
+	background: #e0e0e0;
+	transition: 0.3s;
+}
+.employee-list tr td {
+	border: 1px solid #e5e5e5;
+}
+.employee-list{
+	background: #fff;
+}
+
+.employee-list tr th {
+	padding: 15px 12px;
+	border: 1px solid #e5e5e5;
+}
+.employee-list {
+	width: 100%;
+}
+.employee-list tr:hover{
+	background: #e0e0e0;
+	transition: 0.3s;
+}
+.employee-detail table{
+	margin-top: 20px;
+	width: 100% !important;
+}
+.salary-list tr td{
+	border: 1px solid #ccc;
+}
+.salary-list tr th{
+	border: 1px solid #ccc;
+	padding: 15px;
 }

@@ -11,6 +11,8 @@ class Service extends Model
         'name', 
         'price',
         'percent',
+        'assistant_percent',
+        'main_request_percent',
     ];
 
     public function employee()

@@ -45,9 +45,14 @@
                                 ĐÁNH GIÁ
                             </li>
                         </a>
-                        <a href="{{ route('cart.list') }}">
+                        <a href="{{ route('card.list') }}">
                             <li @if(Request::is('admin/the/danh-sach')) {{"class=menu-active"}} @endif>
                                 QL.THẺ
+                            </li>
+                        </a>
+                        <a href="{{ route('expense.list') }}">
+                            <li @if(Request::is('admin/chi-tieu/danh-sach')) {{"class=menu-active"}} @endif>
+                                QL.THU-CHI
                             </li>
                         </a>
 

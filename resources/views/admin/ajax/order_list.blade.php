@@ -2,7 +2,7 @@
     @foreach ($order->order as $o)
         <tr style="cursor: pointer; 
             @if ($o->status == config('config.order.status.check-in')) 
-                {{ 'background: #7CB342; color: #fff;' }} 
+                {{ 'background: #A5D6A7; color: #000;' }} 
             @elseif ($o->status == config('config.order.status.check-out')) 
                 {{ 'background: #d9edfe; color: #000;' }} 
             @endif"  
@@ -12,7 +12,7 @@
             </td>
             
             <td>
-                {{ $o->customer->phone }}
+                {{ substr($o->customer->phone, 0, 4) }}.{{ substr($o->customer->phone, 4, 3) }}.{{ substr($o->customer->phone, 7) }}
             </td>
             <!-- <td style="font-weight: bold;">
                 {{ 

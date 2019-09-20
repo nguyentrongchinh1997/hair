@@ -31,7 +31,7 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-lg-12">
         <h2 style="text-align: center;">
-            MỜI ANH {{ mb_strtoupper($bill->customer->full_name, 'UTF-8') }}
+            MỜI {{ mb_strtoupper($bill->customer->full_name, 'UTF-8') }}
         </h2>
         <h4 style="text-align: center;">XÁC NHẬN LẠI THÔNG TIN HÓA ĐƠN GIÚP CHÚNG EM</h4>
         <table style="width: 100%; background: #F9FBE7;">
@@ -43,7 +43,7 @@
                     </span>
                 </td>
                 <td style="text-align: right; padding: 10px">
-                    <a class="btn btn-primary" href="danh-gia/?step=2"><i class="fas fa-check"></i> XÁC NHẬN ĐÚNG</a>
+                    <a class="btn btn-primary" href="danh-gia/buoc/?step=2"><i class="fas fa-check"></i> XÁC NHẬN ĐÚNG</a>
                 </td>
             </tr>
         </table><br>
@@ -64,7 +64,7 @@
                         @endif
                     </td>
                     <td style="text-align: right;">
-                        {{ number_format($bill1->money) }} Đ
+                        {{ number_format($bill1->sale_money) }} Đ
                     </td>
                 </tr>
             @endforeach

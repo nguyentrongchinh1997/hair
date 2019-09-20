@@ -20,7 +20,11 @@ class ClientController extends Controller
 
     public function homeView()
     {
-    	return view('client.pages.home');
+        if (auth('customers')->check()) {
+            return view('client.pages.home', $this->clientService->homeView());
+        } else {
+            return view('client.pages.home');
+        }
     }
 
     public function postPhone(Request $request)
@@ -88,13 +92,6 @@ class ClientController extends Controller
         $this->clientService->rateContent($billId);
     }
 
-    public function load()
-    {
-        $this->clientService->load();
-
-        return view('client.pages.rate.step2', $this->clientService->load());
-    }
-
     public function updateRate($rate, $billId)
     {
         $this->clientService->updateRate($rate, $billId);
@@ -116,6 +113,13 @@ class ClientController extends Controller
     {
         auth('customers')->logout();
 
-        return back()->route('client.home');
+        return redirect()->route('client.home');
+    }
+
+    public function finishRate()
+    {
+        $this->clientService->finishRate();
+
+        return redirect('rate');
     }
 }

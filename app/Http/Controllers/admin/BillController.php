@@ -64,10 +64,10 @@ class BillController extends Controller
         $employeeId = $request->employeeId;
         $assistantId = $request->assistantId;
         $money = $request->money;
-        $percent = $request->percent;
+        // $percent = $request->percent;
         $percentEmployee = $request->percentEmployee;
         $percentAssistant =$request->percentAssistant;
-        $data = $this->billService->serviceOtherAdd($billId, $serviceName, $employeeId, $assistantId, $money, $percent, $percentEmployee, $percentAssistant);
+        $data = $this->billService->serviceOtherAdd($billId, $serviceName, $employeeId, $assistantId, $money, $percentEmployee, $percentAssistant);
         
         return view('admin.ajax.add_service_other', ['data' => $data]);
     }

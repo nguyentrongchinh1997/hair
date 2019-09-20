@@ -19,7 +19,7 @@
             </script>       
             <td>{{ ++$stt }}</td>  
             <td>
-                {{ $bill->customer->phone }}
+                {{ substr($bill->customer->phone, 0, 4) }}.{{ substr($bill->customer->phone, 4, 3) }}.{{ substr($bill->customer->phone, 7) }}
             </td>
             <td>
                 {{ 

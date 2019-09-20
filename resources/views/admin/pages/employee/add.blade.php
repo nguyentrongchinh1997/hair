@@ -3,7 +3,7 @@
 @section('content')
 <div class="row employee-add" style="padding-left: 40px; padding-top: 40px">
     <div class="col-lg-6">
-        <h3>Thêm nhân viên</h3>
+        <h3>THÊM NHÂN VIÊN</h3>
         @if (count($errors)>0)
             <div class="alert alert-danger">
                 @foreach($errors->all() as $err)

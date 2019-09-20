@@ -109,23 +109,28 @@ class OrderService
         /*end*/
 
         /*Thêm vào bảng hoa hồng*/
-            // $this->employeeComissionModel->create(
-            //     [
-            //         'employee_id' => $service->employee_id,
-            //         'bill_detail_id' => $billDetailId,
-            //         'percent' => $service->service->percent,
-            //     ]
-            // );
+            if ($order->request == 1) {
+                $percent = $service->service->main_request_percent;
+            } else {
+                $percent = $service->service->percent;
+            }
+            $this->employeeComissionModel->create(
+                [
+                    'employee_id' => $service->employee_id,
+                    'bill_detail_id' => $billDetailId,
+                    'percent' => $percent,
+                ]
+            );
 
-            // if ($service->assistant_id != '') {
-            //     $this->employeeComissionModel->create(
-            //         [
-            //             'employee_id' => $service->assistant_id,
-            //             'bill_detail_id' => $billDetailId,
-            //             'percent' => $service->service->assistant_percent,
-            //         ]
-            //     );
-            // }
+            if ($service->assistant_id != '') {
+                $this->employeeComissionModel->create(
+                    [
+                        'employee_id' => $service->assistant_id,
+                        'bill_detail_id' => $billDetailId,
+                        'percent' => $service->service->assistant_percent,
+                    ]
+                );
+            }
         /*end*/
         }
 

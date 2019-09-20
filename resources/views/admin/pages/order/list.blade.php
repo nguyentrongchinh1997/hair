@@ -5,7 +5,7 @@
     <div class="col-lg-6 left">
         <div class="col-lg-5" style="background: #f8f8f8; border: 1px solid #e5e5e5; padding: 15px; position: fixed; height: 100%">
             <div class="col-lg-12" style="margin-bottom: 20px">
-                <h2>QUẢN LÝ LỊCH ĐẶT</h2>
+                <h2>DANH SÁCH LỊCH ĐẶT</h2>
                 @if (session('thongbao'))
                     <div class="alert alert-success">
                         {{ session('thongbao') }}
@@ -63,8 +63,8 @@
                 <div class="row">
                 <div class="col-lg-6" style="padding: 2px 0px 0px 0px;">
                     <span style="padding: 2px 13px; border: 1px solid #ccc; background: #FFF; margin-top: 10px; margin-right: 10px"></span> Chưa check-in <br><br>
-                    <span style="padding: 2px 13px; background: #7CB342; margin-top: 10px; margin-right: 10px"></span> Đã check-in <br><br>
-                    <span style="border: 1px solid #ccc; padding: 2px 13px; background: #d9edfe; margin-right: 10px"></span> Hoàn thành <br>
+                    <span style="padding: 2px 13px; background: #A5D6A7; margin-top: 10px; margin-right: 10px"></span> Đã check-in <br><br>
+                    <span style="border: 1px solid #ccc; padding: 2px 13px; background: #5fa9f8; margin-right: 10px"></span> Hoàn thành <br>
                 </div>
                 <div class="col-lg-6">
                     <label>Tìm kiếm tại đây:</label>
@@ -99,25 +99,15 @@
                         <tr 
                             style="cursor: pointer; 
                                 @if ($order->status == config('config.order.status.check-in')) 
-                                    {{ 'background: #7CB342; color: #fff;' }} 
+                                    {{ 'background: #A5D6A7; color: #000;' }} 
                                 @elseif ($order->status == config('config.order.status.check-out')) 
-                                    {{ 'background: #d9edfe; color: #000;' }} 
+                                    {{ 'background: #5fa9f8; color: #000;' }} 
                                 @endif" 
                             value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
                             <th scope="row">{{ $order->id }}</th>
-                            <td>{{ $order->customer->phone }}</td>
-                            <!-- <td>
-                               
-                                @if ($order->customer->full_name == '')
-                                    <span>
-                                        <i>Chưa có thông tin</i>
-                                    </span>
-                                @else
-                                    <span style="font-weight: bold;">
-                                        {{ $order->customer->full_name }}
-                                    </span>
-                                @endif
-                            </td> -->
+                            <td>
+                                {{ substr($order->customer->phone, 0, 4) }}.{{ substr($order->customer->phone, 4, 3) }}.{{ substr($order->customer->phone, 7) }}
+                            </td>
                             <td>
                                 {{ $order->time->time }}
                             </td>

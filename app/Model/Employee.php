@@ -19,10 +19,10 @@ class Employee extends Authenticatable
         'phone', 
         'service_id',
         'address',
-        'percent',
         'status',
         'password',
         'balance',
+        'image',
         'salary',
     ];
 

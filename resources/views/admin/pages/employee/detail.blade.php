@@ -38,7 +38,11 @@
 							{{ ++$stt }}
 						</td>
 						<td>
-							{{ $commision->billDetail->service->name }}
+							@if ($commision->billDetail->service_id == '')
+								{{ $commision->billDetail->other_service }}
+							@else
+								{{ $commision->billDetail->service->name }}
+							@endif
 						</td>
 						<td>
 							{{ number_format($commision->billDetail->money) }}<sup>đ</sup>

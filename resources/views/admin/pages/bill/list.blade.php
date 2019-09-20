@@ -59,7 +59,7 @@
                 <div class="row">
                     <div class="col-lg-6" style="padding: 2px 0px 0px 0px;">
                         <span style="padding: 2px 13px; border: 1px solid #ccc; background: #FFF; margin-top: 10px; margin-right: 10px"></span> Chưa thanh toán <br><br>
-                        <span style="border: 1px solid #ccc; padding: 2px 13px; background: #d9edfe; margin-right: 10px"></span> Đã thanh toán <br>
+                        <span style="border: 1px solid #ccc; padding: 2px 13px; background: #5fa9f8; margin-right: 10px"></span> Đã thanh toán <br>
                     </div>
                     <div class="col-lg-6">
                         <label>Tìm kiếm tại đây:</label>
@@ -92,11 +92,11 @@
                             @php $stt = 0; $total = 0;@endphp
                             @foreach ($billList as $bill)
                                 @if ($bill->order->date == $date)
-                                    <tr style="cursor: pointer; @if ($bill->status == config('config.order.status.check-out')) {{ 'background: #d9edfe; color: #000' }} @endif" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
+                                    <tr style="cursor: pointer; @if ($bill->status == config('config.order.status.check-out')) {{ 'background: #5fa9f8; color: #000' }} @endif" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
                                         <td>{{ $bill->id }}</td>  
                                                  
                                         <td>
-                                            {{ $bill->customer->phone }}
+                                            {{ substr($bill->customer->phone, 0, 4) }}.{{ substr($bill->customer->phone, 4, 3) }}.{{ substr($bill->customer->phone, 7) }}
                                         </td>
                                         <td>
                                             {{ $bill->customer->full_name }}
@@ -116,9 +116,9 @@
                                                 @endphp
                                             @endforeach
                                             @php 
-                                                $total = $total + $tong;
+                                                $total = $total + $tong - $bill->sale;
                                             @endphp
-                                            {{ number_format($tong) }}<sup>đ</sup>
+                                            {{ number_format($tong-$bill->sale) }}<sup>đ</sup>
                                         </td>  
                                     </tr>
                                 @endif

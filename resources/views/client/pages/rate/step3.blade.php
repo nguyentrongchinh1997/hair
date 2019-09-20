@@ -8,15 +8,14 @@
                     $(this).find('.check').show();
                     comment = $(this).find('.comment').val();
                     billId = $('#bill-id').val();
-                    $.get('khach-hang/binh-luan/' + billId + '?message=' + comment);
+                    $.get('danh-gia/gop-y/them/' + billId + '?message=' + comment);
                 } else {
                     comment = $(this).find('.comment').val();
                     billId = $('#bill-id').val();
-                    $.get('xoa/binh-luan/' + billId + '?message=' + comment);
+                    $.get('danh-gia/gop-y/xoa/' + billId + '?message=' + comment);
                     $(this).find('.check').hide();
                 }
             })
-
             // setTimeout(function(){
             //    window.location.href='rate';
             // }, 5000);
@@ -57,7 +56,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment " value="Tất cả đều tốt, không có góp ý gì;" type="checkbox" name="">
+                                            <input class="comment" data='0' value="Tất cả đều tốt, không có góp ý gì;" type="checkbox" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -74,7 +73,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment" type="checkbox" value="Chất lượng cắt và kiểu tóc;" name="">
+                                            <input class="comment" data='0' type="checkbox" value="Chất lượng cắt và kiểu tóc;" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -93,7 +92,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment " value="Thái độ phục vụ;" type="checkbox" name="">
+                                            <input class="comment" data='0' value="Thái độ phục vụ;" type="checkbox" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -110,7 +109,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment " value="Thời gian chờ đợi;" type="checkbox" name="">
+                                            <input class="comment" data='0' value="Thời gian chờ đợi;" type="checkbox" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -129,7 +128,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment " value="Nhân viên bớt làm ồn trong khi phục vụ;" type="checkbox" name="">
+                                            <input class="comment" data='0' value="Nhân viên bớt làm ồn trong khi phục vụ;" type="checkbox" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -146,7 +145,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox">
-                                            <input class="comment " value="Cảm thấy bị làm phiền bởi việc tư vấn dịch vụ/bán hàng;" type="checkbox" name="">
+                                            <input class="comment" data='0' value="Cảm thấy bị làm phiền bởi việc tư vấn dịch vụ/bán hàng;" type="checkbox" name="">
                                             <i id="check1" class="fas fa-check check"></i>
                                         </div>
                                     </td>
@@ -159,7 +158,7 @@
                     </td>
                 </tr>
             </table>
-            <a href="" class="btn btn-primary" style="margin-top: 20px; font-size: 30px">
+            <a href="{{ route('rate.finish') }}" class="btn btn-primary" style="margin-top: 20px; font-size: 30px">
                 XÁC NHẬN
             </a>
         </center>

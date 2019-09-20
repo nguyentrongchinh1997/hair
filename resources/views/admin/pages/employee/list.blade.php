@@ -50,33 +50,45 @@
                     </tr>
                 </table>
             </form>
-          <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-            Thêm nhân viên
-          </button><br>
+            <div class="row">
+                <div class="col-lg-6" style="padding: 0px">
+                    <button style="margin-top: 30px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Thêm nhân viên
+                    </button>
+                </div>
+                <div class="col-lg-6" style="padding: 0px">
+                    <label>Tìm kiếm tại đây:</label>
+                    <div class="input-group">
+                        <input type="text" id="name-employee" class="form-control" placeholder="Nhập tên nhân viên...">
+                        <div class="input-group-append">
+                          <button class="btn btn-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                          </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
           <!-- The Modal -->
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
-                          <h4 class="modal-title">Thêm nhân viên</h4>
+                          <h4 class="modal-title">THÊM NHÂN VIÊN</h4>
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form method="post" action="{{ route('employee.add') }}">
+                            <form onsubmit="return validateEmployeeAdd()" method="post" action="{{ route('employee.add') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <table>
+                                <table class="view-employee-add">
                                     <tr>
                                         <td>
                                             Tên nhân viên
                                         </td>
                                         <td>
-                                            :
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" required="required" value="{{ old('full_name') }}" name="full_name">
+                                            <input placeholder="Nhập tên nhân viên..." type="text" class="form-control" required="required" id="employee-name" name="full_name">
                                         </td>
                                     </tr>
                                     <tr>
@@ -84,18 +96,12 @@
                                             Số điện thoại
                                         </td>
                                         <td>
-                                            :
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" required="required" name="phone">
+                                            <input id="employee-phone" placeholder="Nhập số điện thoại..." type="text" class="form-control" required="required" name="phone">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Làm dịch vụ
-                                        </td>
-                                        <td>
-                                            :
                                         </td>
                                         <td>
                                             <select name="type" class="form-control">
@@ -110,30 +116,21 @@
                                             Địa chỉ
                                         </td>
                                         <td>
-                                            :
-                                        </td>
-                                        <td>
-                                            <input value="{{ old('address') }}" type="text" class="form-control" name="address">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Hoa hồng (%)
-                                        </td>
-                                        <td>
-                                            :
-                                        </td>
-                                        <td>
-                                            <input type="number" value="{{ old('percent') }}" name="percent" class="form-control">
+                                            <input id="employee-address" placeholder="Nhập địa chỉ..." type="text" class="form-control" name="address">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Lương (vnđ)
                                         </td>
-                                        <td>:</td>
                                         <td>
-                                            <input id="formattedNumberField" type="text" value="{{ old('salary') }}" name="salary" class="form-control">
+                                            <input placeholder="Nhập lương cứng nhân viên" id="formattedNumberField" type="text" name="salary" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ảnh đại diện</td>
+                                        <td>
+                                            <input required="required" type="file" class="form-control" name="image">
                                         </td>
                                     </tr>
                                     <tr>
@@ -141,14 +138,10 @@
                                             Mật khẩu đăng nhập 
                                         </td>
                                         <td>
-                                            :
-                                        </td>
-                                        <td>
-                                            <input type="password" value="{{ old('password') }}" name="password" class="form-control">
+                                            <input placeholder="Nhập mật khẩu nhân viên..." type="password" id="employee-password" name="password" class="form-control">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
                                         <td></td>
                                         <td>
                                             <input class="btn btn-primary" value="Thêm" type="submit" name="">
@@ -170,7 +163,7 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Sửa nhân viên</h4>
+                      <h4 class="modal-title">SỬA NHÂN VIÊN</h4>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body edit-employee">
@@ -201,29 +194,22 @@
                             <th scope="col">SỬA</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="result-search">
                         @php $stt = 0; @endphp
                         @foreach ($employeeList as $employee)
                             <tr style="cursor: pointer;" onclick="employeeDetail({{ $employee->id }})" class="employee" id="employee{{ $employee->id }}">
                                 <th scope="row">{{ ++$stt }}</th>
-                                <td style="font-weight: bold;">
+                                <td>
                                     <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
                                         {{ $employee->full_name }}
                                     </a>
                                 </td>
-                                <td style="font-weight: bold;">
+                                <td>
                                     {{ substr($employee->phone, 0, 4) }}.{{ substr($employee->phone, 4, 3) }}.{{ substr($employee->phone, 7) }}
-                                    <!-- {{ $employee->phone }} -->
                                 </td>
                                 <td>
                                     {{ $employee->service->name }}
                                 </td>
-                                <!-- <td>
-                                    {{ $employee->address }}
-                                </td> -->
-                                <!-- <td style="text-align: center;">
-                                    {{ $employee->percent }} %
-                                </td> -->
                                 <td style="text-align: center;">
                                     <span style="{{($employee->status == config('config.employee.status.doing')) ? 'color: #4c9d2f; font-weight: bold;' : 'color: red; font-weight: bold;' }}">
                                         {{

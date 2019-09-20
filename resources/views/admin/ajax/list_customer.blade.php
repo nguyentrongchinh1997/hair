@@ -6,7 +6,7 @@
             {{ $customer->full_name }}
         </td>
         <td>
-            {{ $customer->phone }}
+            {{ substr($customer->phone, 0, 4) }}.{{ substr($customer->phone, 4, 3) }}.{{ substr($customer->phone, 7) }}
         </td>
         <td>
             {{ date('d/m/Y', strtotime($customer->birthday)) }}

@@ -25,7 +25,7 @@
                location.reload();
             },3000);
             if ($('#bill-id').val() != 0) {
-                window.location.href = 'danh-gia?step=1';
+                window.location.href = 'danh-gia/buoc?step=1';
             }
         })
     </script>

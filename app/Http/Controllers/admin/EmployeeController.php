@@ -58,18 +58,7 @@ class EmployeeController extends Controller
 
     public function employeeAdd(Request $request)
     {
-        $this->validate($request, 
-            [
-                'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/|size:10|unique:employees,phone',
-            ],
-            [
-
-                'phone.max' => 'Số điện thoại phải 10 số',
-                'phone.regex' => 'Số điện thoại phải là số',
-                'phone.unique' => 'Số điện thoại đã bị trùng',
-            ]
-        );
-    	$this->employeeService->employeeAdd($request);
+    	$this->employeeService->employeeAdd($request->all());
 
         return redirect()->back()->withInput()->with('thongbao', 'Thêm nhân viên thành công');
     }
@@ -81,5 +70,9 @@ class EmployeeController extends Controller
 
         return view('admin.pages.employee.detail', $this->employeeService->detail($employeeId, $date));
     }
-}
 
+    public function resultSearch(Request $request)
+    {
+        return view('admin.pages.employee.list_search', $this->employeeService->resultSearch($request));
+    }
+}

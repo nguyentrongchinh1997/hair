@@ -58,9 +58,15 @@
 						</td>
 						<td>
 							@foreach ($customerHistory->billDetail as $service)
-								<p>
-									» {{ $service->service->name }} + {{ $service->employee->full_name }}
-								</p>
+								@if ($service->service_id !='')
+									<p>
+										» {{ $service->service->name }} + {{ $service->employee->full_name }}
+									</p>
+								@else
+									<p>
+										» {{ $service->other_service }} + {{ $service->employee->full_name }}
+									</p>
+								@endif
 							@endforeach
 						</td>
 					</tr>

@@ -29,12 +29,12 @@ class CustomerController extends Controller
 
     public function viewDetailCustomer($customerId)
     {
-        return view('admin.ajax.detail_customer', $this->customerService->viewDetailCustomer($customerId));
+        return view('admin.pages.customer.detail', $this->customerService->viewDetailCustomer($customerId));
     }
 
    	public function customerSerachResult($phone)
     {
-        return view('admin.ajax.list_customer', $this->customerService->customerSerachResult($phone));
+        return view('admin.pages.customer.list_search', $this->customerService->customerSerachResult($phone));
     }
 
 }

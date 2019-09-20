@@ -19,16 +19,22 @@ class EmployeeService
         $this->employeeCommisionModel = $employeeCommision;
     }
 
-    public function employeeAdd($request)
+    public function employeeAdd($inputs)
     {
+        if (!is_null($inputs['image'])) {
+            $nameImage = str_slug($inputs['full_name']) . '-' . rand() . '.' . $inputs['image']->getClientOriginalExtension();
+            $inputs['image']->move('upload/images/employee/', $nameImage);
+        } else {
+            $nameImage = NULL;
+        }
         return $this->employeeModel->create([
-            'full_name' => $request->full_name,
-            'phone' => $request->phone,
-            'service_id' => $request->type,
-            'address' => $request->address,
-            'percent' => $request->percent,
-            'password' => bcrypt($request->password),
-            'salary' => str_replace(',', '', $request->salary),
+            'full_name' => $inputs['full_name'],
+            'phone' => $inputs['phone'],
+            'service_id' => $inputs['type'],
+            'address' => $inputs['address'],
+            'image' => $nameImage,
+            'password' => bcrypt($inputs['password']),
+            'salary' => str_replace(',', '', $inputs['salary']),
         ]);
     }
 
@@ -99,7 +105,6 @@ class EmployeeService
                     'phone' => $request->phone,
                     'service_id' => $request->service_id,
                     'address' => $request->address,
-                    'percent' => $request->percent,
                     'salary' => str_replace(',', '', $request->salary),
                     'status' => $request->status,
                 ]
@@ -159,6 +164,23 @@ class EmployeeService
             'employee' => $employee,
             'date' => $date,
             'commisionList' => $commisionList,
+        ];
+
+        return $data;
+    }
+
+    public function resultSearch($request)
+    {
+        $employeeName = $request->get('name');
+        if ($employeeName != 'null') {
+            $employeeList = $this->employeeModel->where('full_name', 'like', '%' . $employeeName)
+                                                 ->get();
+        } else {
+            $employeeList = $this->employeeModel->all();
+        }
+       
+        $data = [
+            'employeeList' => $employeeList,
         ];
 
         return $data;

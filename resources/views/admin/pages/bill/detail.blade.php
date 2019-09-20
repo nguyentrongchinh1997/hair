@@ -25,24 +25,6 @@
     $('#sale').focus(function(){
         $('#sale').val('');
     })
-    // $('.add-sale').click(function(){
-    //     bill_id = $('#bill_id').val();
-    //     sale_detail = $('#sale_detail').val();
-    //     sale = $('#sale').val();
-    //     if (sale_detail == '') {
-    //         alert('Cần điền nội dung quà tặng');
-    //     } else if (sale == '') {
-    //         alert('Cần điền số tiền muốn tặng');
-    //     } else {
-    //         $.get('admin/hoa-don/giam-gia/cap-nhat/' + bill_id + '?sale=' + sale + '&saleDetail=' + sale_detail , function(data){
-    //             if (data == '') {
-    //                 alert('Hóa đơn được hoàn thành. Bạn không được thêm quà tặng.')
-    //             } else {
-    //                 alert('Cập nhập thành công');
-    //             }
-    //         });
-    //     }
-    // })
 </script>
 <style type="text/css">
     .header-order tr td{
@@ -89,9 +71,9 @@
                     <td>:</td>
                     <td class="status-ajax" style="font-weight: bold; text-align: right;">
                         @if ($bill->status == config('config.order.status.check-in'))
-                            <span style="color: red">Đợi thanh toán</span>
+                            <span style="color: red; font-weight: bold; font-size: 20px">Đợi thanh toán</span>
                         @elseif($bill->status == config('config.order.status.check-out'))
-                            <span style="color: green">Hoàn thành</span>
+                            <span style="color: #007bff; font-weight: bold; font-size: 20px">Hoàn thành</span>
                         @endif
                     </td>
                 </tr>
@@ -230,14 +212,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                Chiết khấu (%)
-                            </td>
-                            <td>
-                                <input type="number" id="percent-dif" placeholder="chiết khấu phần trăm" name="" class="form-control">
-                            </td>
-                        </tr>
-                        <tr>
                             <td></td>
                             <td>
                                 <button data-dismiss="modal" style="font-weight: normal; float: left; height: 50px; width: 50%; font-size: 23px; background: #007bff; color: #fff; opacity: 1;" id="add-other-service" class="close btn btn-primary">
@@ -260,11 +234,11 @@
                             }
                             $('#add-other-service').click(function(){
                                 var bill_id = $('#bill_id').val();
-                                var percentAssistant = $('#percent-assistant').val();
-                                var percentEmployee = $('#percent-employee').val();
-                                var serviceDif = $('#service-dif').val();
+                                var percentAssistant = $('#percent-assistant').val(); // % thợ phụ
+                                var percentEmployee = $('#percent-employee').val(); // %thợ chính
+                                var serviceDif = $('#service-dif').val(); // tên dịch vụ
                                 var priceDif = $('#price-dif').val();
-                                var percentDif = $('#percent-dif').val();
+                                // var percentDif = $('#percent-dif').val();
                                 var employeeId = employeeForServiceOther();
                                 var assistantId = employeeAssistantForServiceOther();
                                 var nameEmployee = $('#name-employee-other' + employeeId).val();
@@ -273,21 +247,22 @@
                                     alert('Cần điền tên dịch vụ');
                                 } else if (priceDif == '') {
                                     alert('Cần điền giá dịch vụ'); 
-                                } else if (percentDif == '') {
-                                    alert('Cần điền % chiết khấu'); 
                                 } else if (employeeId == 0) {
                                     alert('Cần chọn thợ chính');
                                 } else if (percentEmployee == '') {
                                     alert('Cần điền % cho thợ chính');
-                                } else if (percentAssistant == '') {
+                                } else if (assistantId != 0 && percentAssistant == '') {
                                     alert('Cần điền % cho thợ phụ');
+                                } else if (assistantId == 0 && percentAssistant != '') {
+                                    alert('Cần chọn thợ phụ');
                                 } else {
                                     var convertPrice = priceDif.replace(/[,]/g,'');
-                                    $.get('admin/hoa-don/dich-vu-khac/them?billId=' + bill_id + '&serviceName=' + serviceDif + '&employeeId=' + employeeId + '&assistantId=' + assistantId + '&money=' + priceDif + '&percent=' + percentDif + '&percentEmployee=' + percentEmployee + '&percentAssistant=' + percentAssistant, function(data){
+                                    $.get('admin/hoa-don/dich-vu-khac/them?billId=' + bill_id + '&serviceName=' + serviceDif + '&employeeId=' + employeeId + '&assistantId=' + assistantId + '&money=' + priceDif + '&percentEmployee=' + percentEmployee + '&percentAssistant=' + percentAssistant, function(data){
                                         if (data != '') {
                                             if (assistantId == 0) {
                                                 nameAssistant = '';
                                             }
+                                            $('#service-dif, #percent-employee, #percent-assistant, #price-dif').val('');
                                             $('#list-service').append(data);
                                         } else {
                                             alert('Hóa đơn đã được thanh toán, bạn không thể thêm dịch vụ.');
@@ -401,7 +376,6 @@
                                     var serviceId = $('.option-service').val();
                                     var employeeId = optionEmployee();
                                     var assistantId = optionAssistant();
-                                    var servicePrice = $('#name-service' + serviceId).attr("data");
                                     var bill_id = $('#bill_id').val();
                                     if (serviceId == 0) {
                                         alert('Cần chọn dịch vụ sử dụng');
@@ -409,6 +383,7 @@
                                         alert('Cần chọn thợ chính');
                                     } else {
                                         $.get('admin/hoa-don/dich-vu/them?billId=' + bill_id + '&serviceId=' + serviceId + '&employeeId=' + employeeId + '&assistantId=' + assistantId, function(data){
+                                                $('.option-service, #option-employee, .assistant').val(0);
                                                 $('#list-service').append(data);
                                         });
                                     }
@@ -529,16 +504,6 @@
                     </td>
                 </tr>
             @endif
-
-            <!-- @if ($bill->status != config('config.order.status.check-out'))
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <input style="background: #ccc; border: 1px solid #ccc;" class="add-sale btn btn-primary" value="Thêm quà tặng" name="">
-                    </td>
-                </tr>
-            @endif -->
         </table>
     </div>
     <div class="col-lg-12" style="margin-top: 20px">

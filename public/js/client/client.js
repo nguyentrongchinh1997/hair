@@ -1,6 +1,6 @@
 // function validateForm()
 // {
-// 	var phone = document.getElementById('phone').value;
+//  var phone = document.getElementById('phone').value;
 //     var checkbox = document.getElementsByClassName('service');
 //     var employee = document.getElementsByClassName('employee');
 //     var time = document.getElementsByClassName('time');
@@ -11,52 +11,52 @@
 //     var employeeChecked = false;
 //     var timeChecked = false;
 //     for (var i = 0; i < len; i++) {
-//     	if (checkbox[i].checked){
+//      if (checkbox[i].checked){
 //           anyChecked = true;
 //           break;
-//        	}
+//          }
 //     }
 //     // for (var i = 0; i < len1; i++) {
-//     // 	if (employee[i].checked){
+//     //   if (employee[i].checked){
 //     //       employeeChecked = true;
 //     //       break;
-//     //    	}
+//     //       }
 //     // }
 //     for (var i = 0; i < len2; i++) {
-//     	if (time[i].checked){
+//      if (time[i].checked){
 //           timeChecked = true;
 //           break;
-//        	}
+//          }
 //     }
 //     if (phone == '') {
-//     	alert('Cần điền số điện thoại');
+//      alert('Cần điền số điện thoại');
 
-//     	return false;
+//      return false;
 //     } else if (isNaN(phone)) {
-//     	alert('Số điện thoại không đúng định dạng');
+//      alert('Số điện thoại không đúng định dạng');
 
-// 		return false;
+//      return false;
 //     } else if (phone.length != 10) {
-//     	alert('Số điện thoại phải đủ 10 số');
+//      alert('Số điện thoại phải đủ 10 số');
 
-// 		return false;
+//      return false;
 //     } else if (!anyChecked) {
-// 	   	alert('Bạn chưa chọn dịch vụ');
+//      alert('Bạn chưa chọn dịch vụ');
 
-// 	   	return false;
-// 	  // } else if (!employeeChecked) {
-//    //  	alert('Bạn chưa chọn nhân viên phục vụ');
+//      return false;
+//    // } else if (!employeeChecked) {
+//    //    alert('Bạn chưa chọn nhân viên phục vụ');
 
-// 	  //  	return false;
+//    //    return false;
 //     } else if (!timeChecked) {
-//     	alert('Bạn chưa chọn khung giờ');
+//      alert('Bạn chưa chọn khung giờ');
 
-//     	return false;
+//      return false;
 //     } else {
-// 		return true;
-// 	}
+//      return true;
+//  }
 
-// 	return false
+//  return false
 // }
 
 function validateForm()
@@ -96,18 +96,18 @@ function validateForm()
 
 
 // $(function(){
-// 	$('.service').change(function(){
-// 		var service = $('input[name="service"]:checked').val();
-// 		$.get('nhan-vien/' + service, function(data){
-// 			$('.stylist').html(data);
-// 		});
-// 	})
-	
+//  $('.service').change(function(){
+//      var service = $('input[name="service"]:checked').val();
+//      $.get('nhan-vien/' + service, function(data){
+//          $('.stylist').html(data);
+//      });
+//  })
+    
 // })
 
 function pick(id)
 {
-	$('.expiry').removeClass('pick');
+    $('.expiry').removeClass('pick');
     $('#pick' + id).addClass('pick');
     $('#checked' + id).prop("checked", true);
 }
@@ -123,8 +123,8 @@ function pickService(serviceId)
         $('.employee-list' + serviceId).hide();
         $('#check' + serviceId).hide();
     }
-	// $('.check').hide();
-	// $('#check' + id).show();
+    // $('.check').hide();
+    // $('#check' + id).show();
 }
 function pickHair(serviceId)
 {
@@ -152,6 +152,15 @@ function pickSkinner(serviceId)
         $('.skinner').hide();
     }
 }
+$(function(){
+    if ($('.wash').is(":checked")) {
+        serviceId = $('.wash').val();
+        $('.skinner').show();
+        $.get('skinner/list/' + serviceId, function(data){
+            $('.skinner').html(data);
+        })
+    }
+})
 
 function pickStylist(id)
 {

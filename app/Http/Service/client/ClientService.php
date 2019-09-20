@@ -11,13 +11,14 @@ use App\Model\BillDetail;
 use App\Model\Rate;
 use App\Model\Employee;
 use App\Model\OrderDetail;
+use App\Model\Card;
 use Illuminate\Support\Facades\Auth; //Thư viện để đăng nhập
 
 class ClientService
 {
-    protected $timeModel, $customerModel, $orderModel, $serviceModel, $billModel, $billDetailModel, $rateModel, $employeeModel, $orderDetailModel;
+    protected $timeModel, $customerModel, $orderModel, $serviceModel, $billModel, $billDetailModel, $rateModel, $employeeModel, $orderDetailModel, $cardModel;
 
-    public function __construct(Time $time, Customer $customer, Order $order, Service $service, Bill $bill, BillDetail $billDetail, Rate $rate, Employee $employee, OrderDetail $orderDetail)
+    public function __construct(Time $time, Customer $customer, Order $order, Service $service, Bill $bill, BillDetail $billDetail, Rate $rate, Employee $employee, OrderDetail $orderDetail, Card $card)
     {
         $this->timeModel = $time;
         $this->customerModel = $customer;
@@ -28,6 +29,7 @@ class ClientService
         $this->rateModel = $rate;
         $this->employeeModel = $employee;
         $this->orderDetailModel = $orderDetail;
+        $this->cardModel = $card;
     }
 
     public function timeList($phone)
@@ -71,7 +73,6 @@ class ClientService
             ];
         }
         
-
         return $data;
     }
 
@@ -228,7 +229,7 @@ class ClientService
                                 ->first();
         if (isset($bill)) {
             $billDetail = $this->billDetailModel->where('bill_id', $bill->id)->get();
-            $sum = $this->billDetailModel->where('bill_id', $bill->id)->sum('money');
+            $sum = $this->billDetailModel->where('bill_id', $bill->id)->sum('sale_money');
             $data = [
                 'bill' => $bill,
                 'billDetail' => $billDetail,
@@ -261,5 +262,28 @@ class ClientService
         ];
 
         return $data;
+    }
+
+    public function homeView()
+    {
+        if (auth('customers')->check()) {
+            $customerId = auth('customers')->user()->id;
+            $card = $this->cardModel->where('customer_id', $customerId)->first();
+
+            if (isset($card)) {
+                $data = [
+                    'card' => $card
+                ];
+                
+                return $data;
+            }
+        }
+    }
+
+    public function finishRate()
+    {
+        return $this->billModel
+                    ->where('rate_status', 1)
+                    ->update(['rate_status' => 0]);
     }
 }

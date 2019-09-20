@@ -15,7 +15,7 @@ class CardController extends Controller
 		$this->cardService = $cardService;
 	}
 
-	public function getCartList()
+	public function getCardList()
     {
         return view('admin.pages.cart.list', $this->cardService->getCartList());
     }

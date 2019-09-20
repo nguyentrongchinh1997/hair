@@ -15,7 +15,6 @@ use App\Model\Card;
 use App\Model\CardDetail;
 use App\Model\OrderDetail;
 
-
 class BillService
 {
 	protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $employeeCommisionModel, $cardModel, $cardDetailModel, $orderDetailModel;
@@ -66,7 +65,7 @@ class BillService
                 'rate_id' => $rate_id,
                 'comment' => $comment,
                 'status' => 2,
-                'total' => $sumService,
+                'total' => $total,
                 'rate_status' => 0,
             ]
         );
@@ -275,6 +274,7 @@ class BillService
 
         if ($bill->bill->status != config('config.order.status.check-out')) {
             $this->employeeCommisionModel->where('bill_detail_id', $billDetailId)->delete();
+            $employeeCommision = $this->employeeCommisionModel->where('bill_detail_id', $billDetailId)->delete();
             $billDetail = $this->billDetailModel->findOrFail($billDetailId);
             $price = $billDetail->money;
             $billDetail->delete();
@@ -286,7 +286,7 @@ class BillService
 
     }
 
-    public function serviceOtherAdd($billId, $serviceName, $employeeId, $assistantId, $money, $percent, $percentEmployee, $percentAssistant)
+    public function serviceOtherAdd($billId, $serviceName, $employeeId, $assistantId, $money, $percentEmployee, $percentAssistant)
     {
         $bill = $this->billModel->findOrFail($billId);
 
@@ -302,7 +302,7 @@ class BillService
                 'employee_id' => $employeeId,
                 'assistant_id' => $assistantId,
                 'money' => $convertMoney,
-                'other_service_percent' => $percent,
+                'sale_money' => $convertMoney,
                 'date' => date('Y-m-d'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
@@ -313,13 +313,16 @@ class BillService
                     'percent' => $percentEmployee,
                 ]
             );
-            $this->employeeCommisionModel->create(
-                [
-                    'employee_id' => $assistantId,
-                    'bill_detail_id' => $id,
-                    'percent' => $percentAssistant,
-                ]
-            );
+            if ($assistantId != 0) {
+                $this->employeeCommisionModel->create(
+                    [
+                        'employee_id' => $assistantId,
+                        'bill_detail_id' => $id,
+                        'percent' => $percentAssistant,
+                    ]
+                );
+            }
+
 
             return $this->billDetailModel->findOrFail($id);
         } else {
@@ -389,23 +392,20 @@ class BillService
         $saleMoney = $this->checkCard($customer_id, $service_id, $service->price);
 
     /*thêm vào bảng chi tiết order*/
+        if ($request->assistant_id != 0) {
+            $assistantId = $request->assistant_id;
+        } else {
+            $assistantId = NULL;
+        }
         $this->orderDetailModel->create(
             [
                 'service_id' => $request->service_id,
                 'employee_id' => $request->employee_id,
+                'assistant_id' => $assistantId,
                 'order_id' => $orderId,
             ]
         );
-
-        if ($request->assistant_id != 0) {
-            $this->orderDetailModel->create(
-                [
-                    'service_id' => $request->service_id,
-                    'employee_id' => $request->assistant_id,
-                    'order_id' => $orderId,
-                ]
-            );
-        }
+        
     /*end*/
 
         $billId = $this->billModel->insertGetId([

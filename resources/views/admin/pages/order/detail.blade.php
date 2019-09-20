@@ -69,7 +69,7 @@
         <div class="col-lg-12">
             <form onsubmit="return validateForm()" action="{{ route('check-in', ['id' => $orderDetail->id]) }}" method="post">
                 @csrf
-                <table>
+                <table style="width: 100%">
                     <tr class="update-customer-ajax">
                         <script type="text/javascript">
                             $(function(){
@@ -118,36 +118,46 @@
                                 return false
                             }
                         </script>
-                        <td>Tên khách hàng</td>
-                        <td>:</td>
-                        @if ($orderDetail->customer->full_name == '')
+                    
+                    @if ($orderDetail->customer->full_name == '')
+                        <tr>
+                            <td>Tên khách hàng</td>
                             <td>
                                 <input type="text" name="full_name" placeholder="Nhập tên khách hàng" class="form-control name-customer">
                             </td>
-                            <td style="padding: 5px">
+                        </tr>
+                        <tr>
+                            <td>
                                 Ngày sinh
                             </td>
-                            <td style="padding: 5px">:</td>
                             <td>
                                 <input type="date" class="form-control birthday" name="birthday">
                             </td>
-                        @else
+                        </tr>
+                    @else
+                        <tr>
+                            <td>Tên khách hàng</td>
                             <td style="font-weight: bold;">
                                 {{ $orderDetail->customer->full_name }}
                             </td>
-                            <td style="padding-left: 20px">
+                        </tr>
+                        <tr>
+                            <td>
+                                Ngày sinh
+                            </td>
+                            <td>
                                 @php
                                     $ngaySinh = date_create($orderDetail->customer->birthday)
                                 @endphp
-                                <span style="font-weight: bold;">Ngày sinh</span>: {{ date_format($ngaySinh, 'd/m/Y') }}
+                                {{ date_format($ngaySinh, 'd/m/Y') }}
                             </td>
-                        @endif
-                    </tr>
+                        </tr>
+                    @endif
+                    
                     <tr>
                         <td>
                             Thời gian phục vụ
                         </td>
-                        <td style="padding: 15px">:</td>
                         <td style="font-weight: bold;">
                             {{ $orderDetail->time->time }}
                         </td>
@@ -169,7 +179,14 @@
                     @foreach ($orderDetail->orderDetail as $serviceOrder)
                         <tr id="row{{ $serviceOrder->id }}">
                             <td>
-                                <select onchange="editService({{ $serviceOrder->id }})" id="service{{ $serviceOrder->id }}" style="width: 100%" class="form-control">
+                                <select 
+                                    @if ($orderDetail->status != config('config.order.status.create'))
+                                        {{ 'disabled' }}
+                                    @endif 
+                                    onchange="editService({{ $serviceOrder->id }})" 
+                                    id="service{{ $serviceOrder->id }}" 
+                                    style="width: 100%" class="form-control"
+                                >
                                     @foreach ($serviceList as $service)
                                         <option value="{{ $service->id }}" @if ($service->id == $serviceOrder->service_id) {{ 'selected' }} @endif value="{{ $service->id }}">
                                             {{ $service->name }}
@@ -178,19 +195,34 @@
                                 </select>
                             </td>
                             <td>
-                                <select onchange="editEmployee({{ $serviceOrder->id }})" id="employee{{ $serviceOrder->id }}" name="employee_id" class="form-control employee">
+                                <select 
+                                    @if ($orderDetail->status != config('config.order.status.create'))
+                                        {{ 'disabled' }}
+                                    @endif 
+                                    onchange="editEmployee({{ $serviceOrder->id }})" 
+                                    id="employee{{ $serviceOrder->id }}" name="employee_id" 
+                                    class="form-control employee"
+                                >
                                     @if ($serviceOrder->employee_id == '')
                                         <option value="0">Chọn thợ</option>
                                     @endif
                                     @foreach ($employeeList as $employee)
-                                        <option @if ($employee->id == $serviceOrder->employee_id) {{ 'selected' }}@endif value="{{ $employee->id }}">
+                                        <option  @if ($employee->id == $serviceOrder->employee_id) {{ 'selected' }}@endif value="{{ $employee->id }}">
                                             {{ $employee->full_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
-                                <select onchange="assistant({{ $serviceOrder->id }})" id="assistant{{ $serviceOrder->id }}" name="employee_id" class="form-control employee">
+                                <select 
+                                    @if ($orderDetail->status != config('config.order.status.create'))
+                                        {{ 'disabled' }}
+                                    @endif 
+                                    onchange="assistant({{ $serviceOrder->id }})" 
+                                    id="assistant{{ $serviceOrder->id }}"
+                                    name="employee_id" 
+                                    class="form-control employee"
+                                >
                                     <option value="0">Chọn thợ phụ</option>
                                     @foreach ($employeeList as $employee)
                                         <option 
@@ -227,6 +259,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    var statusOrder = {{ $orderDetail->status }};
     function deleteService(serviceId)
     {
         var orderId = $('.id-order').val();

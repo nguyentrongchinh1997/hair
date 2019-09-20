@@ -10,8 +10,15 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('demo', function(){
+    return view('demo');
+});
 Route::group(['prefix' => 'mobile'], function(){
     Route::get('login', 'mobile\LoginController@loginView');
+    Route::post('login', 'mobile\LoginController@postLogin')->name('post.login');
+
+    Route::get('home', 'mobile\ClientController@viewHome')->name('mobile.home');
+    Route::get('logout', 'mobile\ClientController@logout')->name('mobile.logout');
 });
 
 Route::get('logout', 'client\ClientController@logout');
@@ -27,17 +34,32 @@ Route::post('dat-lich', 'client\ClientController@order')->name('order');
 Route::post('phone', 'client\ClientController@postPhone')->name('post.phone');
 
 Route::post('book', 'client\ClientController@book')->name('client.book');
-Route::get('danh-gia', 'client\ClientController@rate')->name('client.rate');
-Route::get('danh-gia/noi-dung/{billID}', 'client\ClientController@rateContent');
-Route::get('danh-gia/load', 'client\ClientController@load');
-Route::get('khach-hang/danh-gia/{noiDung}/{billId}', 'client\ClientController@updateRate');
-Route::get('khach-hang/binh-luan/{billId}', 'client\AjaxController@updateComment');
-Route::get('xoa/binh-luan/{billId}', 'client\AjaxController@deleteComment');
 Route::get('input', 'client\ClientController@input');
-Route::get('xac-nhan/hoa-don', 'client\ClientController@billAccept');
+
 Route::get('rate', 'client\ClientController@rateView');
+
 Route::get('stylist/list/{serviceId}', 'client\AjaxController@getService');
 Route::get('skinner/list/{serviceId}', 'client\AjaxController@getSkinner');
+
+/*================================== CHỨC NĂNG ĐÁNH GIÁ =====================================*/
+Route::group(['prefix' => 'danh-gia'], function(){
+    Route::get('buoc', 'client\ClientController@rate')->name('client.rate');
+
+    Route::get('ket-thuc', 'client\ClientController@finishRate')->name('rate.finish');
+
+    Route::get('muc-do/{noiDung}/{billId}', 'client\ClientController@updateRate');
+
+    Route::group(['prefix' => 'gop-y'], function(){
+
+        Route::get('them/{billId}', 'client\AjaxController@updateComment'); // thêm góp ý
+ 
+        Route::get('xoa/{billId}', 'client\AjaxController@deleteComment'); // xóa góp ý
+
+        Route::get('xac-nhan/hoa-don', 'client\ClientController@billAccept'); // view xác nhận hóa đơn
+    });
+    
+});
+/*===================================== end ====================================================*/
 
 Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(){
     Route::get('trang-chu', 'admin\AdminController@homeView')->name('admin.home');
@@ -56,6 +78,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::post('bang-luong/{employeeId}', 'admin\EmployeeController@postSalary')->name('salary.list.post');
 
         Route::get('chi-tiet', 'admin\EmployeeController@detail');
+
+        Route::get('tim-kiem', 'admin\EmployeeController@resultSearch');
     });
 
     Route::group(['prefix' => 'dich-vu', 'middleware' => 'accessMiddleware'], function(){
@@ -119,10 +143,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
     });
 
     Route::group(['prefix' => 'the', 'middleware' => 'accessMiddleware'], function(){
-        Route::get('danh-sach', 'admin\CardController@getCartList')->name('cart.list');
+        Route::get('danh-sach', 'admin\CardController@getCardList')->name('card.list');
         Route::post('them', 'admin\CardController@postCard')->name('card.add');
         Route::get('gia-han/{id}', 'admin\CardController@getExtensionView');
         Route::post('gia-han/{id}', 'admin\CardController@postExtension')->name('extension');
+    });
+
+    Route::group(['prefix' => 'chi-tieu', 'middleware' => 'accessMiddleware'], function(){
+        Route::get('danh-sach', 'admin\ExpenseController@getViewExpense')->name('expense.list');
+        Route::post('danh-sach', 'admin\ExpenseController@expenseAdd')->name('expense.add');
+        Route::post('chi-tieu-theo-thang', 'admin\ExpenseController@expenseMonth')->name('expense.month');
+        Route::post('chi-tieu-theo-ngay', 'admin\ExpenseController@expenseDay')->name('expense.day');
     });
     Route::get('logout', 'admin\LoginController@logout')->name('logout');
 });

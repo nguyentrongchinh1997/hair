@@ -26,10 +26,10 @@
                 $(this).css({"color":"yellow"});
                 data = $(this).attr('data');
                 billId = $('#bill-id').val();
-                $.get('khach-hang/danh-gia/' + data + '/' + billId);
+                $.get('danh-gia/muc-do/' + data + '/' + billId);
                 $('#rate-result').html(data);
                 $('.title-rate').show();
-                window.location.href='danh-gia?step=3';
+                window.location.href='danh-gia/buoc?step=3';
                //  setTimeout(function(){
                //     window.location.href='danh-gia?step=3';
                // },1500);

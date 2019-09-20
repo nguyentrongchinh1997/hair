@@ -270,3 +270,55 @@ function employeeDetail(id)
         $('.employee-detail').html(data);
     });
 }
+
+function validateEmployeeAdd()
+{
+    employeeName = $('#employee-name').val();
+    employeePhone = $('#employee-phone').val();
+    employeeAddress = $('#employee-address').val();
+    employeeSalary = $('#formattedNumberField').val();
+    employeePassword = $('#employee-password').val();
+
+    if (employeeName == '') {
+        alert('Cần nhập tên nhân viên');
+
+        return false;
+    } else if (isNaN(employeePhone)) {
+        alert('Số điện thoại không đúng định dạng');
+
+        return false;
+    } else if (employeePhone.length !=10 ) {
+        alert('Số điện thoại phải đủ 10 số');
+
+        return false;
+    } else if (employeeAddress == '') {
+        alert('Cần nhập địa chỉ nhân viên');
+
+        return false;
+    } else if (employeeSalary == '') {
+        alert('Cần nhập lương cứng nhân viên');
+
+        return false;
+    } else if (employeePassword == '') {
+        alert('Cần nhập mật khẩu chi nhân viên');
+
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
+$('#name-employee').keyup(function(){
+    employeeName = $('#name-employee').val();
+
+    if (employeeName != '') {
+        $.get('admin/nhan-vien/tim-kiem?name=' + employeeName, function(data){
+            $('#result-search').html(data);
+        })  
+    } else {
+        $.get('admin/nhan-vien/tim-kiem?name=null', function(data){
+            $('#result-search').html(data);
+        })
+    }
+
+})

@@ -78,14 +78,14 @@
                             @endif
                         </td>
                     </tr>
-                    @php $totalPrice = $totalPrice + $service->money @endphp
+                    @php $totalPrice = $totalPrice + $service->sale_money @endphp
                 @endforeach
                 @if ($bill->sale != 0)
                     <tr>
                         <td colspan="3" style="text-align: right;">
                             {{ number_format($bill->sale) }}<sup>đ</sup>
                         </td>
-                        <td>Sale</td>
+                        <td>Quà tặng</td>
                     </tr>
                 @endif
                 @if ($bill->status != config('config.order.status.check-out'))

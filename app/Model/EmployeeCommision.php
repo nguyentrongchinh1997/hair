@@ -11,6 +11,7 @@ class EmployeeCommision extends Model
         'employee_id', 
         'bill_detail_id', 
         'percent',
+        'date',
         'created_at',
     ];
 

@@ -9,31 +9,24 @@
   margin: 0px -5px 0px -5px;
 }
 button.slick-next, button.slick-next:hover {
-  /*position: absolute;*/
-  /*top: 41%;*/
-  /*right: 4px;*/
-  /*width: 47px;*/
-  /*height: 75px;*/
-  /*background-image: url("http://maggiesadler.com/wp-content/uploads/2015/10/left-right-arrow.png");*/
-  /*background-size: 95px;*/
     position: absolute;
-    top: 41%;
-    right: -95px;
-    width: 86px;
-    height: 111px;
+    top: 23px;
+    right: -15px;
+    width: 20px;
+    height: 27px;
     background: url(http://moviee.vn/public/img/arrow-point-to-right1.png) 1px 0;
-    background-size: 25px;
+    background-size: 15px;
     background-repeat: no-repeat;
 }
 button.slick-prev, button.slick-prev:hover {
   position: absolute;
-  top: 41%;
-  left: -35px;
+  top: 54%;
+  left: -17px;
   z-index: 1;
-  width: 47px;
-  height: 75px;
+  width: 13px;
+  height: 27px;
   background: url(http://moviee.vn/public/img/left-arrow.png) 1px 0;
-  background-size: 25px;
+  background-size: 15px;
   background-repeat: no-repeat;
       /*background-position-x: right;*/
   /*position: absolute;*/

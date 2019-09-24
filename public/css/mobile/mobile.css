@@ -124,19 +124,161 @@ footer ul a li{
     height: 100%;
     text-align: center;
     padding: 0px 5px;
-    color: #fff;
+    color: #878787;
 /*    line-height: 50px;*/
-    display: inline-block;
+    float: left;
 }
 footer p {
+    color: #878787;
     font-size: 10px;
     margin-bottom: 0px;
 }
 footer i{
+    color: #878787;
     font-size: 20px;
 }
 .pick {
     background: #000 !important;
     color: #fff;
     border-bottom: 4px solid #8e8d8d;
+}
+.history ul{
+    padding-left: 0px;
+    list-style-type: none;
+}
+.pick-service{
+    background: #727272;
+    padding: 4px 0px;
+    color: #fff;
+    border-radius: 20px;
+    margin: auto;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+/*    width: 40%;*/
+}
+.pick-service span{
+    background: #727272;
+    color: #fff;
+    padding: 4px 9px;
+    font-size: 16px;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+/*.pick-service::after {
+    top: 14px;
+    content: "";
+    position: absolute;
+    border: 2px solid black;
+    width: 30%;
+    right: 0px;
+}
+.pick-service::before {
+    top: 14px;
+    content: "";
+    position: absolute;
+    border: 2px solid black;
+    width: 30%;
+    left: 0px;
+}*/
+.history ul li{
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 20px;
+}
+.employee-login{
+    border-radius: 4px;
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+}
+.employees-phone{
+    height: 50%;
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+}
+.employees-phone input{
+    width: 100%;
+    margin-top: 10px;
+    border: 0px;
+    padding-left: 10px;
+    outline: none;
+}
+.employees-password{
+    height: 50%;
+    float: left;
+    width: 100%;
+}
+.employees-password input{
+    width: 100%;
+    margin-top: 10px;
+    border: 0px;
+    padding-left: 10px;
+    outline: none;
+}
+.employee-login button{
+    width: 100%;
+    border: 0px;
+    background: #2a2a2a;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 4px;
+    color: #fff;
+}
+.employee-order table{
+    margin-top: 20px;
+    width: 100%;
+}
+.employee-order table tr td {
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+}
+.employee-order table tr th {
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+}
+.salary-time ul{
+    list-style-type: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+.rio-promos a{
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    margin: 0px !important;
+    color: #fff;
+    line-height: 40px;
+    text-decoration: none;
+}
+.rio-promos{
+    margin-bottom: 0px;
+}
+.active{
+    border-bottom: 3px solid #ffd800;
+}
+#pick-day button {
+    outline: none;
+    width: 100px;
+    height: 40px;
+    background: #262626;
+    border: 0px;
+    color: #fff;
+    border-radius: 6px;
+}
+#pick-day input{
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 40px;
+    padding-left: 10px;
+    border-radius: 4px;
+    outline: none;
+}
+.tab table{
+    width: 100%;
+}
+.tab table tr td{
+    border: 1px solid #e5e5e5;
+    padding: 5px;
 }

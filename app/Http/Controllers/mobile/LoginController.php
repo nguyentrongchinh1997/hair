@@ -17,12 +17,28 @@ class LoginController extends Controller
 
     public function loginView()
     {
-    	return view('client.mobile.pages.login');
+    	return view('client.mobile.customers.pages.login');
     }
 
     public function postLogin(Request $request) {
     	$this->loginService->postLogin($request);
 
-    	return redirect('mobile/home');
+    	return redirect()->route('mobile.home');
+    }
+
+    public function loginEmployeeView()
+    {
+        return view('client.mobile.employees.pages.login');
+    }
+
+    public function postLoginEmployee(Request $request)
+    {
+        $login = $this->loginService->postLoginEmployee($request);
+
+        if ($login == true) {
+            return redirect()->route('mobile.employee.home');
+        } else {
+            return back();
+        }
     }
 }

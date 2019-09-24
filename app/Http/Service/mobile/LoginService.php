@@ -30,4 +30,16 @@ class loginService
             /*end*/
 		}
 	}
+
+	public function postLoginEmployee($request)
+	{
+		$phone = str_replace('.', '', $request->phone);
+		$password = $request->password;
+
+		if (Auth::guard('employees')->attempt(['phone' => $phone, 'password' => $password], true)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

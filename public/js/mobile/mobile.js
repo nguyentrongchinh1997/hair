@@ -2,6 +2,28 @@ $(function(){
     $(".phone-mobile").keyup(function(event) {
         $(this).val($(this).val().replace(/^(\d{4})(\d{3})(\d{3})+$/, "$1.$2.$3"));
     });
+    $('.menu-tab').click(function(){
+        value = $(this).attr("value");
+        $('.menu-tab').removeClass('active');
+        $(this).addClass("active");
+        $('.tab').hide();
+        $('#' + value).show();
+    })
+
+    $('#seen').click(function(){
+        dateTo = $('#date-to').val();
+        dateFrom = $('#date-from').val();
+
+        if (dateFrom == '') {
+            alert('Cần chọn ngày bắt đầu');
+        } else if (dateTo == '') {
+            alert('Cần chọn ngày kết thúc');
+        } else {
+            $.get('mobile/nhan-vien/thu-nhap/tim-kiem?from=' + dateFrom + '&to=' + dateTo, function(data){
+                $('#result').html(data);
+            })
+        }
+    })
 })
 function pick(id)
 {
@@ -27,6 +49,43 @@ function validatePhone()
 	
 	return false;
 }
+function resetPassword()
+{
+	alert('Bạn vui lòng liên hệ với Admin để reset lại mật khẩu!');
+}
+function validateForm()
+{
+    var checkbox = document.getElementsByClassName('service');
+    var anyChecked = false;
+    var timeChecked = false;
+    var time = document.getElementsByClassName('time');
+    var len2 = time.length;
+    var len = checkbox.length;
+    for (var i = 0; i < len; i++) {
+        if (checkbox[i].checked){
+            anyChecked = true;
+            break;
+        }
+    }
+    for (var i = 0; i < len2; i++) {
+        if (time[i].checked){
+            timeChecked = true;
+            break;
+        }
+    }
+    if (!anyChecked) {
+        alert('Bạn chưa chọn dịch vụ');
+
+        return false;
+    } else if (!timeChecked) {
+        alert('Bạn chưa chọn thời gian phục vụ');
+
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
 $(function(){
     if ($('.wash').is(":checked")) {
         serviceId = $('.wash').val();
@@ -35,15 +94,6 @@ $(function(){
             $('.skinner').html(data);
         })
     }
-    // var stickyHeaderTop = $('.top-header').offset().top;
-
-    // $(window).scroll(function(){
-    //     if( $(window).scrollTop() > stickyHeaderTop ) {
-    //             $('.top-header').addClass('top-header-scroll');
-    //     } else {
-    //             $('.top-header').removeClass('top-header-scroll');
-    //     }
-    // });
 })
 function pickHair(serviceId)
 {

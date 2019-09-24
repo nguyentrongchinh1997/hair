@@ -13,13 +13,31 @@
 Route::get('demo', function(){
     return view('demo');
 });
-Route::group(['prefix' => 'mobile'], function(){
-    Route::get('login', 'mobile\LoginController@loginView');
-    Route::post('login', 'mobile\LoginController@postLogin')->name('post.login');
+/*========================Route cho Mobile khách hàng======================*/
+Route::get('mobile/dang-nhap', 'mobile\LoginController@loginView')->name('mobile.login')->middleware('loginMobileMiddleware');
+Route::post('mobile/login', 'mobile\LoginController@postLogin')->name('post.login');
+Route::group(['prefix' => 'mobile', 'middleware' => 'mobileMiddleware'], function(){
+    Route::get('trang-chu', 'mobile\CustomerController@viewHome')->name('mobile.home');
 
-    Route::get('home', 'mobile\ClientController@viewHome')->name('mobile.home');
-    Route::get('logout', 'mobile\ClientController@logout')->name('mobile.logout');
+    Route::get('dang-xuat', 'mobile\CustomerController@logout')->name('mobile.logout');
+
+    Route::get('lich-su', 'mobile\CustomerController@history')->name('mobile.history');
+
+    Route::get('the', 'mobile\CustomerController@card')->name('mobile.card');
 });
+/*========================End======================*/
+/*========================Route cho Mobile nhân viên======================*/
+Route::get('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@loginEmployeeView')->name('mobile.employee.login');
+
+Route::post('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@postLoginEmployee')->name('mobile.employee.post.login');
+
+Route::group(['prefix' => 'mobile/nhan-vien'], function(){
+    Route::get('trang-chu', 'mobile\EmployeeController@homeView')->name('mobile.employee.home');
+    Route::get('dang-xuat', 'mobile\EmployeeController@logout')->name('mobile.employee.logout');
+    Route::get('thu-nhap', 'mobile\EmployeeController@salary')->name('mobile.employee.salary');
+    Route::get('thu-nhap/tim-kiem', 'mobile\EmployeeController@search');
+});
+/*========================End======================*/
 
 Route::get('logout', 'client\ClientController@logout');
 Route::get('404', function(){

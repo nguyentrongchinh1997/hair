@@ -1,7 +1,7 @@
-@extends('client.mobile.layouts.index')
+@extends('client.mobile.customers.layouts.index')
 
 @section('content')
-    <div class="container" style="background: #000">
+    <div class="container" style="color: #fff">
         <div class="row">
             <div class="col-lg-12" style="margin-top: 50px">
                 <div style="max-width: 500px; margin: auto;">
@@ -31,13 +31,13 @@
                     <div class="modal-dialog">
                         <div class="modal-content" style="border: 0px">
                             <div class="modal-header" style="border: 0px">
-                                <h4 class="modal-title">Nhập số điện thoại</h4>
+                                <h4 class="modal-title" style="color: #000">Nhập số điện thoại</h4>
                                 <button style="margin: 0px" type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <form method="post" onsubmit="return validatePhone()" action="{{ route('post.login') }}">
                                     @csrf
-                                    <input class="phone-mobile phone" type="text" name="phone"><br>
+                                    <input autofocus class="phone-mobile phone" type="text" name="phone"><br>
                                     <input class="submit" type="submit" value="TIẾP" name="">
                                 </form>
                             </div>

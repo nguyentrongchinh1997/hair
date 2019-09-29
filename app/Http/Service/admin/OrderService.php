@@ -13,12 +13,13 @@ use App\Model\BillDetail;
 use App\Model\EmployeeCommision;
 use App\Model\Card;
 use App\Model\CardDetail;
+use App\Model\Membership;
 
 class OrderService
 {
-	protected $employeeModel, $orderModel, $billModel, $customerModel, $timeModel, $serviceModel, $orderDetailModel, $billDetailModel, $employeeComissionModel, $cardModel, $cardDetailModel;
+	protected $employeeModel, $orderModel, $billModel, $customerModel, $timeModel, $serviceModel, $orderDetailModel, $billDetailModel, $employeeComissionModel, $cardModel, $cardDetailModel, $membershipModel;
 
-    public function __construct(Employee $employee, Order $order, Bill $bill, Customer $customer, Time $time, Service $service, OrderDetail $orderDetail, BillDetail $billDetail, EmployeeCommision $employeeComission, Card $card, CardDetail $cardDetail)
+    public function __construct(Employee $employee, Order $order, Bill $bill, Customer $customer, Time $time, Service $service, OrderDetail $orderDetail, BillDetail $billDetail, EmployeeCommision $employeeComission, Card $card, CardDetail $cardDetail, Membership $membership)
     {
         $this->employeeModel = $employee;
         $this->orderModel = $order;
@@ -31,6 +32,7 @@ class OrderService
         $this->employeeComissionModel = $employeeComission;
         $this->cardModel = $card;
         $this->cardDetailModel = $cardDetail;
+        $this->membershipModel = $membership;
     }
 
 	public function orderListView()
@@ -60,7 +62,7 @@ class OrderService
     }
 
     public function checkIn($orderId, $request)
-    {
+    {   
         $order = $this->orderModel->findOrFail($orderId);
         $orderDetail = $this->orderDetailModel->where('order_id', $orderId)->get();
         $customer = $this->customerModel->findOrFail($order->customer_id);
@@ -71,11 +73,13 @@ class OrderService
                 [
                     'full_name' => $request->full_name,
                     'birthday' => $request->birthday,
+                    'request' => $request->require,
                 ]
             );
         }
     /*end*/
-
+        $order->request = $request->require;
+        $order->save();
     /*tạo hóa đơn*/
         $bill_id = $this->billModel->insertGetId([
             'customer_id' => $order->customer_id,
@@ -86,52 +90,44 @@ class OrderService
     /*end*/
 
         foreach ($orderDetail as $service) {
-        $checkCard = $this->cardDetailModel->where('service_id', $service->service_id)
-                                            ->where('customer_id', $order->customer_id)
-                                            ->first();
-
-        if (isset($checkCard) && (strtotime(date('Y-m-d')) <= strtotime($checkCard->card->end_time))) {
-            $sale_money = $service->service->price - ($service->service->price * $checkCard->percent/100);
-        } else {
-            $sale_money = $service->service->price;
-        }
-        /*thêm vào bảng chi tiết hóa đơn*/
+            $saleMoney = $this->checkMembership($order->customer_id, $service->service_id, $service->service->price);
             $billDetailId = $this->billDetailModel->insertGetId([
                 'bill_id' => $bill_id,
                 'service_id' => $service->service_id,
                 'employee_id' => $service->employee_id,
                 'assistant_id' => $service->assistant_id,
                 'money' => $service->service->price,
-                'sale_money' => $sale_money,
+                'sale_money' => $saleMoney,
                 'created_at' => date('Y-m-d H:i:s'),
                 'date' => date('Y-m-d'),
             ]);
-        /*end*/
 
-        /*Thêm vào bảng hoa hồng*/
-            if ($order->request == 1) {
-                $percent = $service->service->main_request_percent;
-            } else {
-                $percent = $service->service->percent;
-            }
-            $this->employeeComissionModel->create(
-                [
-                    'employee_id' => $service->employee_id,
-                    'bill_detail_id' => $billDetailId,
-                    'percent' => $percent,
-                ]
-            );
-
-            if ($service->assistant_id != '') {
+            /*Thêm vào bảng hoa hồng*/
+                if ($request->require == 1) {
+                    $percent = $service->service->main_request_percent;
+                } else {
+                    $percent = $service->service->percent;
+                }
                 $this->employeeComissionModel->create(
                     [
-                        'employee_id' => $service->assistant_id,
+                        'employee_id' => $service->employee_id,
                         'bill_detail_id' => $billDetailId,
-                        'percent' => $service->service->assistant_percent,
+                        'percent' => $percent,
+                        'date' => date('Y-m-d'),
                     ]
                 );
-            }
-        /*end*/
+
+                if ($service->assistant_id != '') {
+                    $this->employeeComissionModel->create(
+                        [
+                            'employee_id' => $service->assistant_id,
+                            'bill_detail_id' => $billDetailId,
+                            'percent' => $service->service->assistant_percent,
+                            'date' => date('Y-m-d'),
+                        ]
+                    );
+                }
+            /*end*/
         }
 
         return $this->orderModel->updateOrCreate(
@@ -141,6 +137,25 @@ class OrderService
                 'bill_id' => $bill_id,
             ]
         );
+    }
+
+    public function checkMembership($customer_id, $service_id, $priceService)
+    {
+        $checkCard = $this->membershipModel->where('customer_id', $customer_id)->first();
+        if (isset($checkCard)) {
+            $cardDetail = $this->cardDetailModel->where('service_id', $service_id)
+                                                ->where('card_id', $checkCard->card_id)
+                                                ->first();
+            if (isset($checkCard) && (strtotime(date('Y-m-d')) <= strtotime($checkCard->end_time)) && isset($cardDetail)) {
+                $saleMoney = $priceService - ($priceService * $cardDetail->percent/100);
+            } else {
+                $saleMoney = $priceService;
+            }
+        } else {
+            $saleMoney = $priceService;
+        }
+    
+        return $saleMoney;
     }
 
     public function postOrderListView($request)
@@ -204,6 +219,7 @@ class OrderService
                 'date' => $date,
                 'time_id' => $time_id,
                 'status' => config('config.order.status.create'),
+                'request' => $request->require,
                 'created_at' => date('Y-m-d H:i:s'),
             ]
         );

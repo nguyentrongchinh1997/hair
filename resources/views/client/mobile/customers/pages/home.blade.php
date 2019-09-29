@@ -1,7 +1,7 @@
 @extends('client.mobile.customers.layouts.index')
 
 @section('content')
-<div class="container" style="padding: 0px; margin-top: 90px;">
+<div class="container" style="padding: 0px; margin-top: 90px; margin-bottom: 100px !important">
     <form onsubmit="return validateForm()" method="post" action="{{ route('client.book') }}">
         @csrf
         <div class="row" style="padding-top: 20px">

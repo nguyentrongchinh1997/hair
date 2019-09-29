@@ -11,8 +11,11 @@
     </td>
     <td>
         @if ($billDetail->sale_money < $billDetail->money)
-            tặng <b>{{ number_format($billDetail->money - $billDetail->sale_money) }}<sup>đ</sup></b><br>
-            <span style="color: red">({{ $cardName }})</span>
+            <span>({{ $cardName }})</span>
+            <br>
+            <span style="color: red">
+                (đã tặng {{ number_format($billDetail->money - $billDetail->sale_money) }}<sup>đ</sup>)
+            </span>
         @endif
     </td>
     <td>

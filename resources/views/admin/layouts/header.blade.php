@@ -7,8 +7,8 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('/font/fontawesome-free-5.10.0-web/css/all.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/admin/style.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/admin/choosen.css') }}">  
+        <link rel="stylesheet" type="text/css" href="{{ asset('/js/datepicker/css/lightpick.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
-
     </head>
     <body>
         <header>
@@ -17,45 +17,49 @@
                     <ul>
                         <a href="{{ route('order.list') }}">
                             <li @if(Request::is('admin/dat-lich/danh-sach')) {{"class=menu-active"}} @endif>
-                                LỊCH ĐẶT
+                                Lịch đặt
                             </li>
                         </a>
                         <a href="{{ route('bill.list') }}">
                             <li @if(Request::is('admin/hoa-don/danh-sach')) {{"class=menu-active"}} @endif>
-                                HÓA ĐƠN
+                                Hóa đơn
                             </li>
                         </a>
                         <a href="{{ route('service.list') }}">
                             <li @if(Request::is('admin/dich-vu/danh-sach')) {{"class=menu-active"}} @endif>
-                                DỊCH VỤ
+                                Dịch vụ
                             </li>
                         </a>
                         <a href="{{ route('customer.list') }}">
                             <li @if(Request::is('admin/khach-hang/danh-sach')) {{"class=menu-active"}} @endif>
-                                QL.KHÁCH HÀNG
+                                QL.Khách hàng
                             </li>
                         </a>
                         <a href="{{ route('employee.list') }}">
                             <li @if(Request::is('admin/nhan-vien/danh-sach')) {{"class=menu-active"}} @endif>
-                                QL.NHÂN VIÊN
-                            </li>
-                        </a>
-                        <a href="{{ route('rate.list') }}">
-                            <li @if(Request::is('admin/danh-gia/danh-sach')) {{"class=menu-active"}} @endif>
-                                ĐÁNH GIÁ
+                                QL.Nhân viên
                             </li>
                         </a>
                         <a href="{{ route('card.list') }}">
                             <li @if(Request::is('admin/the/danh-sach')) {{"class=menu-active"}} @endif>
-                                QL.THẺ
+                                QL.Thẻ
+                            </li>
+                        </a>
+                        <a href="{{ route('membership.list') }}">
+                            <li @if(Request::is('admin/hoi-vien/danh-sach')) {{"class=menu-active"}} @endif>
+                                QL.Hội viên
                             </li>
                         </a>
                         <a href="{{ route('expense.list') }}">
                             <li @if(Request::is('admin/chi-tieu/danh-sach')) {{"class=menu-active"}} @endif>
-                                QL.THU-CHI
+                                QL.Thu-chi
                             </li>
                         </a>
-
+                        <a href="{{ route('rate.list') }}">
+                            <li @if(Request::is('admin/danh-gia/danh-sach')) {{"class=menu-active"}} @endif>
+                                Đánh giá
+                            </li>
+                        </a>
                         @if (auth()->check())
                             <a style="float: right;" href="{{ route('logout') }}">
                                 <li>

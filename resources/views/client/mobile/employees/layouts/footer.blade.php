@@ -11,10 +11,10 @@
                                 </p>
                             </li>
                         </a>
-                        <a href="{{ route('mobile.history') }}">
+                        <a href="{{ route('mobile.employee.history') }}">
                             <li>
-                                <i style="@if(Request::is('mobile/lich-su'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-history"></i>
-                                <p style="@if(Request::is('mobile/lich-su'))@php echo 'color: #fff;';@endphp@endif">
+                                <i style="@if(Request::is('mobile/nhan-vien/lich-su'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-history"></i>
+                                <p style="@if(Request::is('mobile/nhan-vien/lich-su'))@php echo 'color: #fff;';@endphp@endif">
                                     Lịch sử
                                 </p>
                             </li>

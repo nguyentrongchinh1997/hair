@@ -47,13 +47,14 @@
                     </td>
                 </tr>
 
-            </table>
-            <table id="list-service">
-                <tr>
+            </table><br>
+            <table class="list-table">
+                <tr style="background: #BBDEFB">
                     <th>Dịch vụ</th>
                     <th>Thợ</th>
                     <th>Giá</th>
                     <th>Ghi chú</th>
+                    <th>Thẻ hội viên</th>
                 </tr>
                 @php $totalPrice = 0 @endphp
                 @foreach ($serviceListUse as $service)
@@ -71,10 +72,13 @@
                         <td style="text-align: right;">
                             {{ number_format($service->sale_money) }}<sup>đ</sup>
                         </td>
+                        <td></td>
                         <td>
                             @if ($service->sale_money < $service->money)
-                                tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b><br>
-                                <span style="color: red">({{ $cardName }})</span>
+                                <span>{{ $cardName }}</span><br>
+                                <span style="color: red">
+                                     (đã tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b>)
+                                </span>
                             @endif
                         </td>
                     </tr>
@@ -85,7 +89,8 @@
                         <td colspan="3" style="text-align: right;">
                             {{ number_format($bill->sale) }}<sup>đ</sup>
                         </td>
-                        <td>Quà tặng</td>
+                        <td style="font-weight: bold;">Quà tặng</td>
+                        <td rowspan="3"></td>
                     </tr>
                 @endif
                 @if ($bill->status != config('config.order.status.check-out'))
@@ -93,7 +98,11 @@
                         <td colspan="3" style="text-align: right;">
                             {{ number_format($bill->customer->balance) }}<sup>đ</sup>
                         </td>
-                        <td>Số dư</td>
+                        <td style="font-weight: bold;">Số dư</td>
+                        @if ($bill->sale == 0)
+                            <td rowspan="2"></td>
+                        @endif
+                        
                     </tr>
                     <tr>
                         @php 
@@ -107,17 +116,22 @@
                                 {{ number_format($total - $balance) }}<sup>đ</sup>
                             </td>
                         @endif
-                        <td>
+                        <td style="font-weight: bold;">
                             Cần thanh toán
                         </td>
+                        
                     </tr>
                 @endif
             </table>
             <br>
             @if ($bill->status != config('config.order.status.check-out'))
                 <center>
-                    <input type="submit" value="Kết thúc" class="btn btn-primary" name="">
-                    <a id="update-rate" style="background: #727272; border: 0px; cursor: pointer; color: #fff" class="btn btn-primary">
+                    <button class="btn btn-primary button-control">
+                        Kết thúc
+                    </button>
+                    <!-- <input type="submit" value="Kết thúc" class="btn btn-primary " name=""> -->
+                    
+                    <a id="update-rate" style="background: #727272; border: 0px; cursor: pointer; color: #fff" class="btn btn-primary button-control">
                         Cập nhật đánh giá
                     </a>
                     <script type="text/javascript">

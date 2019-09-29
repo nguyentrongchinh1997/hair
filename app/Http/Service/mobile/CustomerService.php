@@ -6,18 +6,20 @@ use App\Model\Employee;
 use App\Model\Service;
 use App\Model\Bill;
 use App\Model\Card;
+use App\Model\Membership;
 
 class CustomerService
 {
-	protected $timeModel, $employeeModel, $serviceModel, $billModel, $cardModel;
+	protected $timeModel, $employeeModel, $serviceModel, $billModel, $cardModel, $membershipModel;
 
-	public function __construct(Time $time, Employee $employee, Service $service, Bill $bill, Card $card)
+	public function __construct(Time $time, Employee $employee, Service $service, Bill $bill, Card $card, Membership $membership)
 	{
 		$this->timeModel = $time;
 		$this->employeeModel = $employee;
 		$this->serviceModel = $service;
 		$this->billModel = $bill;
 		$this->cardModel = $card;
+        $this->membershipModel = $membership;
 	}
 	public function viewHome($phone)
     {
@@ -55,12 +57,11 @@ class CustomerService
 
     public function card()
     {
-    	$card = $this->cardModel->where('customer_id', auth('customers')->user()->id)
-    							->first();
-
-    	if (isset($card)) {
+        $customerId = auth('customers')->user()->id;
+    	$membership = $this->membershipModel->where('customer_id', $customerId)->first();
+    	if (isset($membership)) {
     		$data = [
-    			'card' => $card,
+    			'card' => $membership,
     		];
     	} else {
     		$data = [

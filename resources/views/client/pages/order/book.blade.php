@@ -8,13 +8,19 @@
                 <!-- <center> -->
                     <form onsubmit="return validateForm()" method="post" action="{{ route('client.book') }}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <!-- <h2 style="text-align: center;"><i class="far fa-clock"></i></h2>
-                        <br> -->
-                        <div class="row">
+<!--                         <div class="row">
                             <div class="col-lg-12">
+                                <div class="rio-promos" style="margin: 0px">
+                                    
+                                </div>
+                            </div>
+                        </div> -->
+                        
+                        <div class="row">
+                            <div class="col-lg-12" style="padding: 0px">
                                 <div class="label-input">
                                     <label>
-                                        <b>CHỌN DỊCH VỤ:</b>
+                                        <b>Chọn dịch vụ:</b>
                                         <input type="hidden" value="{{ $phone }}" name="phone">
                                     </label>
                                 </div>
@@ -25,7 +31,7 @@
                                         <label onclick="pickHair({{ $hairCut->id }})" style="width: 100%; margin-top: 12px">
                                             <input 
                                                 style='display: none' type="checkbox" 
-                                                class="service service{{ $hairCut->id }}" 
+                                                class="cut service service{{ $hairCut->id }}" 
                                                 name="service[]" 
                                                 value="{{ $hairCut->id }}"
                                             >
@@ -59,6 +65,13 @@
                                     
                                 </div>
                             </div>
+                            <style type="text/css">
+                                button.slick-next, button.slick-next:hover{
+                                    top: 54%;
+                                    right: -20px;
+                                }
+                            </style>
+
                             <div class="col-lg-12">
                                 <div class="row" style="margin: 10px 0px !important;">
                                     <div class="col-lg-2" style="padding-left: 0px">
@@ -95,17 +108,16 @@
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="row skinner" style="display: none;">
+                                <div class="row skinner" style="display: none; margin-bottom: 20px !important">
                                     
                                 </div>
                             </div>
-                        </div><br>
-                        
+                        </div>
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-12" style="padding: 0px">
                                 <div class="row label-input">
                                     <label>
-                                        <b>CHỌN GIỜI CẮT</b>
+                                        <b>Chọn giờ cắt</b>
                                     </label>
                                 </div>
                             </div>

@@ -1,214 +1,278 @@
+body{
+    font-size: 13px !important;
+}
 .row {
-	margin: 0px;
+    margin: 0px;
+}
+.list-table{
+    background: #fff;
+    width: 100%;
+}
+.list-table tr td, .list-table tr th{
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+.list-table tr td p{
+    margin-bottom: 0px;
 }
 .menu ul li {
-	padding: 10px;
-	display: inline-block;
+    padding: 10px;
+    display: inline-block;
 }
 .menu ul li:hover{
-	background: #BDBDBD;
-	transition: 0.3s;
+    background: #fafafa;
+    transition: 0.3s;
 }
 .menu{
-	background: #e6e6e6;
+    background: #BBDEFB;
 }
 .menu-active{
-	background: #BDBDBD;
+    background: #fafafa;
 }
 .menu ul a {
-	color: rgba(0,0,0,.65);
-	font-weight: bold;
-	text-decoration: none;
+    color: rgba(0,0,0,.65);
+    font-weight: bold;
+    text-decoration: none;
 }
 .menu ul {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 .menu {
-	border-bottom: 1px solid #ccc
+    border-bottom: 1px solid #ccc
 }
-.employee-add table tr td {
-	padding: 15px 12px;
-}
+
 .login table tr td {
-	padding: 15px 10px;
+    padding: 15px 10px;
 }
 .left ul{
-	list-style-type: none;
-	margin-bottom: 0px;
-	padding-left: 0px;
+    list-style-type: none;
+    margin-bottom: 0px;
+    padding-left: 0px;
 }
 .left ul li{
-	background: #f9f9f9;
-	cursor: pointer;
-	margin-bottom: 5px;
-	border-radius: 4px;
-	padding-left: 20px;
-	height: 50px;
+    background: #f9f9f9;
+    cursor: pointer;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    padding-left: 20px;
+    height: 50px;
 }
 /*.left ul .create{
-	background: #f1f1f1;
+    background: #f1f1f1;
 }
 .left ul .check-in{
-	color: #fff;
-	background: #FB8C00;
+    color: #fff;
+    background: #FB8C00;
 }
 .check-in table{
-	color: #fff;
+    color: #fff;
 }
 .check-out{
-	background: #007bff;
-	color: #fff;
+    background: #007bff;
+    color: #fff;
 }*/
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    background-color: #000000;
+    border: 2px solid #BDBDBD;
+}
 .left ul li table{
-	width: 100%;
-	line-height: 50px;
+    width: 100%;
+    line-height: 50px;
 }
 .active{
-	/*d9edfe*/
-	background: #E0E0E0 !important;
-	color: #000 !important;
+    /*d9edfe*/
+    background: #eee !important;
+    color: #000 !important;
+}
+.button-control{
+    font-size: 13px;
+    padding: 5px 10px;
+    height: 35px;
+}
+.input-control{
+    font-size: 13px;
+    height: 30px !important;
+    padding: 0px 10px;
+}
+h3{
+    font-size: 16px !important;
 }
 .active span{
-	color: #000 !important;
-}
-.detail-order table tr td {
-	padding: 15px 0px;
+    color: #000 !important;
 }
 .table-bordered{
-	background: #fff;
+    background: #fff;
 }
 .service-fee{
-	display: none;
+    display: none;
 }
 #list-service{
-/*	margin-top: 50px;*/
-	width: 100%;
+/*  margin-top: 50px;*/
+    width: 100%;
 }
 #list-service tr td{
-	padding-left: 15px;
-	padding-right: 15px;
-	border: 1px solid #e5e5e5;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 1px solid #e5e5e5;
 }
 #list-service tr th{
-	padding: 15px;
-	border: 1px solid #e5e5e5;
+    padding: 15px;
+    border: 1px solid #e5e5e5;
 }
 .tong-gia{
-	width: 100%;
+    width: 100%;
 }
 .tong-gia tr td {
-	text-align: right;
-	width: 33%;
-	padding: 15px !important;
+    text-align: right;
+    width: 33%;
+    padding: 15px !important;
 }
 .rate{
-	width: 100%;
+    width: 100%;
 }
 .rate tr td{
-	padding: 10px;
-	border: 1px solid #e5e5e5;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
 }
 .detail-order{
-	min-height: 680px;
-	border: 1px solid #e5e5e5;
-	padding: 15px;
+    min-height: 680px;
+    border: 1px solid #e5e5e5;
+    padding: 15px;
 }
 .add-bill tr td{
-	padding: 15px;
+    padding: 10px;
 }
 .list-service-order{
-	width: 100%;
+    width: 100%;
 }
 .list-service-order tr th {
-	border: 1px solid #e5e5e5;
-	padding: 10px;
+    border: 1px solid #e5e5e5;
+    padding: 10px;
 }
 .list-service-order tr td{
-	padding: 10px !important;
-	border: 1px solid #e5e5e5;
+    padding: 10px !important;
+    border: 1px solid #e5e5e5;
 }
 .history-customer tr td{
-	border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 .history-customer tr th {
-	padding: 15px;
-	border: 1px solid #e5e5e5;
+    padding: 15px;
+    border: 1px solid #e5e5e5;
 }
 #cart table tr td {
-	border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 #cart table tr td:nth-child(1){
-	background: #eee;
+    background: #fafafa;
 }
 .add-bill tr td:nth-child(1){
-	font-weight: bold;
-	background: #eee;
+    font-weight: bold;
+    background: #fafafa;
 }
 .add-bill tr td {
-	border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 .service-other tr td:nth-child(1){
-	font-weight: bold;
-	background: #eee;
+    font-weight: bold;
+    background: #fafafa;
 }
 .service-other tr td {
-	padding: 15px !important;
-	border: 1px solid #e5e5e5;
+    padding: 15px !important;
+    border: 1px solid #ccc;
 }
 .service-other {
-	width: 100%;
-}
-.order-list tr:hover{
-	background: #e0e0e0;
-	transition: 0.3s;
+    width: 100%;
 }
 .employee-list tr td {
-	border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 .employee-list{
-	background: #fff;
+    background: #fff;
 }
 
 .employee-list tr th {
-	padding: 15px 12px;
-	border: 1px solid #e5e5e5;
+    padding: 15px 12px;
+    border: 1px solid #e5e5e5;
 }
 .employee-list {
-	width: 100%;
+    width: 100%;
 }
 .employee-list tr:hover{
-	background: #e0e0e0;
-	transition: 0.3s;
+    background: #e0e0e0;
+    transition: 0.3s;
 }
 .employee-detail table{
-	margin-top: 20px;
-	width: 100% !important;
+    width: 100% !important;
 }
 .salary-list tr td{
-	border: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 .salary-list tr th{
-	border: 1px solid #ccc;
-	padding: 15px;
+    border: 1px solid #ccc;
+    padding: 15px;
 }
 .view-employee-add tr td:nth-child(1) {
-	font-weight: bold;
-	background: #fafafa;
+    font-weight: bold;
+    background: #fafafa;
 }
 .view-employee-add tr td{
-	border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 .view-employee-add {
-	width: 100%;
+    width: 100%;
 }
 .expense table{
-	width: 100%;
+    width: 100%;
 }
-.expense table tr th {
-	border: 1px solid #e5e5e5;
-	padding: 10px;
+.chi{
+    cursor: pointer;
+    padding: 0px; 
+    height: 50px; 
+    border: 1px solid #e5e5e5; 
 }
-.expense table tr td {
-	border: 1px solid #e5e5e5;
-	padding: 10px;
+.expense-active{
+    background: #BBDEFB;
+    transition: 0.5s;
+}
+.chi p, .thu p{
+    line-height: 50px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px;
+}
+.thu{
+    cursor: pointer;
+    padding: 0px; 
+    height: 50px; 
+    border: 1px solid #e5e5e5;
+}
+#thu{
+    display: none;
+}
+.expense-right table{
+    width: 100%;
+}
+.expense-right table tr td{
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.expense-right table tr td:nth-child(1){
+    background: #eee;
+}
+.order-detail tr td{
+    padding: 5px;
 }

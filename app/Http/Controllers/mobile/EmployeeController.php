@@ -36,4 +36,14 @@ class EmployeeController extends Controller
     {
         return view('client.mobile.employees.pages.search_date', $this->employeeService->search($request));
     }
+
+    public function history()
+    {
+        return view('client.mobile.employees.pages.history', $this->employeeService->history());
+    }
+
+    public function historySearch($date)
+    {
+        return view('client.mobile.employees.pages.search_history', $this->employeeService->historySearch($date));
+    }
 }

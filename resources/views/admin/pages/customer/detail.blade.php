@@ -1,4 +1,4 @@
-<div class="col-lg-12" style="border: 1px solid #e5e5e5">
+<div class="col-lg-12" style="border: 1px solid #e5e5e5; padding: 15px">
 	<div class="row">
 		<div class="col-lg-6">
 			<table style="width: 100%">
@@ -31,8 +31,8 @@
 					<td></td>
 					<td></td>
 					<td>
-						<button type="button" class="btn btn-primary" style="float: right" data-toggle="modal" data-target="#myModal">
-                    NẠP TIỀN
+						<button type="button" class="btn btn-primary button-control" style="float: right" data-toggle="modal" data-target="#myModal">
+                    Nạp tiền
                 </button>
 					</td>
 				</tr>
@@ -42,11 +42,13 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<h3>Lịch sử</h3>
-			<table class="history-customer" style="width: 100%">
-				<tr>
+		</div>
+		<div class="col-lg-12" style="height: 410px; overflow: auto;">
+			<table class="list-table" style="width: 100%">
+				<tr style="background: #BBDEFB">
 					<th>Ngày đến</th>
 					<th>Giờ đặt</th>
-					<th>Dịch vụ + thợ</th>
+					<th>Dịch vụ(thợ)</th>
 				</tr>
 				@foreach ($customerHistory as $customerHistory)
 					<tr>
@@ -60,11 +62,11 @@
 							@foreach ($customerHistory->billDetail as $service)
 								@if ($service->service_id !='')
 									<p>
-										» {{ $service->service->name }} + {{ $service->employee->full_name }}
+										{{ $service->service->name }} ({{ $service->employee->full_name }})
 									</p>
 								@else
 									<p>
-										» {{ $service->other_service }} + {{ $service->employee->full_name }}
+										» {{ $service->other_service }} ({{ $service->employee->full_name }})
 									</p>
 								@endif
 							@endforeach
@@ -80,20 +82,18 @@
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">NẠP TIỀN</h4>
-        	
+          <h3 class="modal-title">Nạp tiền</h3>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <!-- Modal body -->
         <div class="modal-body">
             <form method="post" action="{{ route('recharge') }}">
                 @csrf
-                <table>
+                <table class="list-table">
                 	<tr>
-                		<td>Khách hhàng</td>
-                		<td>:</td>
+                		<td style="background: #fafafa">Khách hhàng</td>
                 		<td>
-                			<select name="customer_id" class="form-control">
+                			<select name="customer_id" class="form-control input-control">
                 				<option value="{{ $customer->id }}">
                 					{{ $customer->full_name }}
                 				</option>
@@ -101,21 +101,17 @@
                 		</td>
                 	</tr>
                     <tr>
-                        <td>
+                        <td style="background: #fafafa">
                             Số tiền
                         </td>
                         <td>
-                            :
-                        </td>
-                        <td>
-                            <input required="required" id="format" type="text" class="form-control" name="money">
+                            <input required="required" id="format" type="text" class="form-control input-control" name="money">
                         </td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td style="background: #fafafa"></td>
                         <td>
-                            <button class="btn btn-primary" type="submit">NẠP</button>
+                            <button class="btn btn-primary button-control" type="submit">Nạp</button>
                         </td>
                     </tr>
                 </table>

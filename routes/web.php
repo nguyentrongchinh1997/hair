@@ -26,16 +26,19 @@ Route::group(['prefix' => 'mobile', 'middleware' => 'mobileMiddleware'], functio
     Route::get('the', 'mobile\CustomerController@card')->name('mobile.card');
 });
 /*========================End======================*/
+
 /*========================Route cho Mobile nhân viên======================*/
-Route::get('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@loginEmployeeView')->name('mobile.employee.login');
+Route::get('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@loginEmployeeView')->name('mobile.employee.login')->middleware('loginMobileEmployeeMiddleware');
 
 Route::post('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@postLoginEmployee')->name('mobile.employee.post.login');
 
-Route::group(['prefix' => 'mobile/nhan-vien'], function(){
+Route::group(['prefix' => 'mobile/nhan-vien', 'middleware' => 'mobileEmployeeMiddleware'], function(){
     Route::get('trang-chu', 'mobile\EmployeeController@homeView')->name('mobile.employee.home');
     Route::get('dang-xuat', 'mobile\EmployeeController@logout')->name('mobile.employee.logout');
     Route::get('thu-nhap', 'mobile\EmployeeController@salary')->name('mobile.employee.salary');
     Route::get('thu-nhap/tim-kiem', 'mobile\EmployeeController@search');
+    Route::get('lich-su', 'mobile\EmployeeController@history')->name('mobile.employee.history');
+    Route::get('lich-su/{ngay}', 'mobile\EmployeeController@historySearch');
 });
 /*========================End======================*/
 
@@ -46,7 +49,7 @@ Route::get('404', function(){
 Route::get('/', 'client\ClientController@homeView')->name('client.home');
 Route::get('nhan-vien/{type}', 'client\AjaxController@getEmployee');
 
-Route::get('dat-lich/{phone}', 'client\ClientController@orderView')->name('order.view');
+Route::get('dat-lich/{phone}', 'client\ClientController@orderView')->name('order.view')->middleware('checkPhoneMiddleware');
 Route::post('dat-lich', 'client\ClientController@order')->name('order');
 
 Route::post('phone', 'client\ClientController@postPhone')->name('post.phone');
@@ -163,15 +166,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
     Route::group(['prefix' => 'the', 'middleware' => 'accessMiddleware'], function(){
         Route::get('danh-sach', 'admin\CardController@getCardList')->name('card.list');
         Route::post('them', 'admin\CardController@postCard')->name('card.add');
-        Route::get('gia-han/{id}', 'admin\CardController@getExtensionView');
-        Route::post('gia-han/{id}', 'admin\CardController@postExtension')->name('extension');
+        
     });
 
     Route::group(['prefix' => 'chi-tieu', 'middleware' => 'accessMiddleware'], function(){
         Route::get('danh-sach', 'admin\ExpenseController@getViewExpense')->name('expense.list');
-        Route::post('danh-sach', 'admin\ExpenseController@expenseAdd')->name('expense.add');
-        Route::post('chi-tieu-theo-thang', 'admin\ExpenseController@expenseMonth')->name('expense.month');
-        Route::post('chi-tieu-theo-ngay', 'admin\ExpenseController@expenseDay')->name('expense.day');
+        Route::post('them', 'admin\ExpenseController@expenseAdd')->name('expense.add');
+        Route::post('danh-sach', 'admin\ExpenseController@expenseMonth')->name('expense.month');
+    });
+
+    Route::group(['prefix' => 'hoi-vien'], function(){
+        Route::get('danh-sach', 'admin\MembershipController@viewListMemberShip')->name('membership.list');
+        Route::post('danh-sach', 'admin\MembershipController@membershipAdd')->name('membership.add');
+        Route::get('gia-han/{id}', 'admin\MembershipController@getExtensionView');
+        Route::post('gia-han/{id}', 'admin\MembershipController@postExtension')->name('extension');
     });
     Route::get('logout', 'admin\LoginController@logout')->name('logout');
 });

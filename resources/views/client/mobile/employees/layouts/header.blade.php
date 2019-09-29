@@ -8,12 +8,20 @@
         <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('/font/fontawesome-free-5.10.0-web/css/all.css') }}" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('/js/datepicker/css/lightpick.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="{{ asset('/js/jquery.min.js') }}"></script>
         <script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('/js/mobile/mobile.js') }}"></script>
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/client/slick.css') }}">
         <script src="{{ asset('/js/client/slick.js') }}"></script>
+    
+<!-- thư hiện lightpick -->
+        <script async src="{{ asset('/js/datepicker/js/button.js') }}"></script>
+        <script src="{{ asset('/js/datepicker/js/moment.min.js') }}"></script>
+        <script src="{{ asset('/js/datepicker/js/lightpick.js') }}"></script>
+        <script src="{{ asset('/js/datepicker/js/demo.js') }}"></script>
+    <!-- end -->
     </head>
     <body>
         @if (auth('employees')->check())

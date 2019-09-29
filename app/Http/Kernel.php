@@ -64,6 +64,9 @@ class Kernel extends HttpKernel
         'accessMiddleware' => \App\Http\Middleware\AccessMiddleware::class,
         'mobileMiddleware' => \App\Http\Middleware\MobileMiddleware::class,
         'loginMobileMiddleware' => \App\Http\Middleware\LoginMobileMiddleware::class,
+        'mobileEmployeeMiddleware' => \App\Http\Middleware\MobileEmployeeMiddleware::class,
+        'loginMobileEmployeeMiddleware'=> \App\Http\Middleware\LoginMobileEmployeeMiddleware::class,
+        'checkPhoneMiddleware' => \App\Http\Middleware\CheckPhoneMiddleware::class
     ];
 
     /**

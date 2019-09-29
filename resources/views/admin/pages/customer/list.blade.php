@@ -3,7 +3,6 @@
 @section('content')
     <div class="row employee-add" style="padding-left: 40px; padding-top: 40px">
         <div class="col-lg-6">
-            <h2>DANH SÁCH KHÁCH HÀNG</h2>
             <div class="col-lg-12">
                 <div class="offset-lg-6">
                     <label>Tìm kiếm tại đây:</label>
@@ -23,14 +22,14 @@
                         {{ session('thongbao') }}
                     </div>
                 @endif
-                <table class="table table-bordered">
+                <table class="list-table">
                     <thead>
-                        <tr>
-                          <th scope="col">STT</th>
-                          <th scope="col">KHÁCH HÀNG</th>
+                        <tr style="background: #BBDEFB">
+                          <th scope="col">Stt</th>
+                          <th scope="col">Khách hàng</th>
                           <th scope="col">SĐT</th>
-                          <th scope="col">NGÀY SINH</th>
-                          <th scope="col">SỐ DƯ</th>
+                          <th scope="col">Ngày sinh</th>
+                          <th scope="col">Số dư</th>
                         </tr>
                     </thead>
                     <tbody id="list-customer">
@@ -49,7 +48,7 @@
                                 <td>
                                     {{ date('d/m/Y', strtotime($customer->birthday)) }}
                                 </td>
-                                <td style="text-align: right;">
+                                <td style="text-align: right; font-size: 18px">
                                     {{ number_format($customer->balance) }}<sup>đ</sup>
                                 </td>
                             </tr>
@@ -57,7 +56,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: 20px">
                 {{ $customerList->links() }}
                 <style type="text/css">
                     .pagination {

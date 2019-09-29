@@ -21,11 +21,9 @@ class CardService
 
     public function getCartList()
     {
-        $customerList = $this->customerModel->all();
         $serviceList = $this->serviceModel->all();
         $cardList = $this->cardModel->paginate(20);
         $data = [
-            'customerList' => $customerList,
             'serviceList' => $serviceList,
             'cardList' => $cardList,
         ];
@@ -37,11 +35,8 @@ class CardService
     {
         $id = $this->cardModel->insertGetId(
             [
-                'customer_id' => $request->customer_id,
                 'card_name' => $request->card_name,
                 'price' => str_replace(',', '', $request->price),
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
                 'created_at' => date('Y-m-d H:i:s'),
             ]
         );
@@ -50,28 +45,11 @@ class CardService
             $this->cardDetailModel->create(
                 [
                     'service_id' => $service,
-                    'customer_id' => $request->customer_id,
                     'card_id' => $id,
                     'percent' => $request->percent[$i],
                 ]
             );
             $i++;
         }
-    }
-
-    public function getExtensionView($id)
-    {
-        $card = $this->cardModel->findOrFail($id);
-        $data = ['card' => $card];
-
-        return $data;
-    }
-
-    public function postExtension($request, $id)
-    {
-        $card = $this->cardModel->findOrFail($id);
-        $card->end_time = $request->end_time;
-
-        return $card->save();
     }
 }

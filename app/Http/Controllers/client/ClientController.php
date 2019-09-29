@@ -99,14 +99,14 @@ class ClientController extends Controller
 
     public function orderView($phone)
     {
-        return view('client.pages.order.book', $this->clientService->timeList($phone));
+        return view('client.pages.order.book', $this->clientService->bookView($phone));
     }
 
     public function book(Request $request)
     {
         $this->clientService->book($request);
 
-        return back();
+        return back()->with('thongbao', 'Đặt lịch thành công');
     }
 
     public function logout()

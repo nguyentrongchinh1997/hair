@@ -2,7 +2,7 @@
 @foreach ($customer as $customer)
     @foreach ($customer->bill as $bill)
         @if ($bill->order->date == $date)
-        <tr style="cursor: pointer; @if ($bill->status == config('config.order.status.check-out')) {{ 'background: #d9edfe; color: #000' }} @endif" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}"> 
+        <tr style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}"> 
             <script type="text/javascript">
                 $(document).ready(function(){
                     $('.list-bill').click(function() {

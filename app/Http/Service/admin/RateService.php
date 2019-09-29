@@ -28,7 +28,7 @@ class RateService
         return $this->rateModel->updateOrCreate(
             ['id' => $rateId],
             [
-                'percent' => $request->percent,
+                'name' => $request->name,
             ]
         );
     }

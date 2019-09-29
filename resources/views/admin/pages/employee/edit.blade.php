@@ -1,13 +1,13 @@
 <form onsubmit="return validateEmployeeAdd()" method="post" action="{{ route('employee.edit', ['id' => $oldData->id]) }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <table class="view-employee-add">
+    <table class="list-table">
         <tr>
             <td>
                 Tên nhân viên
                 <input type="hidden" value="{{ $oldData->id }}" name="id">
             </td>
             <td>
-                <input type="text" class="form-control" required="required" value="{{ $oldData->full_name }}" name="full_name">
+                <input type="text" class="form-control input-control" required="required" value="{{ $oldData->full_name }}" name="full_name">
             </td>
         </tr>
         <tr>
@@ -15,7 +15,7 @@
                 Số điện thoại
             </td>
             <td>
-                <input type="text" class="form-control" required="required" value="{{ $oldData->phone }}" name="phone">
+                <input type="text" class="input-control form-control" required="required" value="{{ $oldData->phone }}" name="phone">
             </td>
         </tr>
         <tr>
@@ -23,7 +23,7 @@
                 Làm dịch vụ
             </td>
             <td>
-                <select name="service_id" class="form-control">
+                <select name="service_id" class="input-control form-control">
                     <option @if ($oldData->service_id == config('config.employee.type.skinner')) {{ 'selected' }} @endif value="2">Gội</option>
                     <option @if ($oldData->service_id == config('config.employee.type.stylist')) {{ 'selected' }} @endif value="1">Cắt</option>
                 </select>
@@ -34,7 +34,7 @@
                 Địa chỉ
             </td>
             <td>
-                <input value="{{ $oldData->address }}" type="text" class="form-control" name="address">
+                <input value="{{ $oldData->address }}" type="text" class="input-control form-control" name="address">
             </td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
                 Lương cứng (vnđ)
             </td>
             <td>
-                <input id="format-number" type="text" value="{{ $oldData->salary }}" name="salary" class="form-control">
+                <input id="format-number" type="text" value="{{ $oldData->salary }}" name="salary" class="input-control form-control">
             </td>
         </tr>
         <tr>
@@ -50,7 +50,7 @@
                 Trạng thái
             </td>
             <td>
-                <select class="form-control" name="status">
+                <select class="input-control form-control" name="status">
                     <option @if ($oldData->status == config('config.employee.status.doing')) {{ 'selected' }} @endif value="1">
                         Đang làm
                     </option>
@@ -63,7 +63,7 @@
         <tr>
             <td></td>
             <td>
-                <input class="btn btn-primary" value="Sửa" type="submit" name="">
+                <input class="btn btn-primary input-control" value="Sửa" type="submit" name="">
             </td>
         </tr>
     </table>

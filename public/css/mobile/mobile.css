@@ -142,10 +142,6 @@ footer i{
     color: #fff;
     border-bottom: 4px solid #8e8d8d;
 }
-.history ul{
-    padding-left: 0px;
-    list-style-type: none;
-}
 .pick-service{
     background: #727272;
     padding: 4px 0px;
@@ -181,11 +177,6 @@ footer i{
     width: 30%;
     left: 0px;
 }*/
-.history ul li{
-    padding: 10px;
-    border: 1px solid #e5e5e5;
-    margin-bottom: 20px;
-}
 .employee-login{
     border-radius: 4px;
     width: 100%;
@@ -280,5 +271,71 @@ footer i{
 }
 .tab table tr td{
     border: 1px solid #e5e5e5;
-    padding: 5px;
+    padding: 8px;
+}
+.tab table tr td:nth-child(4){
+    color: #727272;
+}
+.tab table tr td:nth-child(2){
+    color: #727272;
+}
+.tab table tr td:nth-child(3){
+    font-weight: bold;
+}
+
+/*#pick-day table tr td{
+    border:  0px !important;
+}*/
+.history-employee table{
+    width: 100%;
+}
+.history-employee .history-list tr td, .history-employee .history-list tr th{
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+}
+.book-notification{
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    z-index: 5;
+    background: #d4edda;
+    height: 93px;
+    opacity: 0.9;
+    color: #155724;
+    font-weight: bold;
+}
+.book-notification i{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 20px;
+    color: red;
+}
+.book-notification p{
+    text-align: center; 
+    line-height: 93px; 
+    width: 100%;
+}
+.card-membership{
+    width: 100%;
+}
+.card-membership tr td{
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+}
+.card-membership tr td:nth-child(1){
+    background: #fafafa;
+}
+.history table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.history table tr td{
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+}
+.history table tr td:nth-child(1){
+    background: #fafafa;
+    font-weight: bold;
+    width: 40%;
 }

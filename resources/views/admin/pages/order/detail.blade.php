@@ -65,11 +65,11 @@
             </table>
         </div>
     </div><hr>
-    <div class="row" style="margin-top: 40px">
+    <div class="row">
         <div class="col-lg-12">
             <form onsubmit="return validateForm()" action="{{ route('check-in', ['id' => $orderDetail->id]) }}" method="post">
                 @csrf
-                <table style="width: 100%">
+                <table style="width: 100%" class="order-detail">
                     <tr class="update-customer-ajax">
                         <script type="text/javascript">
                             $(function(){
@@ -123,7 +123,7 @@
                         <tr>
                             <td>Tên khách hàng</td>
                             <td>
-                                <input type="text" name="full_name" placeholder="Nhập tên khách hàng" class="form-control name-customer">
+                                <input type="text" name="full_name" placeholder="Nhập tên khách hàng" class="form-control name-customer input-control">
                             </td>
                         </tr>
                         <tr>
@@ -131,7 +131,7 @@
                                 Ngày sinh
                             </td>
                             <td>
-                                <input type="date" class="form-control birthday" name="birthday">
+                                <input type="date" class="form-control birthday input-control" name="birthday">
                             </td>
                         </tr>
                     @else
@@ -162,19 +162,34 @@
                             {{ $orderDetail->time->time }}
                         </td>
                     </tr>
-                </table>
-                <p class="notification" style="text-align: center; font-size: 30px">
+                    <tr>
+                        <td>Khách yêu cầu</td>
+                        <td>
+                            <label style="margin-right: 10px">
+                                <input
+                                    @if ($orderDetail->request == config('config.request.yes')) {{'checked'}} @endif
+                                type="radio" value="1" name="require"> Có
+                            </label>
+                            <label>
+                                <input 
+                                    @if ($orderDetail->request == config('config.request.no')) {{'checked'}} @endif
+                                style="padding-left: 10px" value="0" type="radio" name="require"> Không
+                            </label>
+                            
+                        </td>
+                        
+                    </tr>
+                </table><br>
+                <p class="notification" style="text-align: center; font-size: 20px; margin-bottom: 10px">
                     
                 </p>
-                <table class="list-service-order">
-                    <tr>
+                <table class="list-table">
+                    <tr style="background: #BBDEFB">
                         <th>Dịch vụ</th>
                         <th>Thợ chính</th>
                         <th>Thợ phụ (nếu cần)</th>
                         <th>Giá</th>
-                        @if ($orderDetail->status == config('config.order.status.check-in'))
-                            <th>Xóa</th>
-                        @endif
+                        <th>Xóa</th>
                     </tr>
                     @foreach ($orderDetail->orderDetail as $serviceOrder)
                         <tr id="row{{ $serviceOrder->id }}">
@@ -185,7 +200,7 @@
                                     @endif 
                                     onchange="editService({{ $serviceOrder->id }})" 
                                     id="service{{ $serviceOrder->id }}" 
-                                    style="width: 100%" class="form-control"
+                                    style="width: 100%" class="form-control input-control"
                                 >
                                     @foreach ($serviceList as $service)
                                         <option value="{{ $service->id }}" @if ($service->id == $serviceOrder->service_id) {{ 'selected' }} @endif value="{{ $service->id }}">
@@ -201,7 +216,7 @@
                                     @endif 
                                     onchange="editEmployee({{ $serviceOrder->id }})" 
                                     id="employee{{ $serviceOrder->id }}" name="employee_id" 
-                                    class="form-control employee"
+                                    class="form-control input-control employee"
                                 >
                                     @if ($serviceOrder->employee_id == '')
                                         <option value="0">Chọn thợ</option>
@@ -221,7 +236,7 @@
                                     onchange="assistant({{ $serviceOrder->id }})" 
                                     id="assistant{{ $serviceOrder->id }}"
                                     name="employee_id" 
-                                    class="form-control employee"
+                                    class="form-control input-control employee"
                                 >
                                     <option value="0">Chọn thợ phụ</option>
                                     @foreach ($employeeList as $employee)
@@ -238,20 +253,22 @@
                             <td style="text-align: right;">
                                 {{ number_format($serviceOrder->service->price) }}<sup>đ</sup>
                             </td>
-                            @if ($orderDetail->status == config('config.order.status.create'))
-                                <td style="text-align: center; color: red">
+                            
+                            <td style="text-align: center; color: red">
+                                @if ($orderDetail->status == config('config.order.status.create'))
                                     <a style="color: red" onclick="return deleteService({{ $serviceOrder->id }})">
                                         <i style="cursor: pointer;"  class="fas fa-times"></i>
                                     </a>
-                                </td>
-                            @endif
+                                @endif
+                            </td>
+                            
                         </tr>
                     @endforeach
-
                 </table>
                 @if ($orderDetail->status == config('config.order.status.create'))
                     <center class="test" style="margin-top: 30px">
-                        <input style="width: 140px; height: 50px; font-size: 20px" type="submit" value="CHECK-IN" class="btn btn-primary" name="">
+                       <!--  <input style="width: 140px; height: 40px; font-size: 20px" type="submit" value="Check-in" class="btn btn-primary" name=""> -->
+                        <button style="margin-top: 30px" type="submit" class="btn btn-primary button-control">Check-in</button>
                     </center>
                 @endif
             </form>

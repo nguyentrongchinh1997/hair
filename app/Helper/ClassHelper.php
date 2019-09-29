@@ -48,6 +48,16 @@ class ClassHelper
         }
     }
 
+    public static function checkOrderCreate($key)
+    {
+        $check = Order::findOrFail($key);
+        if ($check->status == config('config.order.status.create')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function check()
     {
         $dem = 0;
@@ -111,5 +121,12 @@ class ClassHelper
 
             return $dem;
         }
+    }
+
+    public static function getCustomer($billId)
+    {
+        $customer = Bill::where('id', $billId)->where('status', config('config.order.status.check-out'))->first();
+
+        return $customer;
     }
 }

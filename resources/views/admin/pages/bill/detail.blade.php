@@ -43,6 +43,9 @@
                 @endphp
                 {{ date_format($date, 'd/m/Y') }}
             </p>
+            <p style="font-weight: bold;">
+                SĐT: {{ substr($bill->customer->phone, 0, 4) }}.{{ substr($bill->customer->phone, 4, 3) }}.{{ substr($bill->customer->phone, 7, 3) }}
+            </p>
         </div>
         <div class="col-lg-6">
             <table class="header-order" style="width: 100%">
@@ -124,31 +127,29 @@
                     </td>
                     <td>:</td>
                     <td style="font-weight: bold;">
-                        {{ number_format($service->price) }}<sup>d</sup>
+                        {{ number_format($service->price) }}<sup>đ</sup>
                         <input type="hidden" id="hidden{{ $service->id }}" value="0" name="">
                     </td>
                 </tr>
             @endforeach
         </table>
-    </div>
-    <div class="col-lg-12" style="padding: 0px">
+    </div><br>
+    <div class="col-lg-12">
         @if ($bill->status != config('config.order.status.check-out'))
-            <button style="float: right; margin-bottom: 20px; height: 50px" type="button" class="add-service btn btn-primary" data-toggle="modal" data-target="#myModal">
-                THÊM DỊCH VỤ
+            <button style="float: right; margin-bottom: 20px" type="button" class="button-control add-service btn btn-primary" data-toggle="modal" data-target="#myModal">
+                Thêm dịch vụ
             </button>
-            <button style="float: left; margin-bottom: 20px; height: 50px; background: #FF9800; border: 0px" type="button" class="add-service btn btn-primary" data-toggle="modal" data-target="#service-other">
-                THÊM DỊCH VỤ KHÁC
+            <button style="float: left; margin-bottom: 20px; background: #FF9800; border: 0px" type="button" class="add-service btn btn-primary button-control" data-toggle="modal" data-target="#service-other">
+                Thêm dịch vụ khác
             </button>
         @endif
         <div class="modal fade" id="service-other">
             <div class="modal-dialog">
               <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header">
-                  <h4 class="modal-title">DỊCH VỤ KHÁC</h4>
+                  <h3 class="modal-title">Thêm dịch vụ khác</h3>
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <!-- Modal body -->
                 <div class="modal-body">
                     <table class="service-other">
                         <tr>
@@ -156,7 +157,7 @@
                                 Tên dịch vụ
                             </td>
                             <td>
-                                <input type="text" id="service-dif" placeholder="Nhập tên dịch vụ..." class="form-control" name="">
+                                <input type="text" id="service-dif" placeholder="Nhập tên dịch vụ..." class="form-control input-control" name="">
                             </td>
                         </tr>
                         <tr>
@@ -167,40 +168,68 @@
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-employee-other{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
                                 @endforeach
-                                <select onchange="employeeForServiceOther()" id="employeeForServiceOther" class="option-employee form-control">
-                                    <option value="0">Chọn thợ chính</option>
-                                    @foreach ($employeeList as $employee)
-                                        <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                            {{ $employee->full_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label style="margin-top: 8px; font-weight: bold">
-                                    Chiết khấu % thợ chính
-                                </label>
-                                <input id="percent-employee" placeholder="% thợ chính" type="number" class="form-control" name="">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            Chọn thợ
+                                        </td>
+                                        <td>
+                                            <select onchange="employeeForServiceOther()" id="employeeForServiceOther" class="option-employee form-control input-control">
+                                                <option value="0">Chọn thợ</option>
+                                                @foreach ($employeeList as $employee)
+                                                    <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                        {{ $employee->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label style="margin-top: 8px; font-weight: bold">
+                                                Chiết khấu (%)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="percent-employee" placeholder="% thợ chính" type="number" class="form-control input-control" name="">
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                Chọn thợ phụ
+                                Chọn thợ phụ <span style="color: red">(nếu cần)</span>
                             </td>
                             <td>
                                 @foreach ($employeeList as $employee)
-                                    <input type="hidden" id="name-assistant-other{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
+                                    <input type="hidden" class="input-control" id="name-assistant-other{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
                                 @endforeach
-                                <select onchange="employeeAssistantForServiceOther()" id="employee-assistant-for-service-other" class="option-employee form-control">
-                                    <option value="0">Chọn thợ phụ</option>
-                                    @foreach ($employeeList as $employee)
-                                        <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                            {{ $employee->full_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label style="margin-top: 8px; font-weight: bold">
-                                    Chiết khấu % thợ phụ
-                                </label>
-                                <input id="percent-assistant" placeholder="% thợ phụ" type="number" class="form-control" name="">
+                                <table>
+                                    <tr>
+                                        <td>Chọn thợ</td>
+                                        <td>
+                                            <select onchange="employeeAssistantForServiceOther()" id="employee-assistant-for-service-other" class="option-employee form-control input-control">
+                                                <option value="0">Chọn thợ</option>
+                                                @foreach ($employeeList as $employee)
+                                                    <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                        {{ $employee->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label style="margin-top: 8px; font-weight: bold">
+                                                Chiết khấu (%)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="percent-assistant" placeholder="% thợ phụ" type="number" class="input-control form-control" name="">
+                                        </td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
                         <tr>
@@ -208,13 +237,13 @@
                                 Giá dịch vụ
                             </td>
                             <td>
-                                <input type="text" id="price-dif" id="formattedNumberField" placeholder="Điền giá dịch vụ..." class="form-control" name="">
+                                <input type="text" id="price-dif" id="formattedNumberField" placeholder="Điền giá dịch vụ..." class="form-control input-control" name="">
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <button data-dismiss="modal" style="font-weight: normal; float: left; height: 50px; width: 50%; font-size: 23px; background: #007bff; color: #fff; opacity: 1;" id="add-other-service" class="close btn btn-primary">
+                                <button data-dismiss="modal" style="font-weight: normal; float: left; width: 50%; background: #007bff; color: #fff; opacity: 1;" id="add-other-service" class="close btn btn-primary button-control">
                                     THÊM
                                 </button>
                             </td>
@@ -263,7 +292,7 @@
                                                 nameAssistant = '';
                                             }
                                             $('#service-dif, #percent-employee, #percent-assistant, #price-dif').val('');
-                                            $('#list-service').append(data);
+                                            $('#list-table').append(data);
                                         } else {
                                             alert('Hóa đơn đã được thanh toán, bạn không thể thêm dịch vụ.');
                                         }
@@ -284,7 +313,7 @@
               <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                  <h4 class="modal-title">THÊM DỊCH VỤ</h4>
+                  <h3 class="modal-title">Thêm dịch vụ</h3>
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <!-- Modal body -->
@@ -296,9 +325,9 @@
                             </td>
                             <td>
                                 @foreach ($serviceList as $service)
-                                    <input data="{{ $service->price }}" type="hidden" id="name-service{{ $service->id }}" value="{{ $service->name }}" name="">
+                                    <input data="{{ $service->price }}" class="input-control" type="hidden" id="name-service{{ $service->id }}" value="{{ $service->name }}" name="">
                                 @endforeach
-                                <select class="option-service form-control">
+                                <select class="option-service form-control input-control">
                                     <option value="0">Chọn dịch vụ</option>
                                     @foreach ($serviceList as $service)
                                         <option value="{{ $service->id }}">
@@ -317,7 +346,7 @@
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-employee{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
                                 @endforeach
-                                <select onchange="optionEmployee()" id="option-employee" class="option-employee form-control">
+                                <select onchange="optionEmployee()" id="option-employee" class="option-employee form-control input-control">
                                         <option value="0">Chọn thợ chính</option>
                                     @foreach ($employeeList as $employee)
                                         <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
@@ -329,14 +358,14 @@
                         </tr>
                         <tr>
                             <td>
-                                Chọn thợ phụ
+                                Chọn thợ phụ <span style="color: red">(nếu cần)</span>
                             </td>
                             <td>
                                 @foreach ($employeeList as $employee)
                                     <input type="hidden" id="name-assistant{{ $employee->id }}" value="{{ $employee->full_name }}" name="">
                                 @endforeach
-                                <select onchange="optionAssistant()" class="assistant form-control">
-                                        <option value="0">Chọn thợ phụ</option>
+                                <select onchange="optionAssistant()" class="assistant form-control input-control">
+                                        <option value="0">Chọn thợ phụ (nếu cần)</option>
                                     @foreach ($employeeList as $employee)
                                         <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
                                             {{ $employee->full_name }}
@@ -384,7 +413,7 @@
                                     } else {
                                         $.get('admin/hoa-don/dich-vu/them?billId=' + bill_id + '&serviceId=' + serviceId + '&employeeId=' + employeeId + '&assistantId=' + assistantId, function(data){
                                                 $('.option-service, #option-employee, .assistant').val(0);
-                                                $('#list-service').append(data);
+                                                $('#list-table').append(data);
                                         });
                                     }
                                 })
@@ -401,17 +430,15 @@
                                             $('#row' + id).remove();
                                         } else {
                                             alert('Hóa đơn đã hoàn thành, bạn không được phép xóa.');
-                                        }
-                                        
-                                    })
-                                    
+                                        }  
+                                    })   
                                 }
                             </script>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
-                                <button data-dismiss="modal" style="font-weight: normal; float: left; height: 50px; width: 50%; font-size: 23px; background: #007bff; color: #fff; opacity: 1;" id="add-service" class="close btn btn-primary">
+                                <button data-dismiss="modal" style="font-weight: normal; float: left; width: 50%;background: #007bff; color: #fff; opacity: 1;" id="add-service" class="close btn btn-primary button-control">
                                     THÊM
                                 </button>
                             </td>
@@ -424,13 +451,13 @@
               </div>
             </div>
           </div>
-        <table id="list-service">
-            <tr style="background: #eee">
+        <table class="list-table" id="list-table">
+            <tr style="background: #BBDEFB">
                 <th>Dịch vụ</th>
                 <th>Thợ chính</th>
                 <th>Thợ phụ</th>
                 <th>Giá</th>
-                <th>Ghi chú</th>
+                <th>Thẻ hội viên</th>
             </tr>
             @foreach ($serviceListUse as $service)
                 <tr>
@@ -455,14 +482,17 @@
                     <td>
                         @if ($service->sale_money < $service->money)
                             <span>
-                                tặng {{ (number_format($service->money - $service->sale_money)) }}<sup>đ</sup><br>
-                                <span style="color: red">({{ $cardName }})</span>
+                                <span>{{ $cardName }}</span><br>
+                                <span style="color: red">
+                                    (đã tặng {{ (number_format($service->money - $service->sale_money)) }}<sup>đ</sup>)
+                                </span>
+                                
                             </span>
                         @endif
                     </td>
                 </tr>
             @endforeach
-        </table>
+        </table><br>
         <table style="width: 100%">
             @if ($bill->status == config('config.order.status.check-out'))
                 <tr>
@@ -479,7 +509,7 @@
                     </td>
                     <td style="width: 10%">:</td>
                     <td style="width: 50%">
-                        <input type="text" placeholder="0" value="{{ $bill->sale }}" id="sale" class="form-control" name="">
+                        <input type="text" placeholder="0" value="{{ $bill->sale }}" id="sale" class="form-control input-control" name="">
                     </td>
                     
                 </tr>
@@ -500,7 +530,7 @@
                     </td>
                     <td>:</td>
                     <td>
-                        <input type="text" value="{{ $bill->sale_detail }}" class="form-control" placeholder="Nội dùng giảm giá" id="sale_detail" name="">
+                        <input type="text" value="{{ $bill->sale_detail }}" class="input-control form-control" placeholder="Nội dùng giảm giá" id="sale_detail" name="">
                     </td>
                 </tr>
             @endif
@@ -518,7 +548,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Thanh toán dịch vụ</h4>
+                      <h3 class="modal-title">Thanh toán dịch vụ</h3>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body" id="modal-body">
@@ -534,7 +564,7 @@
         billId = $('#bill_id').val();
         sale_detail = $('#sale_detail').val();
         sale = $('#sale').val();
-        $.get('danh-gia/noi-dung/' + billId);
+        // $.get('danh-gia/noi-dung/' + billId);
         $.get('admin/hoa-don/cap-nhat/thu-ngan/' + billId);
         
         if (sale == '') {

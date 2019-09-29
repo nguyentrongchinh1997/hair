@@ -1,7 +1,7 @@
 @extends('client.layouts.index')
 
 @section('content')
-<div class="container">
+<div class="container" style="background: hsla(0,0%,100%,.52); min-height: 500px">
     <div class="row">
     <!--     <div id="demo" class="carousel slide" data-ride="carousel">
           <ul class="carousel-indicators">
@@ -27,11 +27,11 @@
             <span class="carousel-control-next-icon"></span>
           </a>
         </div> -->
-        @if (auth('customers')->check())
+        @if (auth('customers')->check() && $card != '')
             <div class="col-lg-4">
                 <div class="card">
                     <img src="http://moviee.vn/public/img/moviee.vn.png" style="max-width: 40%; margin: auto;">
-                    <p style="text-transform: uppercase;">{{ $card->card_name }}</p>
+                    <p style="text-transform: uppercase;">{{ $card->card->card_name }}</p>
                 </div>
             </div>
         @else
@@ -40,7 +40,12 @@
         @endif
         <div class="col-lg-4" style="padding: 0px">
             <div class="input-sologan">
-                <form method="post" action="{{ route('post.phone') }}">
+                @if (session('thongbao'))
+                    <div class="alert alert-danger">
+                        {{ session('thongbao') }}
+                    </div>
+                @endif
+                <form method="post" action="{{ route('post.phone') }}" style="box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);">
                 @csrf
                     <div class="input-phone" style="background: #fff">
                         <div class="input-text">
@@ -63,11 +68,11 @@
                 </form>
             </div>
         </div>
-        @if (auth('customers')->check())
+        @if (auth('customers')->check() && $card != '')
             <div class="col-lg-4 sale-service" style="padding-top: 40px;">
                 <p style="text-align: center; font-weight: bold; font-size: 25px">ƯU ĐÃI LỚN KHI</p>
                 <ul>
-                    @foreach ($card->cardDetail as $service)
+                    @foreach ($card->card->cardDetail as $service)
                         <li style="margin-bottom: 20px">
                             <table style="width: 100%">
                                 <tr>

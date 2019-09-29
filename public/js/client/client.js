@@ -137,6 +137,7 @@ function pickHair(serviceId)
     } else {
         $('#check' + serviceId).hide();
         $('.stylist').hide();
+        $('#stylist').hide();
     }
 }
 function pickSkinner(serviceId)
@@ -144,12 +145,14 @@ function pickSkinner(serviceId)
     if ($('.service-skinner' + serviceId).is(":checked")) {
         $('#icon-check-skinner').show();
         $('.skinner').show();
+        $('#skinner').show();
         $.get('skinner/list/' + serviceId, function(data){
             $('.skinner').html(data);
         })
     } else {
         $('#icon-check-skinner').hide();
         $('.skinner').hide();
+        $('#skinner').hide();
     }
 }
 $(function(){
@@ -160,6 +163,7 @@ $(function(){
             $('.skinner').html(data);
         })
     }
+
 })
 
 function pickStylist(id)
@@ -180,6 +184,11 @@ function optionStylist(id)
 {
     $('.thumnail-stylist').removeClass('avatar-stylist');
     $('.avatar-stylist' + id).addClass('avatar-stylist');
-    $('.radio-stylist1').prop('checked', false);
+    $('.radio-stylist').prop('checked', false);
     $('#stylist' + id).prop('checked', true);
 }
+$(function(){
+    $('.notification-book i').click(function(){
+        $('.notification-book').hide();
+    })
+})

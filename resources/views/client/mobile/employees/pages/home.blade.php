@@ -1,9 +1,9 @@
 @extends('client.mobile.employees.layouts.index')
     
 @section('content')
-    <div class="row employee-order" style="margin-top: 92px !important;">
+    <div class="row employee-order" style="margin-top: 92px !important; margin-bottom: 100px !important">
         <div class="col-12" style="background: #eee; padding: 10px 15px">
-            » Khách đang phục vụ
+            » Khách đã check-in
         </div>
         <div class="col-12">
             <table>
@@ -49,7 +49,7 @@
             </table>
         </div>
         <div class="col-12" style="background: #eee; padding: 10px 15px; margin-top: 20px">
-            » Khách đang đợi
+            » Khách đặt lịch
         </div>
         <div class="col-12">
             <table>
@@ -74,24 +74,42 @@
                     </tr>
                 @else
                     @foreach (App\Helper\ClassHelper::getOrderId() as $key => $order)
-                        <tr>
-                            <td>
-                                {{ App\Helper\ClassHelper::customerNameOrder($key)->customer->full_name }}
-                            </td>
-                            <td>
-                                {{ App\Helper\ClassHelper::customerNameOrder($key)->time->time }}
-                            </td>
-                            <td>
-                                @foreach (App\Helper\ClassHelper::customerNameOrder($key)->orderDetail as $service)
-                                    {{ $service->service->name }},
-                                @endforeach
-                            </td>
-                        </tr>
-                       
+                        @if (App\Helper\ClassHelper::checkOrderCreate($key) == true)
+                            <tr>
+                                <td>
+                                    @if (App\Helper\ClassHelper::customerNameOrder($key)->customer->full_name == '')
+                                        <i>Chưa có tên</i>
+                                    @else
+                                        {{ App\Helper\ClassHelper::customerNameOrder($key)->customer->full_name }}
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ App\Helper\ClassHelper::customerNameOrder($key)->time->time }}
+                                </td>
+                                <td>
+                                    @foreach (App\Helper\ClassHelper::customerNameOrder($key)->orderDetail as $service)
+                                        @if ($service->service_id != '')
+                                            {{ $service->service->name }}, 
+                                        @else
+                                            {{ $service->other_service }}, 
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 @endif
            
             </table>
+        </div>
+        <div class="col-12">
+            <center>
+                <a style="color: #fff" href="{{ route('mobile.employee.home') }}">
+                    <button style="color: #fff; background: #000; border: 0px; margin-top: 20px; padding: 7px 20px; border-radius: 4px">
+                        Tải lại
+                    </button>
+                </a>
+            </center>
         </div>
     </div>
 @endsection

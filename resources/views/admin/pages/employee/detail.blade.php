@@ -1,7 +1,7 @@
 <div class="row" style="border: 1px solid #e5e5e5;">
 	<div class="col-lg-12" style="padding: 15px 30px">
 		<h3 style="text-align: center;">
-			THÔNG TIN NHÂN VIÊN
+			Thông tin nhân viên
 		</h3>
 		<table>
 			<tr>
@@ -19,11 +19,12 @@
 				</td>
 			</tr>
 		</table><hr>
-		<h3 style="text-align: center;">
-			CHI TIẾT HOA HỒNG (<span style="color: #007bff">{{ date('m/Y', strtotime($date)) }}</span>)
+		<h3 style="text-align: center; margin-bottom: 20px">
+			Chi tiết hoa hồng (<span style="color: #007bff">{{ date('m/Y', strtotime($date)) }}</span>)
 		</h3>
-		<table class="salary-list">
-			<tr>
+		<div class="row" style="height: 400px; overflow: auto;">
+		<table class="list-table">
+			<tr style="background: #BBDEFB">
 				<th>STT</th>
 				<th>DỊCH VỤ</th>
 				<th>GIÁ</th>
@@ -50,7 +51,7 @@
 						<td style="text-align: center;">
 							{{ $commision->percent }}%
 						</td>
-						<td style="text-align: right; font-size: 25px; font-weight: bold;">
+						<td style="text-align: right; font-size: 20px; font-weight: bold;">
 							{{ number_format($commision->percent/100 * $commision->billDetail->money) }}<sup>đ</sup>
 						</td>
 						@php $total =  $total + $commision->percent/100 * $commision->billDetail->money @endphp
@@ -59,16 +60,17 @@
 			@endforeach
 				<tr>
 					<td colspan="4" style="text-align: right;">TỔNG</td>
-					<td style="text-align: right; font-size: 25px; font-weight: bold; color: #007bff">
+					<td style="text-align: right; font-size: 20px; font-weight: bold; color: #007bff">
 						{{ number_format($total) }}<sup>đ</sup>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align: right;">TỔNG LƯƠNG</td>
-					<td style="text-align: right; font-size: 25px; font-weight: bold; color: #007bff">
+					<td style="text-align: right; font-size: 20px; font-weight: bold; color: #007bff">
 						{{ number_format($total + $employee->salary) }}<sup>đ</sup>
 					</td>
 				</tr>
 		</table>
+		</div>
 	</div>
 </div>

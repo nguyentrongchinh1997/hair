@@ -21,6 +21,29 @@ jQuery(document).ready(function($) {
            }
         }]
     });
+
+    $('.slide-employee').slick({
+      dots: false,
+      infinite: true,
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      autoplay: false,
+      arrows: true,
+      responsive: [{
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 2
+        }
+      },
+      {
+         settings: {
+            arrows: false,
+            slidesToShow: 2,
+            slidesToScroll: 2
+         }
+      }]
+    });
 });
 
 // Slick Slider Script -- Provided by https://kenwheeler.github.io/slick/

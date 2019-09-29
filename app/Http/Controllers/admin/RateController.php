@@ -23,6 +23,6 @@ class RateController extends Controller
     {
         $this->rateService->postRate($request, $rateId);
 
-        return back()->with('thongbao', 'Sửa phần trăm thành công');
+        return back()->with('thongbao', 'Sửa thành công');
     }
 }

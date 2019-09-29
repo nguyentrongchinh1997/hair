@@ -29,8 +29,11 @@
                         <td>
                             {{ $salary->percent }}%
                         </td>
+                        <td style="text-align: right;">
+                                {{ number_format($salary->percent/100 * $salary->billDetail->money) }}<sup>đ</sup>
+                            </td>
                         <td>
-                            {{ date('H:i:s', strtotime($salary->created_at)) }}
+                            {{ date('d/m/Y H:i', strtotime($salary->created_at)) }}
                         </td>
                     </tr>
                 @endif
@@ -45,3 +48,4 @@
         @endif
     </table>
 </div>
+

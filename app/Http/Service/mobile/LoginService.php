@@ -19,7 +19,7 @@ class loginService
 		$checkPhone = $this->customerModel->where('phone', $phone)->count();
 
 		if ($checkPhone > 0) {
-			Auth::guard('customers')->attempt(['phone' => $phone, 'password' => $phone]);
+			Auth::guard('customers')->attempt(['phone' => $phone, 'password' => $phone], true);
 		} else {
 			/*insert vào bảng orders*/
                 $user = $this->customerModel->create([

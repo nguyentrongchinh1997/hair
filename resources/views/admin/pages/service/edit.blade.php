@@ -1,12 +1,12 @@
 <form method="post" action="{{ route('service.edit', ['id' => $oldData->id]) }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <table>
+    <table class="list-table">
         <tr>
             <td>
                 Tên dịch vụ
             </td>
             <td>
-                <input type="text" class="form-control" required="required" value="{{ $oldData->name }}" name="name">
+                <input type="text" class="form-control input-control" required="required" value="{{ $oldData->name }}" name="name">
             </td>
         </tr>
         <tr>
@@ -14,7 +14,7 @@
                 Giá
             </td>
             <td>
-                <input type="text" value="{{ $oldData->price }}" id="format-number" class="h form-control" required="required" name="price">
+                <input type="text" value="{{ $oldData->price }}" id="format-number" class="h form-control input-control" required="required" name="price">
             </td>
         </tr>
         <tr>
@@ -23,7 +23,7 @@
                 <span style="color: red">(Khách không yêu cầu)</span>
             </td>
             <td>
-                <input type="number" value="{{ $oldData->percent }}" class="form-control" required="required" name="percent">
+                <input type="number" value="{{ $oldData->percent }}" class="form-control input-control" required="required" name="percent">
             </td>
         </tr>
         <tr>
@@ -32,19 +32,19 @@
                 <span style="color: red">(Khách yêu cầu)</span>
             </td>
             <td>
-                <input type="number" value="{{ $oldData->main_request_percent }}" class="form-control" required="required" name="main_request_percent">
+                <input type="number" value="{{ $oldData->main_request_percent }}" class="form-control input-control" required="required" name="main_request_percent">
             </td>
         </tr>
         <tr>
             <td>Chiết khấu thợ phụ (%)</td>
             <td>
-                <input type="number" value="{{ $oldData->assistant_percent }}" class="form-control" required="required" name="assistant_percent">
+                <input type="number" value="{{ $oldData->assistant_percent }}" class="form-control input-control" required="required" name="assistant_percent">
             </td>
         </tr>
         <tr>
             <td></td>
             <td>
-                <input class="btn btn-primary" value="Sửa" type="submit" name="">
+                <input class="btn btn-primary button-control" value="Sửa" type="submit" name="">
             </td>
         </tr>
     </table>

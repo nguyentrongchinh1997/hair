@@ -3,9 +3,10 @@
     <tr style="cursor: pointer;" onclick="employeeDetail({{ $employee->id }})" class="employee" id="employee{{ $employee->id }}">
         <th scope="row">{{ ++$stt }}</th>
         <td>
-            <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
+<!--             <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
                 {{ $employee->full_name }}
-            </a>
+            </a> -->
+            {{ $employee->full_name }}
         </td>
         <td>
             {{ substr($employee->phone, 0, 4) }}.{{ substr($employee->phone, 4, 3) }}.{{ substr($employee->phone, 7) }}

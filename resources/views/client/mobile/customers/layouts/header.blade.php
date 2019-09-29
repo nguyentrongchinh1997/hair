@@ -16,6 +16,14 @@
     </head>
     <body style="@if(Request::is('mobile/dang-nhap'))@php echo 'background: #000;';@endphp@endif">
         @if (auth('customers')->check())
+            @if (session('thongbao'))
+                <div class="animated fadeInLeftBig row book-notification">
+                    <i class="fas fa-times"></i>
+                    <p>
+                        {{ session('thongbao') }}
+                    </p>
+                </div>
+            @endif
             <div class="row top-header">
                 <div class="container">
                     <div class="col-12" style="padding: 10px 0px">

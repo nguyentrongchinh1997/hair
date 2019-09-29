@@ -12,7 +12,7 @@
         <tr>
         	<td style="background: #eee">Thời gian</td>
         	<td>
-        		<input class="form-control" type="date" value="{{ $card->end_time }}" name="end_time">
+        		<input class="form-control input-control" type="date" value="{{ $card->end_time }}" name="end_time">
         	</td>
         </tr>
     </table>

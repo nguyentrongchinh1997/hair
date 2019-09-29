@@ -13,12 +13,13 @@ use App\Model\Employee;
 use App\Model\OrderDetail;
 use App\Model\Card;
 use Illuminate\Support\Facades\Auth; //Thư viện để đăng nhập
+use App\Model\Membership;
 
 class ClientService
 {
-    protected $timeModel, $customerModel, $orderModel, $serviceModel, $billModel, $billDetailModel, $rateModel, $employeeModel, $orderDetailModel, $cardModel;
+    protected $timeModel, $customerModel, $orderModel, $serviceModel, $billModel, $billDetailModel, $rateModel, $employeeModel, $orderDetailModel, $cardModel, $membershipModel;
 
-    public function __construct(Time $time, Customer $customer, Order $order, Service $service, Bill $bill, BillDetail $billDetail, Rate $rate, Employee $employee, OrderDetail $orderDetail, Card $card)
+    public function __construct(Time $time, Customer $customer, Order $order, Service $service, Bill $bill, BillDetail $billDetail, Rate $rate, Employee $employee, OrderDetail $orderDetail, Card $card, Membership $member)
     {
         $this->timeModel = $time;
         $this->customerModel = $customer;
@@ -30,48 +31,28 @@ class ClientService
         $this->employeeModel = $employee;
         $this->orderDetailModel = $orderDetail;
         $this->cardModel = $card;
+        $this->membershipModel = $member;
     }
 
-    public function timeList($phone)
+    public function bookView($phone)
     {
         $timeList = $this->timeModel->all();
-        $listStylist = $this->employeeModel
-                            ->where('service_id', config('config.employee.type.skinner'))
-                            ->orWhere('service_id', config('config.employee.type.stylist'))
-                            ->get();
+        $skinner = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
+        $stylist = $this->employeeModel->where('service_id', config('config.employee.type.stylist'))->get();
         $serviceList = $this->serviceModel->where('id', '<=', 2)->get();
         $hairCut = $this->serviceModel->findOrFail(config('config.service.cut'));
         $wash = $this->serviceModel->findOrFail(config('config.service.wash'));
-
-        if (auth('customers')->check()) {
-            $nearestOrder = $this->orderModel->where('customer_id', auth('customers')->user()->id)->orderBy('id', 'DESC')->take(1)->first();
-        }
-        
-        if (isset($nearestOrder)) {
-            $employee = $this->employeeModel->where('service_id', $nearestOrder->service_id)->get();
-            $data = [
-                'phone' => $phone,
-                'hairCut' => $hairCut,
-                'wash' => $wash,
-                'nearestOrder' => $nearestOrder,
-                'employee' => $employee,
-                'listStylist' => $listStylist,
-                'time' => $timeList,
-                'serviceList' => $serviceList,
-            ];
-        } else {
-            $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
-            $data = [
-                'phone' => $phone,
-                'hairCut' => $hairCut,
-                'wash' => $wash,
-                'nearestOrder' => '',
-                'employee' => $employee,
-                'listStylist' => $listStylist,
-                'time' => $timeList,
-                'serviceList' => $serviceList,
-            ];
-        }
+        $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
+        $data = [
+            'skinner' => $skinner,
+            'stylist' => $stylist,
+            'phone' => $phone,
+            'hairCut' => $hairCut,
+            'wash' => $wash,
+            'employee' => $employee,
+            'time' => $timeList,
+            'serviceList' => $serviceList,
+        ];
         
         return $data;
     }
@@ -94,15 +75,17 @@ class ClientService
         }
     }
 
-    public function orderView()
-    {
-        $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
-        $data = [
-            'employee' => $employee
-        ];
+    // public function orderView()
+    // {
+    //     $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))
+    //                                     ->get();
 
-        return $data;
-    }
+    //     $data = [
+    //         'employee' => $employee
+    //     ];
+
+    //     return $data;
+    // }
 
     public function book($request)
     {
@@ -268,13 +251,19 @@ class ClientService
     {
         if (auth('customers')->check()) {
             $customerId = auth('customers')->user()->id;
-            $card = $this->cardModel->where('customer_id', $customerId)->first();
-
+            $card = $this->membershipModel->where('customer_id', $customerId)->first();
+            
             if (isset($card)) {
                 $data = [
                     'card' => $card
                 ];
                 
+                return $data;
+            } else {
+                $data = [
+                    'card' => ''
+                ];
+
                 return $data;
             }
         }

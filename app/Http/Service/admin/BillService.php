@@ -14,12 +14,13 @@ use App\Model\EmployeeCommision;
 use App\Model\Card;
 use App\Model\CardDetail;
 use App\Model\OrderDetail;
+use App\Model\Membership;
 
 class BillService
 {
-	protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $employeeCommisionModel, $cardModel, $cardDetailModel, $orderDetailModel;
+	protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $employeeCommisionModel, $cardModel, $cardDetailModel, $orderDetailModel, $membershipModel;
 
-    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate, Time $time, EmployeeCommision $commision, Card $card, CardDetail $cardDetail, OrderDetail $orderDetail)
+    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate, Time $time, EmployeeCommision $commision, Card $card, CardDetail $cardDetail, OrderDetail $orderDetail, Membership $membership)
     {
         $this->employeeModel = $employee;
         $this->serviceModel = $service;
@@ -33,6 +34,7 @@ class BillService
         $this->cardModel = $card;
         $this->cardDetailModel = $cardDetail;
         $this->orderDetailModel = $orderDetail;
+        $this->membershipModel = $membership;
     }
 
 	public function finish($billId)
@@ -168,12 +170,12 @@ class BillService
         $moneyServiceTotal = $this->billDetailModel->where('bill_id', $billId)->sum('money');
         $serviceListUse = $this->billDetailModel->where('bill_id', $billId)->get();
         $customer = $this->customerModel->findOrFail($bill->customer_id);
-        $card = $this->cardModel->where('customer_id', $bill->customer_id)
+        $card = $this->membershipModel->where('customer_id', $bill->customer_id)
                                 ->where('end_time', '>=', date('Y-m-d'))
                                 ->first();
 
         if (isset($card)) {
-            $cardName = $card->card_name;
+            $cardName = $card->card->card_name;
         } else {
             $cardName = '';
         }
@@ -206,17 +208,25 @@ class BillService
         $date = date('Y-m-d');
         $bill = $this->billModel->findOrFail($billId);
         $service = $this->serviceModel->findOrFail($serviceId);
-        $card = $this->cardModel->where('customer_id', $bill->order->customer_id)->first();
-        $detailCard = $this->cardDetailModel->where('service_id', $serviceId)
-                                                ->where('customer_id', $bill->order->customer_id)
+        $checkMembership = $this->membershipModel->where('customer_id', $bill->order->customer_id)
                                                 ->first();
-        if (isset($card) && (strtotime($date) <= strtotime($card->end_time)) && isset($detailCard)) {
-            $cardName = $card->card_name;
-            $saleMoney = $service->price - ($service->price * $detailCard->percent/100);
+    /*kiểm tra thẻ hội viên*/
+        if (isset($checkMembership)) {
+            $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
+                                              ->where('service_id', $serviceId)
+                                              ->first();
+            if (strtotime($date) <= strtotime($checkMembership->end_time) && isset($detailCard)) {
+                $cardName = $checkMembership->card->card_name;
+                $saleMoney = $service->price - ($service->price * $detailCard->percent/100);
+            } else {
+                $saleMoney = $service->price;
+                $cardName = '';
+            }
         } else {
             $saleMoney = $service->price;
             $cardName = '';
         }
+    /*end*/
 
         if ($assistantId == 0) {
             $assistantId = NULL;
@@ -245,6 +255,7 @@ class BillService
                     'employee_id' => $employeeId,
                     'bill_detail_id' => $id,
                     'percent' => $percent,
+                    'date' => date('Y-m-d'),
                 ]
             );
             if ($assistantId != 0) {
@@ -253,6 +264,7 @@ class BillService
                         'employee_id' => $assistantId,
                         'bill_detail_id' => $id,
                         'percent' => $service->assistant_percent,
+                        'date' => date('Y-m-d'),
                     ]
                 );
             }
@@ -267,6 +279,28 @@ class BillService
             return '';
         }
     }
+
+    public function checkCard($customer_id, $serviceId, $price)
+    {
+        $date = date('Y-m-d');
+        $checkMembership = $this->membershipModel->where('customer_id', $customer_id)
+                                                ->first();
+        if (isset($checkMembership)) {
+            $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
+                                              ->where('service_id', $serviceId)
+                                              ->first();
+            if (isset($checkMembership) && (strtotime($date) <= strtotime($checkMembership->end_time)) && isset($detailCard)) {
+                $saleMoney = $price - ($price * $detailCard->percent/100);
+            } else {
+                $saleMoney = $price;
+            }
+        } else {
+            $saleMoney = $price;
+        }
+        
+        return $saleMoney;
+    }
+
 
     public function serviceDelete($billDetailId)
     {
@@ -311,6 +345,7 @@ class BillService
                     'employee_id' => $employeeId,
                     'bill_detail_id' => $id,
                     'percent' => $percentEmployee,
+                    'date' => date('Y-m-d'),
                 ]
             );
             if ($assistantId != 0) {
@@ -319,6 +354,7 @@ class BillService
                         'employee_id' => $assistantId,
                         'bill_detail_id' => $id,
                         'percent' => $percentAssistant,
+                        'date' => date('Y-m-d'),
                     ]
                 );
             }
@@ -344,20 +380,6 @@ class BillService
                 'cashier' => $idUser,
             ]
         );
-    }
-
-    public function checkCard($customer_id, $service_id, $price)
-    {
-        $checkCard = $this->cardDetailModel->where('customer_id', $customer_id)
-                                            ->where('service_id', $service_id)
-                                            ->first();
-        if (isset($checkCard) && (strtotime(date('Y-m-d')) <= strtotime($checkCard->card->end_time))) {
-            $sale_money = $price - $price * $checkCard->percent/100;
-        } else {
-            $sale_money = $price;
-        }
-
-        return $sale_money;
     }
 
     public function addBill($request)
@@ -428,6 +450,7 @@ class BillService
             'bill_id' => $billId,
             'service_id' => $service_id,
             'employee_id' => $employee,
+            'assistant_id' => $assistantId,
             'money' => $service->price,
             'sale_money' => $saleMoney,
             'date' => $date,
@@ -450,6 +473,7 @@ class BillService
                     'employee_id' => $request->assistant_id,
                     'bill_detail_id' => $billDetailId,
                     'percent' => $percentAssistant,
+                    'date' => date('Y-m-d'),
                 ]
             );
         }
@@ -460,6 +484,7 @@ class BillService
                 'employee_id' => $request->employee_id,
                 'bill_detail_id' => $billDetailId,
                 'percent' => $percentEmployee,
+                'date' => date('Y-m-d'),
             ]
         );
 
@@ -493,13 +518,15 @@ class BillService
 
         $bill->sale = str_replace(',', '', $sale);
         $bill->sale_detail = $saleDetail;
+        $bill->rate_status = 1;
         $bill->save();
-        $card = $this->cardModel->where('customer_id', $bill->customer_id)
+        $this->billModel->where('id', '!=', $billId)->update(['rate_status' => 0]);
+        $card = $this->membershipModel->where('customer_id', $bill->customer_id)
                                 ->where('end_time', '>=', date('Y-m-d'))
                                 ->first();
 
         if (isset($card)) {
-            $cardName = $card->card_name;
+            $cardName = $card->card->card_name;
         } else {
             $cardName = '';
         }

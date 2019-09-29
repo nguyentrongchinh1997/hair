@@ -33,6 +33,14 @@ $(document).ready(function(){
     }
   })
 
+    $('.tab').click(function(){
+        value = $(this).attr('value');
+        $('.tab').removeClass('expense-active');
+        $(this).addClass('expense-active');
+        $('.list-expense').hide();
+        $('#' + value).show();
+    })
+
 // search hóa đơn
   $('#key-search').keyup(function(){
     var day = $('#day').val();
@@ -256,7 +264,7 @@ function cardService(id)
 
 function extension(id)
 {
-    $.get('admin/the/gia-han/' + id, function(data){
+    $.get('admin/hoi-vien/gia-han/' + id, function(data){
         $('.extension').html(data);
     })
 }
@@ -322,3 +330,45 @@ $('#name-employee').keyup(function(){
     }
 
 })
+
+function validateFormMembership()
+{
+    customerId = $('#customer_id').val();
+    cardId = $('#card_id').val();
+    endTime = $('#end_time').val();
+    
+    if (customerId == 0) {
+        alert('Chưa chọn khách hàng');
+
+        return false;
+    } else if (cardId == 0) {
+        alert('Chưa chọn thẻ hội viên');
+
+        return false;
+    } else if (endTime == '') {
+        alert('Chưa chọn ngày hết hạn');
+
+        return false;
+    } else {
+        return true;
+    }
+
+    return false;
+}
+
+function check1()
+{
+    if ($('#cut').is(":checked")) {
+        $('.cut').prop('disabled', false);
+    } else {
+        $('.cut').prop('disabled', true);
+    }
+}
+function check2()
+{
+    if ($('#wash').is(":checked")) {
+        $('.wash').prop('disabled', false);
+    } else {
+        $('.wash').prop('disabled', true);
+    }
+}

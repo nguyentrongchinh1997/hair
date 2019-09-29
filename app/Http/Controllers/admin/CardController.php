@@ -27,11 +27,6 @@ class CardController extends Controller
         return back()->with('thongbao', 'Thêm thẻ hội viên thành công');
     }
 
-    public function getExtensionView($id)
-    {
-        return view('admin.ajax.extension_card', $this->cardService->getExtensionView($id));
-    }
-
     public function postExtension(Request $request, $id)
     {
         $this->cardService->postExtension($request, $id);

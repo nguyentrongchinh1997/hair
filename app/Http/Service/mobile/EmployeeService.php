@@ -6,17 +6,19 @@ use App\Model\Bill;
 use App\Model\BillDetail;
 use App\Model\Order;
 use App\Model\EmployeeCommision;
+use App\Model\OrderDetail;
 
 class EmployeeService
 {
-	protected $billModel, $billDetailModel, $orderModel, $employeeCommisionModel;
+	protected $billModel, $billDetailModel, $orderModel, $employeeCommisionModel, $orderDetailModel;
 
-	public function __construct(Bill $bill, BillDetail $billDetail, Order $order, EmployeeCommision $employeeCommision)
+	public function __construct(Bill $bill, BillDetail $billDetail, Order $order, EmployeeCommision $employeeCommision, OrderDetail $orderDetail)
 	{
 		$this->billModel = $bill;
 		$this->billDetailModel = $billDetail;
 		$this->orderModel = $order;
 		$this->employeeCommisionModel = $employeeCommision;
+		$this->orderDetailModel = $orderDetail;
 	}
 	public function homeView()
 	{
@@ -53,19 +55,19 @@ class EmployeeService
 		$employeeId = auth('employees')->user()->id;
 
 		$salaryToday = $this->employeeCommisionModel
-							->where('created_at', 'like', $today . '%')
+							->where('date', $today)
 							->where('employee_id', $employeeId)
 							->get();
 		$salaryYesterday = $this->employeeCommisionModel
-								->where('created_at', 'like', $yesterday . '%')
+								->where('date', $yesterday)
 								->where('employee_id', $employeeId)
 								->get();
 		$salaryLastMonth = $this->employeeCommisionModel
-								->where('created_at', 'like', $lastMonth . '%')
+								->where('date', 'like', $lastMonth . '%')
 								->where('employee_id', $employeeId)
 								->get();
 		$salaryMonth = $this->employeeCommisionModel
-							->where('created_at', 'like', $month . '%')
+							->where('date', 'like', $month . '%')
 							->where('employee_id', $employeeId)
 							->get();
 		$data = [
@@ -80,11 +82,16 @@ class EmployeeService
 
 	public function search($request)
 	{
-		$dateFrom = $request->get('from');
-		$dateTo = $request->get('to');
+		// $dateFrom = $request->get('from');
+		// $dateTo = $request->get('to');
+		$date = $request->get('date');
+		$dateFrom = str_replace('/', '-', trim(explode('-', $date)[0]));
+		$dateTo = str_replace('/', '-', trim(explode('-', $date)[1]));
+		$dateFromFormat = date('Y-m-d', strtotime($dateFrom));
+		$dateToFormat = date('Y-m-d', strtotime($dateTo));
 		$employeeId = auth('employees')->user()->id;
 		$salary = $this->employeeCommisionModel
-						->whereBetween('date', [$dateFrom, $dateTo])
+						->whereBetween('date', [$dateFromFormat, $dateToFormat])
 						->where('employee_id', $employeeId)
 						->get();
 		$data = [
@@ -93,4 +100,62 @@ class EmployeeService
 
 		return $data;
 	}
+
+	public function history()
+	{
+		$employeeId = auth('employees')->user()->id;
+		$date = date('Y-m-d');
+		$history = $this->billDetailModel
+						->where('created_at', 'like', $date . '%')
+						->where(function($query) use ($employeeId){
+							$query->where('employee_id', $employeeId)
+								->orWhere('assistant_id', $employeeId);
+						})
+						->get()
+						->groupBy('bill_id');
+		$dem = 0;
+		foreach ($history as $key => $bill) {
+			$dataBill = $this->billModel->findOrFail($key);
+
+			if ($dataBill->status == config('config.order.status.check-out')) {
+				$dem++;
+			}
+		}
+
+		$data = [
+			'dem' => $dem,
+			'history' => $history,
+		];
+
+		return $data;
+	}
+
+	public function historySearch($date)
+	{
+		$employeeId = auth('employees')->user()->id;
+		$history = $this->billDetailModel
+						->where('created_at', 'like', $date . '%')
+						->where(function($query) use ($employeeId){
+							$query->where('employee_id', $employeeId)
+								->orWhere('assistant_id', $employeeId);
+						})
+						->get()
+						->groupBy('bill_id');
+		$dem = 0;
+		foreach ($history as $key => $bill) {
+			$dataBill = $this->billModel->findOrFail($key);
+
+			if ($dataBill->status == config('config.order.status.check-out')) {
+				$dem++;
+			}
+		}
+
+		$data = [
+			'dem' => $dem,
+			'history' => $history,
+		];
+
+		return $data;
+	}
 }
+

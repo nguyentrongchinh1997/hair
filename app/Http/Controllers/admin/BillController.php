@@ -19,7 +19,7 @@ class BillController extends Controller
     {
         $this->billService->finish($billId);
 
-        return back();
+        return back()->with('thongbao', 'Thanh toán thành công');
     }
 
     public function billList()

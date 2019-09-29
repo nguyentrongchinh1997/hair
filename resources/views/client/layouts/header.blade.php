@@ -15,11 +15,16 @@
 	</head>
 	<body>
 		<header>
-			@if (session('thongbao'))
-				<div class="alert alert-success" style="margin-bottom: 0px; text-align: center;">
-		        	{{ session('thongbao') }}
-		        </div>
-	        @endif
+			@if (auth('customers')->check())
+				@if (session('thongbao'))
+					<div class="row notification-book">
+						<i class="fas fa-times"></i>
+						<p>
+							{{ session('thongbao') }}
+						</p>
+					</div>
+				@endif
+			@endif
 			<div class="row top-header">
 				<div class="container">
 					<center>
@@ -50,7 +55,18 @@
 								<a href="logout" style="float: right;">
 									<li style="color: #727272">Đăng xuất</li>
 								</a>
-						        <a href="" style="float: right;">
+								<a href="logout" style="float: right; border-right: 1px solid #e5e5e5">
+									<li style="color: #727272">
+										@if (auth('customers')->user()->full_name != '')
+										{{ auth('customers')->user()->full_name }}
+										@else
+											{{ substr(auth('customers')->user()->phone, 0, 4) }}.
+											{{ substr(auth('customers')->user()->phone, 4, 3) }}.
+											{{ substr(auth('customers')->user()->phone, 7, 3) }}
+										@endif
+									</li>
+								</a>
+						        <a href="" style="float: right; border-right: 1px solid #e5e5e5">
 									<li>Số dư: {{ number_format(auth('customers')->user()->balance) }}<sup>đ</sup></li>
 								</a>
 								

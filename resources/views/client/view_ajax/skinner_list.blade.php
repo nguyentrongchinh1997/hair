@@ -1,3 +1,4 @@
+
 @foreach ($employee as $stylist)
 <div class="row" style="width: 100%; padding: 10px 10px; border-bottom: 1px solid #f3f2f2;">
     <div class="col-2 col-lg-2" style="padding: 0px">

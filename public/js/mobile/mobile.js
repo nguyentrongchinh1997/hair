@@ -11,9 +11,17 @@ $(function(){
     })
 
     $('#seen').click(function(){
-        dateTo = $('#date-to').val();
-        dateFrom = $('#date-from').val();
+        date = $('.date-pick').val();
 
+        if (date == '') {
+            alert('Cần chọn ngày');
+        } else {
+            $.get('mobile/nhan-vien/thu-nhap/tim-kiem?date=' + date, function(data){
+                $('#result').html(data);
+            })
+        }
+        /*dateTo = $('#date-to').val();
+        dateFrom = $('#date-from').val();
         if (dateFrom == '') {
             alert('Cần chọn ngày bắt đầu');
         } else if (dateTo == '') {
@@ -22,7 +30,18 @@ $(function(){
             $.get('mobile/nhan-vien/thu-nhap/tim-kiem?from=' + dateFrom + '&to=' + dateTo, function(data){
                 $('#result').html(data);
             })
-        }
+        }*/
+    })
+
+    $('.history-employee .pick-date').change(function(){
+        date = $('.history-employee .pick-date').val();
+        $.get('mobile/nhan-vien/lich-su/' + date, function(data){
+            $('.history-employee .history-list').html(data);
+        })
+    })
+
+    $('.book-notification i').click(function(){
+        $('.book-notification').hide();
     })
 })
 function pick(id)
@@ -135,3 +154,19 @@ function optionStylist(id)
     $('.radio-stylist1').prop('checked', false);
     $('#stylist' + id).prop('checked', true);
 }
+
+/*Lightpick*/
+$(function(){
+    var picker = new Lightpick({
+        field: document.getElementById('demo-2'),
+        singleDate: false,
+        onSelect: function(start, end){
+            var str = '';
+            str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+            str += end ? end.format('Do MMMM YYYY') : '...';
+            // document.getElementById('result-2').innerHTML = str;
+        }
+    }); 
+})
+
+/*end*/

@@ -20,44 +20,42 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <h2>DANH SÁCH NHÂN VIÊN</h2>
             <input type="hidden" id="date" value="{{ $year }}-{{ $month }}" name="">
-            <form method="post" action="{{ route('commision.time') }}">
-                @csrf
-                <table>
-                    <tr>
-                        <td>
-                            <select name="month" class="form-control">
-                                @for ($i = 1; $i <= 12; $i++)
-                                    <option @if ($i == $month) {{ 'selected' }} @endif value="@if ($i < 10) 0{{ $i }} @else {{ $i }} @endif">
-                                        Tháng {{ $i }}
-                                    </option>
-                                @endfor
-                            </select>
-                        </td>
-                        <td>
-                            <select name="year" class="form-control">
-                                @for ($i = 2019; $i <= date('Y'); $i++)
-                                    <option @if ($i == $year) {{ 'selected' }} @endif value="{{ $i }}">
-                                        Năm {{ $i }}
-                                    </option>
-                                @endfor
-                            </select>
-                        </td>
-                        <td>
-                            <input value="Xem lương" class="btn btn-primary" type="submit" name="">
-                        </td>
-                    </tr>
-                </table>
-            </form>
+            <div class="row">
+
+                <form method="post" action="{{ route('commision.time') }}">
+                    @csrf
+                    <h3>Xem thời gian</h3>
+                    <table>
+                        <tr>
+                            <td>
+                                <select name="month" class="form-control input-control">
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <option @if ($i == $month) {{ 'selected' }} @endif value="@if ($i < 10) 0{{ $i }} @else {{ $i }} @endif">
+                                            Tháng {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </td>
+                            <td>
+                                <select name="year" class="form-control input-control">
+                                    @for ($i = 2019; $i <= date('Y'); $i++)
+                                        <option @if ($i == $year) {{ 'selected' }} @endif value="{{ $i }}">
+                                            Năm {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </td>
+                            <td>
+                                <input value="Xem thời gian" class="btn btn-primary input-control" type="submit" name="">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div><br>
             <div class="row">
                 <div class="col-lg-6" style="padding: 0px">
-                    <button style="margin-top: 30px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                    Thêm nhân viên
-                    </button>
-                </div>
-                <div class="col-lg-6" style="padding: 0px">
-                    <label>Tìm kiếm tại đây:</label>
+                    <h3>Tìm kiếm tại đây:</h3>
                     <div class="input-group">
                         <input type="text" id="name-employee" class="form-control" placeholder="Nhập tên nhân viên...">
                         <div class="input-group-append">
@@ -67,28 +65,30 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-6" style="padding: 0px">
+                    <button style="margin-top: 30px; float: right;" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#myModal">
+                    Thêm nhân viên
+                    </button>
+                </div>
+                
             </div>
-          <!-- The Modal -->
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <!-- Modal Header -->
                         <div class="modal-header">
-                          <h4 class="modal-title">THÊM NHÂN VIÊN</h4>
+                          <h3 class="modal-title">Thêm nhân viên</h3>
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        
-                        <!-- Modal body -->
                         <div class="modal-body">
                             <form onsubmit="return validateEmployeeAdd()" method="post" action="{{ route('employee.add') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <table class="view-employee-add">
+                                <table class="list-table">
                                     <tr>
                                         <td>
                                             Tên nhân viên
                                         </td>
                                         <td>
-                                            <input placeholder="Nhập tên nhân viên..." type="text" class="form-control" required="required" id="employee-name" name="full_name">
+                                            <input placeholder="Nhập tên nhân viên..." type="text" class="form-control input-control" required="required" id="employee-name" name="full_name">
                                         </td>
                                     </tr>
                                     <tr>
@@ -96,7 +96,7 @@
                                             Số điện thoại
                                         </td>
                                         <td>
-                                            <input id="employee-phone" placeholder="Nhập số điện thoại..." type="text" class="form-control" required="required" name="phone">
+                                            <input id="employee-phone" placeholder="Nhập số điện thoại..." type="text" class="form-control input-control" required="required" name="phone">
                                         </td>
                                     </tr>
                                     <tr>
@@ -104,7 +104,7 @@
                                             Làm dịch vụ
                                         </td>
                                         <td>
-                                            <select name="type" class="form-control">
+                                            <select name="type" class="form-control input-control">
                                                 @foreach ($serviceList as $service)
                                                     <option value="{{ $service->id }}">{{ $service->name }}</option>
                                                 @endforeach
@@ -116,7 +116,7 @@
                                             Địa chỉ
                                         </td>
                                         <td>
-                                            <input id="employee-address" placeholder="Nhập địa chỉ..." type="text" class="form-control" name="address">
+                                            <input id="employee-address" placeholder="Nhập địa chỉ..." type="text" class="form-control input-control" name="address">
                                         </td>
                                     </tr>
                                     <tr>
@@ -124,13 +124,13 @@
                                             Lương (vnđ)
                                         </td>
                                         <td>
-                                            <input placeholder="Nhập lương cứng nhân viên" id="formattedNumberField" type="text" name="salary" class="form-control">
+                                            <input placeholder="Nhập lương cứng nhân viên" id="formattedNumberField" type="text" name="salary" class="form-control input-control">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Ảnh đại diện</td>
                                         <td>
-                                            <input required="required" type="file" class="form-control" name="image">
+                                            <input required="required" type="file" class="form-control input-control" name="image">
                                         </td>
                                     </tr>
                                     <tr>
@@ -138,13 +138,13 @@
                                             Mật khẩu đăng nhập 
                                         </td>
                                         <td>
-                                            <input placeholder="Nhập mật khẩu nhân viên..." type="password" id="employee-password" name="password" class="form-control">
+                                            <input placeholder="Nhập mật khẩu nhân viên..." type="password" id="employee-password" name="password" class="form-control input-control">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <input class="btn btn-primary" value="Thêm" type="submit" name="">
+                                            <input class="btn btn-primary button-control" value="Thêm" type="submit" name="">
                                         </td>
                                     </tr>
                                 </table>
@@ -155,7 +155,6 @@
                         <div class="modal-footer">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
-                    
                     </div>
                 </div>
             </div><br>            
@@ -163,13 +162,12 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">SỬA NHÂN VIÊN</h4>
+                      <h3 class="modal-title">Sửa nhân viên</h3>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body edit-employee">
                         
                     </div>
-                    
                     <!-- Modal footer -->
                     <div class="modal-footer">
                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -178,31 +176,29 @@
                   </div>
                 </div>
             </div>
-            <div class="row" style="max-height: 500px; overflow: auto;">
-                <table class="employee-list">
+            <div class="row" style="height: 400px; overflow: auto;">
+                <table class="list-table">
                     <thead>
-                        <tr style="background: #BDBDBD">
-                            <th scope="col">STT</th>
-                            <th scope="col">TÊN</th>
-                            <th scope="col">SĐT</th>
-                            <th scope="col">THỢ</th>
-                            <!-- <th scope="col">Địa chỉ</th> -->
-                            <!-- <th scope="col">Phần trăm hưởng</th> -->
-                            <th scope="col">TRẠNG THÁI</th>
-                            <!-- <th scope="col">Lương cứng</th> -->
-                            <th scope="col">HOA HỒNG</th>
-                            <th scope="col">SỬA</th>
+                        <tr style="background: #BBDEFB">
+                            <th scope="col">Stt</th>
+                            <th scope="col">Tên</th>
+                            <th scope="col">Sđt</th>
+                            <th scope="col">Vị trí</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Hoa hồng</th>
+                            <th scope="col">Sửa</th>
                         </tr>
                     </thead>
                     <tbody id="result-search">
                         @php $stt = 0; @endphp
                         @foreach ($employeeList as $employee)
                             <tr style="cursor: pointer;" onclick="employeeDetail({{ $employee->id }})" class="employee" id="employee{{ $employee->id }}">
-                                <th scope="row">{{ ++$stt }}</th>
+                                <td scope="row">{{ ++$stt }}</td>
                                 <td>
-                                    <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
+                                    {{ $employee->full_name }}
+                                    <!-- <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
                                         {{ $employee->full_name }}
-                                    </a>
+                                    </a> -->
                                 </td>
                                 <td>
                                     {{ substr($employee->phone, 0, 4) }}.{{ substr($employee->phone, 4, 3) }}.{{ substr($employee->phone, 7) }}
@@ -217,23 +213,22 @@
                                         }}
                                     </span>
                                 </td>
-    <!--                             <td style="text-align: right;; font-weight: bold;">
-                                    {{ number_format($employee->salary) }}<sup>đ</sup>
-                                </td> -->
-                                <td style="color: #007bff; font-weight: bold; text-align: right;">
+                                <td style="color: #007bff; font-weight: bold; text-align: right; font-size: 20px">
                                     @php 
                                         $commisionTotal = 0;
                                     @endphp
                                     @foreach ($employee->employeeCommision as $commision)
-                                        @php
-                                            $commisionTotal = $commisionTotal + $commision->percent/100 * $commision->billDetail->money
-                                        @endphp
+                                        @if ($commision->billDetail->bill->status == config('config.order.status.check-out'))
+                                            @php
+                                                $commisionTotal = $commisionTotal + $commision->percent/100 * $commision->billDetail->money
+                                            @endphp
+                                        @endif
                                     @endforeach
                                     {{ number_format($commisionTotal) }}<sup>đ</sup>
                                 </td>
-                                <td>
-                                    <button onclick="editEmployee({{ $employee->id }})" type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit">
-                                        Sửa
+                                <td style="text-align: center;">
+                                    <button style="border: 1px solid #ccc; outline: none;" onclick="editEmployee({{ $employee->id }})" type="button" class="button-control" data-toggle="modal" data-target="#edit">
+                                        <i class="far fa-edit"></i>
                                     </button>
                                 </td>
                             </tr>

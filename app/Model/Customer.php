@@ -32,9 +32,9 @@ class Customer extends Authenticatable
     	return $this->hasMany(Bill::class);
     }
 
-    public function card()
+    public function membership()
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany(Membership::class);
     }
 
     public function cardDetail()

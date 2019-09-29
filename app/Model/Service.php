@@ -34,4 +34,9 @@ class Service extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
+    }
 }

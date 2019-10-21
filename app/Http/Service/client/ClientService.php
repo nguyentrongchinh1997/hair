@@ -269,9 +269,9 @@ class ClientService
     {
         if (auth('customers')->check()) {
             $customerId = auth('customers')->user()->id;
-            $card = $this->membershipModel->where('customer_id', $customerId)->first();
-            
-            if (isset($card)) {
+            $card = $this->membershipModel->where('customer_id', $customerId)->where('status', 1)->get();
+
+            if ($card->count() > 0) {
                 $data = [
                     'card' => $card
                 ];

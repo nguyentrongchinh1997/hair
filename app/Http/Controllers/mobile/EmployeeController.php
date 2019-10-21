@@ -46,4 +46,9 @@ class EmployeeController extends Controller
     {
         return view('client.mobile.employees.pages.search_history', $this->employeeService->historySearch($date));
     }
+
+    public function salaryList()
+    {
+        return view('client.mobile.employees.pages.salary_list', $this->employeeService->salaryList());
+    }
 }

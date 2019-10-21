@@ -15,12 +15,13 @@ use App\Model\Card;
 use App\Model\CardDetail;
 use App\Model\OrderDetail;
 use App\Model\Membership;
+use App\Model\Salary;
 
 class BillService
 {
-	protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $employeeCommisionModel, $cardModel, $cardDetailModel, $orderDetailModel, $membershipModel;
+	protected $employeeModel, $serviceModel, $orderModel, $billModel, $customerModel, $billDetailModel, $rateModel, $timeModel, $employeeCommisionModel, $cardModel, $cardDetailModel, $orderDetailModel, $membershipModel, $salaryModel;
 
-    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate, Time $time, EmployeeCommision $commision, Card $card, CardDetail $cardDetail, OrderDetail $orderDetail, Membership $membership)
+    public function __construct(Employee $employee, Service $service, Order $order, Bill $bill, Customer $customer, BillDetail $billDetail, Rate $rate, Time $time, EmployeeCommision $commision, Card $card, CardDetail $cardDetail, OrderDetail $orderDetail, Membership $membership, Salary $salary)
     {
         $this->employeeModel = $employee;
         $this->serviceModel = $service;
@@ -35,6 +36,7 @@ class BillService
         $this->cardDetailModel = $cardDetail;
         $this->orderDetailModel = $orderDetail;
         $this->membershipModel = $membership;
+        $this->salaryModel = $salary;
     }
 
 	public function finish($billId)

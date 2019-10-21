@@ -27,10 +27,10 @@
                                 </p>
                             </li>
                         </a>
-                        <a href="mobile/nhan-vien/thu-nhap?today={{ date('Y-m-d') }}">
+                        <a href="{{ route('mobile.employee.salary.list') }}">
                             <li>
-                                <i style="@if(Request::is('mobile/nhan-vien/thu-nhap'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-dollar-sign"></i>
-                                <p style="@if(Request::is('mobile/nhan-vien/thu-nhap'))@php echo 'color: #fff;';@endphp@endif">
+                                <i style="@if(Request::is('mobile/nhan-vien/bang-luong'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-dollar-sign"></i>
+                                <p style="@if(Request::is('mobile/nhan-vien/bang-luong'))@php echo 'color: #fff;';@endphp@endif">
                                     Bảng lương
                                 </p>
                             </li>

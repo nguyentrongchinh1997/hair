@@ -42,5 +42,9 @@ return [
     'request' => [
         'yes' => 1,
         'no' => 0,
+    ],
+    'card' => [
+        'hoi_vien' => 0,
+        'so_lan' => 1,
     ]
 ];

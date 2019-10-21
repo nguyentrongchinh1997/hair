@@ -44,7 +44,7 @@ class BillDetail extends Model
 
     public function employeeCommision()
     {
-        return $this->hasMany(BillDetail::class);
+        return $this->hasMany(EmployeeCommision::class);
     }
 
     public function card()

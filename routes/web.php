@@ -10,9 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('demo', function(){
-    dd(strtotime('2019-10-18'));
-});
 /*========================Route cho Mobile khách hàng======================*/
 Route::get('mobile/dang-nhap', 'mobile\LoginController@loginView')->name('mobile.login')->middleware('loginMobileMiddleware');
 Route::post('mobile/login', 'mobile\LoginController@postLogin')->name('post.login');
@@ -36,11 +33,18 @@ Route::post('mobile/nhan-vien/dang-nhap', 'mobile\LoginController@postLoginEmplo
 
 Route::group(['prefix' => 'mobile/nhan-vien', 'middleware' => 'mobileEmployeeMiddleware'], function(){
     Route::get('trang-chu', 'mobile\EmployeeController@homeView')->name('mobile.employee.home');
+
     Route::get('dang-xuat', 'mobile\EmployeeController@logout')->name('mobile.employee.logout');
+
     Route::get('thu-nhap', 'mobile\EmployeeController@salary')->name('mobile.employee.salary');
+
     Route::get('thu-nhap/tim-kiem', 'mobile\EmployeeController@search');
+
     Route::get('lich-su', 'mobile\EmployeeController@history')->name('mobile.employee.history');
+
     Route::get('lich-su/{ngay}', 'mobile\EmployeeController@historySearch');
+
+    Route::get('bang-luong', 'mobile\EmployeeController@salaryList')->name('mobile.employee.salary.list');
 });
 /*========================End======================*/
 

@@ -29,11 +29,14 @@
         </div> -->
         @if (auth('customers')->check() && $card != '')
             <div class="d-none d-sm-none d-md-block col-lg-4">
-                <div class="card">
-                    <img src="http://moviee.vn/public/img/moviee.vn.png" style="max-width: 40%; margin: auto;">
-                    <p style="text-transform: uppercase;">{{ $card->card->card_name }}</p>
-                </div>
+                @foreach ($card as $membership)
+                    <div class="card">
+                        <img src="http://moviee.vn/public/img/moviee.vn.png" style="max-width: 40%; margin: auto;">
+                        <p style="text-transform: uppercase;">{{ $membership->card->card_name }}</p>
+                    </div>
+                @endforeach
             </div>
+
         @else
             <div class="col-lg-4">
             </div>
@@ -72,27 +75,54 @@
             <div class="col-lg-4 sale-service" style="padding-top: 40px;">
                 <p style="text-align: center; font-weight: bold; font-size: 25px">ƯU ĐÃI LỚN KHI</p>
                 <ul>
-                    @foreach ($card->card->cardDetail as $service)
-                        <li style="margin-bottom: 20px">
-                            <table style="width: 100%">
-                                <tr>
-                                    <td style="width: 10%">
-                                        <div style="width: 25px; height: 25px; background: #000">
-                                            <i id="icon-check-skinner" style="color: #fff; padding-left: 5px" class="fas fa-check check"></i>                      
-                                        </div>
-                                    </td>
-                                    <td style="padding-left: 20px; text-transform: uppercase; width: 40%">
-                                        {{ $service->service->name }}
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <span style="background: #ffd800;padding: 5px 30px;border-radius: 4px;font-weight: bold;">
-                                            - {{ $service->percent }}%
-                                        </span>
-                                        
-                                    </td>
-                                </tr>
-                            </table>
-                        </li>
+                    @foreach ($card as $membership) 
+                        @if ($membership->card->type == config('config.card.hoi_vien'))
+                            @foreach ($membership->card->cardDetail as $service)
+                                <li style="margin-bottom: 20px">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 10%">
+                                                <div style="width: 25px; height: 25px; background: #000">
+                                                    <i id="icon-check-skinner" style="color: #fff; padding-left: 5px" class="fas fa-check check"></i>                      
+                                                </div>
+                                            </td>
+                                            <td style="padding-left: 20px; text-transform: uppercase; width: 40%">
+                                                {{ $service->service->name }}
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <span style="background: #ffd800;padding: 5px 30px;border-radius: 4px;font-weight: bold;">
+                                                    - {{ $service->percent }}%
+                                                </span>
+                                                
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </li>
+                            @endforeach
+                        @elseif ($membership->card->type == config('config.card.so_lan'))
+                            @foreach ($membership->card->cardDetail as $service)
+                                <li style="margin-bottom: 20px">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 10%">
+                                                <div style="width: 25px; height: 25px; background: #000">
+                                                    <i id="icon-check-skinner" style="color: #fff; padding-left: 5px" class="fas fa-check check"></i>                      
+                                                </div>
+                                            </td>
+                                            <td style="padding-left: 20px; text-transform: uppercase; width: 40%">
+                                                {{ $service->service->name }}
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <span style="background: #ffd800;padding: 5px 30px;border-radius: 4px;font-weight: bold;">
+                                                    Free {{ $service->number }} lần
+                                                </span>
+                                                
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </li>
+                            @endforeach
+                        @endif
                     @endforeach
                 </ul>
             </div>

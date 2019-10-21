@@ -7,18 +7,22 @@ use App\Model\BillDetail;
 use App\Model\Order;
 use App\Model\EmployeeCommision;
 use App\Model\OrderDetail;
+use App\Model\Employee;
+use App\Model\Salary;
 
 class EmployeeService
 {
-	protected $billModel, $billDetailModel, $orderModel, $employeeCommisionModel, $orderDetailModel;
+	protected $billModel, $billDetailModel, $orderModel, $employeeCommisionModel, $orderDetailModel, $employeeModel, $salaryModel;
 
-	public function __construct(Bill $bill, BillDetail $billDetail, Order $order, EmployeeCommision $employeeCommision, OrderDetail $orderDetail)
+	public function __construct(Bill $bill, BillDetail $billDetail, Order $order, EmployeeCommision $employeeCommision, OrderDetail $orderDetail, Employee $employeeModel, Salary $salaryModel)
 	{
 		$this->billModel = $bill;
 		$this->billDetailModel = $billDetail;
 		$this->orderModel = $order;
 		$this->employeeCommisionModel = $employeeCommision;
 		$this->orderDetailModel = $orderDetail;
+		$this->employeeModel = $employeeModel;
+		$this->salaryModel = $salaryModel;
 	}
 	public function homeView()
 	{
@@ -154,5 +158,40 @@ class EmployeeService
 
 		return $data;
 	}
+
+	public function salaryList()
+	{
+		$date = date('Y-m');
+		$employeeList = $this->employeeModel
+                             ->with(['employeeCommision' => function($q) use ($date){
+                                $q->where('created_at', 'like', $date . '%');
+                             }])
+                             ->get();
+		foreach ($employeeList as $employee) {
+                        $commisionTotal = 0;
+            foreach ($employee->employeeCommision as $commision){
+                if ($commision->billDetail->bill->status == config('config.order.status.check-out')) {
+                    $commisionTotal = $commisionTotal + $commision->percent/100 * $commision->billDetail->money;
+                }
+            }
+            $this->salaryModel->updateOrCreate(
+            	[
+            		'employee_id' => $employee->id,
+            		'date' => $date,
+            	],
+            	[
+            		'money' => $commisionTotal,
+            	]
+            );
+        }
+        $salaryList = $this->salaryModel->where('date', $date)->orderBy('money', 'desc')->get();
+        $data = [
+        	'date' => $date,
+        	'salaryList' => $salaryList
+        ];
+
+        return $data;
+	}
 }
+
 

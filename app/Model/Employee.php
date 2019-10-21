@@ -65,5 +65,10 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(EmployeeCommision::class);
     }
+
+    public function salary()
+    {
+        return $this->hasMany(Salary::class);
+    }
 }
 

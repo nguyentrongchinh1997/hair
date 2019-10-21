@@ -59,10 +59,10 @@
                     </table>
                 </form><br>
                 <div class="row">
-                    <div class="col-lg-6" style="padding-left: 0px">
+                    <div class="col-lg-8" style="padding-left: 0px">
                         <h3>Tìm kiếm tại đây:</h3>
                         <div class="input-group">
-                            <input type="text" id="key-search" class="form-control" placeholder="Nhập số điện thoại...">
+                            <input type="text" id="key-search" class="form-control" placeholder="Nhập số điện thoại hoặc tên khách hàng...">
                             <div class="input-group-append">
                               <button class="btn btn-secondary" type="button">
                                 <i class="fas fa-search"></i>
@@ -70,36 +70,38 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6" style="padding-right: 0px">
-                        @if ($date == date('Y-m-d'))
-                            <button style="float: right; margin-top: 30px" type="button" class="button-control btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm hóa đơn</button><br>
-                            
-                        @endif
+                    <div class="col-lg-4" style="padding-right: 0px">
+                        <button style="float: right; margin-top: 30px" type="button" class="button-control btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm hóa đơn</button><br>
                     </div><br>
                 </div>
                 <div class="row" style="height: 420px; overflow: auto; margin-top: 20px">
                     <table class="list-table">
                         <thead>
                             <tr style="background: #BBDEFB">
-                                <th scope="col">Mã đơn</th>
-                                <th scope="col">SĐT</th>
-                                <th scope="col">Têns</th>
+                                <th scope="col">STT</th>
+                                <th scope="col">Khách</th>
                                 <th scope="col">Trạng thái</th>
-                                <th scope="col">Số tiền</th>
+                                <th scope="col">Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody class="order-list">
-                            @php $stt = 0; $total = 0;@endphp
+                            <tr style="background: #fcf8e3; font-weight: bold;">
+                                <td class="tong" style="text-align: right; font-size: 20px" colspan="5">
+
+                                </td>
+                            </tr>
+                            @php $stt = $billList->count(); $total = 0;@endphp
                             @foreach ($billList as $bill)
-                                @if ($bill->order->date == $date)
-                                    <tr style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
-                                        <td style="text-align: center; width: 7%">{{ $bill->id }}</td>  
+                                <!-- @if ($bill->order->date == $date) -->
+                                    <tr title="click để xem chi tiết" style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
+                                        <td style="text-align: center; width: 7%">{{ $stt-- }}</td>  
                                         <td>
+                                            <span style="font-weight: bold;">
+                                                {{ $bill->customer->full_name }}
+                                            </span><br>
                                             {{ substr($bill->customer->phone, 0, 4) }}.{{ substr($bill->customer->phone, 4, 3) }}.{{ substr($bill->customer->phone, 7) }}
-                                        </td>
-                                        <td>
-                                            {{ $bill->customer->full_name }}
                                         </td> 
+                                        
                                         <td>
                                             @if ($bill->status == config('config.order.status.check-in'))
                                                 <span style="color: red; font-weight: bold;">Chưa thanh toán</span>
@@ -120,13 +122,13 @@
                                             {{ number_format($tong-$bill->sale) }}<sup>đ</sup>
                                         </td>  
                                     </tr>
-                                @endif
+                                <!-- @endif -->
                             @endforeach
-                            <tr>
+                            <tr style="display: none;">
                                 <td style="text-align: right; font-size: 20px" colspan="4">
                                     Tổng
                                 </td>
-                                <td style="text-align: right; font-size: 20px; font-weight: bold;">
+                                <td id="tong" style="text-align: right; font-size: 20px; font-weight: bold;">
                                     {{ number_format($total) }}<sup>đ</sup>
                                 </td>
                             </tr>
@@ -225,6 +227,12 @@
                             <td>
                                 <input class="no-request" type="radio" value="0" name="requirement"> Không
                                 <input class="request" type="radio" value="1" name="requirement"> Có
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày lập hóa đơn</td>
+                            <td>
+                                <input type="date" name="date" value="{{ date('Y-m-d') }}" class="form-control input-control">
                             </td>
                         </tr>
                         <tr>

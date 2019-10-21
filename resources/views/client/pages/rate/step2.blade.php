@@ -44,6 +44,9 @@
             <h4>
                 ĐÁNH GIÁ CHẤT LƯỢNG DỊCH VỤ GIÚP CHÚNG EM
             </h4>
+            <center>
+                <p style="margin-top: 50px; font-weight: bold;">Bước 1/2</p>
+            </center>
             <table>
                 <tr>
                     @foreach ($rateList as $rate)

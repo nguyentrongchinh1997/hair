@@ -63,7 +63,7 @@
                                         <span style="color: red">(Khách không yêu cầu)</span>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Nhập %" class="form-control input-control" required="required" name="percent">
+                                        <input type="text" placeholder="Nhập %" class="form-control input-control" required="required" name="percent">
                                     </td>
                                 </tr>
                                 <tr>
@@ -72,13 +72,13 @@
                                         <span style="color: red">(Khách yêu cầu)</span>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Nhập %" class="form-control input-control" required="required" name="main_request_percent">
+                                        <input type="text" placeholder="Nhập %" class="form-control input-control" required="required" name="main_request_percent">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Chiết khấu thợ phụ (%)</td>
                                     <td>
-                                        <input type="number" placeholder="Nhập %" class="form-control input-control" required="required" name="assistant_percent">
+                                        <input type="text" placeholder="Nhập %" class="form-control input-control" required="required" name="assistant_percent">
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,6 +113,9 @@
                         Thợ phụ (%)
                     </th>
                     <th scope="col">Sửa</th>
+                    <th scope="col">
+                        Xóa
+                    </th>
                 </tr>
               </thead>
               <tbody>
@@ -139,6 +142,13 @@
                             <button onclick="editService({{ $service->id }})" type="button" class="btn btn-primary input-control" data-toggle="modal" data-target="#edit">
                                 <i class="far fa-edit"></i>
                             </button>
+                        </td>
+                        <td style="text-align: center;">
+                            @if ($service->id != config('config.service.cut') && $service->id != config('config.service.wash'))
+                            <a onclick="return deleteService()" href="{{ route('service.delete', ['id' => $service->id]) }}" style="color: red;">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

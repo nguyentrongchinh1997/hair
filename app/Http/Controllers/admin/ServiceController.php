@@ -38,4 +38,12 @@ class ServiceController extends Controller
         
         return back()->with('thongbao', 'Sửa thành công');
     }
+
+    public function serviceDelete($id)
+    {
+        $this->service->serviceDelete($id);
+
+        return back()->with('thongbao', 'Xóa thành công');
+    }
 }
+

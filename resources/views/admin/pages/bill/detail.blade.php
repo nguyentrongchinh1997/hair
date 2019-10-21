@@ -87,11 +87,47 @@
         <input type="hidden" id="bill_id" value="{{ $bill->id }}" class="id-order" name="">
         <input type="hidden" id="employee_id" value="{{ $bill->order->employee_id }}" class="customer-id">
         <input type="hidden" id="price_total" value="{{ $moneyServiceTotal }}" name="">
-        <table style="width: 100%">
+        <table style="width: 100%" class="list-table">
+            @if ($bill->customer->membership->count() > 0)
+            <tr>
+                <td style="width: 40%">Thẻ của khách</td>
+                <td style="width: 50%">
+                    <table style="width: 100%">
+                        <tr style="background: #BBDEFB; font-weight: bold;">
+                            <td>Tên thẻ</td>
+                            <td>Ưu đãi</td>
+                        </tr>
+                        @foreach ($bill->customer->membership as $card)
+                            @if ($card->status == 1)
+                                <tr>
+                                    <td>
+                                        {{ $card->card->card_name }}
+                                    </td>
+                                    <td>
+                                        @foreach ($card->card->cardDetail as $service)
+                                            <p style="margin-bottom: 0px">
+                                                {{$service->service->name }}
+                                                <span>
+                                                    @if ($service->number == '')
+                                                        (tặng {{ $service->percent }}%)
+                                                    @else
+                                                        (còn {{ $card->number }} lần sử dụng)
+                                                    @endif
+                                                </span>
+                                                
+                                            </p>
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </table>
+                </td>
+            </tr>
+            @endif
             @if ($bill->status == config('config.order.status.check-out'))
                 <tr>
                     <td style="width: 40%">Đã thanh toán</td>
-                    <td style="width: 10%">:</td>
                     <td style="font-weight: bold; width: 50%">
                         {{ number_format($bill->total) }}<sup>đ</sup>
                         <input type="hidden" value="{{ $bill->customer->balance }}" id="balance" name="">
@@ -101,9 +137,7 @@
                     <td>
                         Đánh giá khách hàng
                     </td>
-                    <td>
-                        :
-                    </td>
+
                     <td style="font-weight: bold;">
                         {{ $bill->rate->name }}
                     </td>
@@ -112,9 +146,7 @@
                     <td>
                         Góp ý khách hàng
                     </td>
-                    <td>
-                        :
-                    </td>
+
                     <td style="font-weight: bold;">
                         {{ $bill->comment }}
                     </td>
@@ -178,7 +210,7 @@
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
                                                     <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                        {{ $employee->full_name }}
+                                                        {{ $employee->id }}-{{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -213,7 +245,7 @@
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
                                                     <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                        {{ $employee->full_name }}
+                                                            {{ $employee->id }}-{{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -311,12 +343,10 @@
         <div class="modal fade" id="myModal">
             <div class="modal-dialog">
               <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header">
                   <h3 class="modal-title">Thêm dịch vụ</h3>
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <!-- Modal body -->
                 <div class="modal-body">
                     <table class="service-other">
                         <tr>
@@ -349,9 +379,9 @@
                                 <select onchange="optionEmployee()" id="option-employee" class="option-employee form-control input-control">
                                         <option value="0">Chọn thợ chính</option>
                                     @foreach ($employeeList as $employee)
-                                        <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                            {{ $employee->full_name }}
-                                        </option>
+                                            <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                            </option>
                                     @endforeach
                                 </select>
                             </td>
@@ -367,73 +397,16 @@
                                 <select onchange="optionAssistant()" class="assistant form-control input-control">
                                         <option value="0">Chọn thợ phụ (nếu cần)</option>
                                     @foreach ($employeeList as $employee)
-                                        <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                            {{ $employee->full_name }}
-                                        </option>
+                                            <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                            </option>
                                     @endforeach
                                 </select>
                             </td>
                         </tr>
+                        
                         <tr>
-                            <script type="text/javascript">
-                                function optionEmployee()
-                                {
-                                    var id = $('#option-employee').val();
 
-                                    return id;
-                                }
-                                function optionAssistant()
-                                {
-                                    var id = $('.assistant').val();
-
-                                    return id;
-                                }
-                                stt = 0;
-                                $('#formattedNumberField').keyup(function(event) {
-                                  // skip for arrow keys
-                                  if(event.which >= 37 && event.which <= 40) return;
-
-                                  // format number
-                                  $(this).val(function(index, value) {
-                                    return value
-                                    .replace(/\D/g, "")
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                    ;
-                                  });
-                                });
-                                $('#add-service').click(function(){
-                                    var serviceId = $('.option-service').val();
-                                    var employeeId = optionEmployee();
-                                    var assistantId = optionAssistant();
-                                    var bill_id = $('#bill_id').val();
-                                    if (serviceId == 0) {
-                                        alert('Cần chọn dịch vụ sử dụng');
-                                    } else if (employeeId == 0) {
-                                        alert('Cần chọn thợ chính');
-                                    } else {
-                                        $.get('admin/hoa-don/dich-vu/them?billId=' + bill_id + '&serviceId=' + serviceId + '&employeeId=' + employeeId + '&assistantId=' + assistantId, function(data){
-                                                $('.option-service, #option-employee, .assistant').val(0);
-                                                $('#list-table').append(data);
-                                        });
-                                    }
-                                })
-                                
-                                function xoa(id)
-                                {
-                                    // price = $('#price' + id).val();
-                                    priceTotal = $('#total-all').val();
-                                    // $('#total-all').val(parseInt(priceTotal) - parseInt(price));
-                                    $.get('admin/hoa-don/xoa/dich-vu/' + id, function(data){
-                                        $('#total-all').val(parseInt(priceTotal) - parseInt(data));
-                                        if (data != '') {
-                                            $('.total-service').html(addCommas(parseInt(priceTotal) - parseInt(data)));
-                                            $('#row' + id).remove();
-                                        } else {
-                                            alert('Hóa đơn đã hoàn thành, bạn không được phép xóa.');
-                                        }  
-                                    })   
-                                }
-                            </script>
                         </tr>
                         <tr>
                             <td></td>
@@ -457,10 +430,11 @@
                 <th>Thợ chính</th>
                 <th>Thợ phụ</th>
                 <th>Giá</th>
-                <th>Thẻ hội viên</th>
+                <th>Thẻ sử dụng</th>
+                <th>Xóa</th>
             </tr>
             @foreach ($serviceListUse as $service)
-                <tr>
+                <tr id="row{{ $service->id }}">
                     <td>
                         @if ($service->service_id != '') 
                             {{ $service->service->name }}
@@ -476,18 +450,53 @@
                             {{ $service->employeeAssistant->full_name }}
                         @endif
                     </td>
-                    <td style="text-align: right;">
+                    <td id="price{{ $service->id }}" style="text-align: right;">
                         {{ number_format($service->sale_money) }}<sup>đ</sup>
                     </td>
                     <td>
-                        @if ($service->sale_money < $service->money)
+                        @if ($bill->status < config('config.order.status.check-out'))
+                            <select onchange="service({{ $service->id }})" id="card{{$service->id}}" class="form-control input-control">
+                                <option value="0">
+                                    Chọn thẻ
+                                </option>
+                                @php $dateNow = date('Y-m-d'); @endphp
+                                @foreach ($bill->customer->membership as $membership)
+                                    @if ($membership->status == 1 && ($membership->start_time == '' || strtotime($dateNow) >= strtotime($membership->start_time)) && (App\Helper\ClassHelper::checkEmptyServiceInCard($service->service->id, $membership->card->id)) > 0)
+                                        <option @if ($membership->card->id == $service->card_id) {{ 'selected' }} @endif value="{{ $membership->card->id }}">
+                                            {{ $membership->card->card_name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        @else
                             <span>
-                                <span>{{ $cardName }}</span><br>
-                                <span style="color: red">
-                                    (đã tặng {{ (number_format($service->money - $service->sale_money)) }}<sup>đ</sup>)
-                                </span>
-                                
+                                {{
+                                    ($service->card_id != '' ? $service->card->card_name : '')
+                                }}
                             </span>
+                        @endif
+                       
+                        <script type="text/javascript">
+                            function service(idBillDetail)
+                            {
+                                cardId = $('#card' + idBillDetail).val();
+                                if (cardId != 0) {
+                                    $.get('admin/hoa-don/kiem-tra-the/' + idBillDetail + '/' + cardId, function(data){
+                                        $('#price' + idBillDetail).html(data);
+                                    })
+                                } else if (cardId == 0) {
+                                    $.get('admin/hoa-don/khoi-phuc/' + idBillDetail, function(data){
+                                        $('#price' + idBillDetail).html(data);
+                                    })
+                                }
+                            }
+                        </script>
+                    </td>
+                    <td style="text-align: center;">
+                        @if ($bill->status < config('config.order.status.check-out'))
+                            <i onclick="xoa({{ $service->id }})" style="cursor: pointer; color: red" class="fas fa-times" id="close{{ $service->id }}"></i>
+                        @else
+                            <i style="cursor: pointer; color: #ccc" class="fas fa-times"></i>
                         @endif
                     </td>
                 </tr>
@@ -578,4 +587,66 @@
         });
         // window.open("admin/hoa-don/thanh-toan/" + billId, "_blank", "width=500, height=600");
     })
+</script>
+<script type="text/javascript">
+    function optionEmployee()
+    {
+        var id = $('#option-employee').val();
+
+        return id;
+    }
+    function optionAssistant()
+    {
+        var id = $('.assistant').val();
+
+        return id;
+    }
+    stt = 0;
+    $('#formattedNumberField').keyup(function(event) {
+      // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+    $('#add-service').click(function(){
+        var serviceId = $('.option-service').val();
+        var employeeId = optionEmployee();
+        var assistantId = optionAssistant();
+        var bill_id = $('#bill_id').val();
+        if (serviceId == 0) {
+            alert('Cần chọn dịch vụ sử dụng');
+        } else if (employeeId == 0) {
+            alert('Cần chọn thợ chính');
+        } else {
+            $.get('admin/hoa-don/dich-vu/them?billId=' + bill_id + '&serviceId=' + serviceId + '&employeeId=' + employeeId + '&assistantId=' + assistantId, function(data){
+                    $('.option-service, #option-employee, .assistant').val(0);
+                    $('#list-table').append(data);
+            });
+        }
+    })
+    
+    function xoa(id)
+    {
+        if (confirm('Bạn có muốn xóa dịch vụ này không?')) {
+            priceTotal = $('#total-all').val();
+            $.get('admin/hoa-don/xoa/dich-vu/' + id, function(data){
+                $('#total-all').val(parseInt(priceTotal) - parseInt(data));
+                if (data != '') {
+                    $('.total-service').html(addCommas(parseInt(priceTotal) - parseInt(data)));
+                    $('#row' + id).remove();
+                } else {
+                    alert('Hóa đơn đã hoàn thành, bạn không được phép xóa.');
+                }  
+            })   
+        } else {
+            return false;
+        }
+        
+    }
 </script>

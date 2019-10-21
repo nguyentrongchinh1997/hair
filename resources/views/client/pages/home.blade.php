@@ -28,7 +28,7 @@
           </a>
         </div> -->
         @if (auth('customers')->check() && $card != '')
-            <div class="col-lg-4">
+            <div class="d-none d-sm-none d-md-block col-lg-4">
                 <div class="card">
                     <img src="http://moviee.vn/public/img/moviee.vn.png" style="max-width: 40%; margin: auto;">
                     <p style="text-transform: uppercase;">{{ $card->card->card_name }}</p>
@@ -40,19 +40,19 @@
         @endif
         <div class="col-lg-4" style="padding: 0px">
             <div class="input-sologan">
-                @if (session('thongbao'))
+                @if (session('error'))
                     <div class="alert alert-danger">
-                        {{ session('thongbao') }}
+                        {{ session('error') }}
                     </div>
                 @endif
-                <form method="post" action="{{ route('post.phone') }}" style="box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);">
+                <form onsubmit="return validatePhone()" method="post" action="{{ route('post.phone') }}" style="box-shadow: 0 1px 6px 0 rgba(32, 33, 36, .28);">
                 @csrf
                     <div class="input-phone" style="background: #fff">
                         <div class="input-text">
                             <div class="icon">
                                 <img width="40px" height="40px" src="https://v3.30shine.org/data/images/Trangchu/item_call.png" alt="Icon">
                                 <img style="width:1px; height:40px; margin-left: 5px" src="https://v3.30shine.org/data/images/Trangchu/gachh.png" alt="Icon" class="right">
-                                <input placeholder="* Nhập số điện thoại..." type="tel" name="phone" value=""> 
+                                <input id="phone" placeholder="* Nhập số điện thoại..." type="tel" name="phone" value=""> 
                             </div>
                         </div>
                         <div style="display: flex; text-align: center; margin-top: 10px;">
@@ -76,16 +76,19 @@
                         <li style="margin-bottom: 20px">
                             <table style="width: 100%">
                                 <tr>
-                                    <td>
+                                    <td style="width: 10%">
                                         <div style="width: 25px; height: 25px; background: #000">
                                             <i id="icon-check-skinner" style="color: #fff; padding-left: 5px" class="fas fa-check check"></i>                      
                                         </div>
                                     </td>
-                                    <td style="padding-left: 20px; text-transform: uppercase;">
+                                    <td style="padding-left: 20px; text-transform: uppercase; width: 40%">
                                         {{ $service->service->name }}
                                     </td>
-                                    <td style="background: #ffd800; text-align: center; font-weight: bold; font-size: 20px; border-radius: 4px">
-                                        - {{ $service->percent }}%
+                                    <td style="text-align: right;">
+                                        <span style="background: #ffd800;padding: 5px 30px;border-radius: 4px;font-weight: bold;">
+                                            - {{ $service->percent }}%
+                                        </span>
+                                        
                                     </td>
                                 </tr>
                             </table>

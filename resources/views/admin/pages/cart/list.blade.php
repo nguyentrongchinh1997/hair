@@ -9,23 +9,29 @@
     }
 </style>
 @section('content')
-    <div class="row" style="padding-left: 40px; margin-top: 40px">
-        <div class="col-lg-12">
+    <div class="row" style="padding-left: 40px; margin-top: 40px">        
+        <div class="col-lg-6">
+            @if(count($errors)>0)
+                <div class="alert alert-danger">
+                    @foreach($errors->all() as $err)
+                        {{$err}}<br>
+                    @endforeach    
+                </div>
+            @endif  
             @if (session('thongbao'))
                 <div class="alert alert-success">
                     {{ session('thongbao') }}
                 </div>
             @endif
-        </div>
-        
-        <div class="col-lg-8">
-            <button style="float: right; margin-bottom: 20px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart">Thêm thẻ</button>
+            <button style="float: right; margin-bottom: 20px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart">Thêm thẻ hội viên</button>
+            <button style="float: left; margin-bottom: 20px; background: #FF9800; border: 0px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart-other">Thêm thẻ khác</button>
             <table class="list-table" style="margin-top: 20px">
                 <thead>
                     <tr style="background: #BBDEFB">
                         <th scope="col">STT</th>
                         <th scope="col">Tên thẻ</th>
                         <th scope="col">Dịch vụ áp dụng</th>
+                        <th scope="col" style="text-align: center;">Xóa</th>
                     </tr>
                 </thead>
                 <tbody class="order-list">
@@ -38,27 +44,22 @@
                             </td>
                             <td>
                                 @foreach ($card->cardDetail as $service)
+                                    @if ($service->percent == '')
+                                        {{ $service->service->name }}<span style="color: red">
+                                            (free {{ $service->number }} lần)
+                                        </span><br>
+                                    @else
                                     {{ $service->service->name }}<span style="color: red">
                                         (giảm {{ $service->percent }}%)
                                     </span><br>
+                                    @endif
                                 @endforeach
                             </td>
-                            <!-- <td style="text-align: center;">
-                                <button type="button" onclick="extension({{ $card->id }})" class="btn btn-primary" data-toggle="modal" data-target="#cart-extension">Gia hạn</button>
-                                <div class="modal fade" id="cart-extension">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">GIA HẠN THẺ</h4>
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body extension">
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td> -->
+                            <td style="text-align: center;">
+                                <a onclick="return deleteCard()" href="{{ route('card.delete', ['id' => $card->id]) }}" style="color: red;">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -81,7 +82,7 @@
                                     Tên thẻ
                                 </td>
                                 <td>
-                                    <input id="card-name" type="text" class=" input-control form-control" name="card_name">
+                                    <input value="{{ old('card_name') }}" required="required" id="card-name" type="text" class=" input-control form-control" name="card_name">
                                 </td>
                             </tr>
                             <tr>
@@ -89,11 +90,11 @@
                                     Giá thẻ
                                 </td>
                                 <td>
-                                    <input class="form-control input-control " type="text" id="formattedNumberField" name="price">
+                                    <input value="{{ old('price') }}" required="required" class="form-control input-control " type="text" id="formattedNumberField" name="price">
                                 </td>
                             </tr>
                         </table><br>
-                        <label style="padding: 10px 10px 10px 0px; font-weight: bold;">Chọn dịch vụ</label>
+                        <label style="padding: 10px 10px 10px 0px; font-weight: bold;">Dịch vụ áp dụng</label>
                         <div class="row" style="max-height: 300px; overflow: auto;">
                             <table style="width: 100%">
                                 @foreach ($serviceList as $service)
@@ -108,6 +109,67 @@
                                 @endforeach
                             </table>
                         </div>
+                        
+                        <div class="col-lg-12" style="margin-top: 30px">
+                            <center>
+                                <button class="btn btn-primary" type="submit">XÁC NHẬN</button>
+                            </center>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="cart-other">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Thêm thẻ khác</h3>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ route('other.card.add') }}">
+                        @csrf
+                        <table class="add-bill" style="width: 100%">
+                            <tr>
+                                <td>
+                                    Tên thẻ
+                                </td>
+                                <td>
+                                    <input placeholder="Nhập tên thẻ..." value="{{ old('card_name') }}" required="required" id="card-name" type="text" class=" input-control form-control" name="card_name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Giá thẻ
+                                </td>
+                                <td>
+                                    <input placeholder="Giá của thẻ" value="{{ old('price') }}" required="required" class="formattedNumberField form-control input-control " type="text" name="price">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Số lần áp dụng
+                                </td>
+                                <td>
+                                    <input required="required" placeholder="Số lần áp dụng" type="number" class="input-control form-control" name="number">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Dịch vụ áp dụng
+                                </td>
+                                <td>
+                                    <select name="service_id" class="form-control input-control">
+                                        @foreach ($serviceList as $service)
+                                            <option value="{{ $service->id }}">
+                                                {{ $service->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            </tr>
+                        </table><br>
                         
                         <div class="col-lg-12" style="margin-top: 30px">
                             <center>

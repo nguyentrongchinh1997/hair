@@ -10,6 +10,11 @@
                         {{ session('thongbao') }}
                     </div>
                 @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
             </div>
             <div class="col-lg-12" style="margin-bottom: 20px">
                 <form method="post" action="{{ route('order.post.list') }}">
@@ -62,10 +67,10 @@
             </div>
             <div class="col-lg-12">
                 <div class="row" style="margin-bottom: 20px">
-                    <div class="col-lg-6" style="padding-left: 0px">
+                    <div class="col-lg-8" style="padding-left: 0px">
                         <h3>Tìm kiếm tại đây:</h3>
                         <div class="input-group">
-                            <input type="text" id="search-input" class="form-control" placeholder="Nhập số điện thoại...">
+                            <input type="text" id="search-input" class="form-control" placeholder="Nhập số điện thoại hoặc tên khách hàng...">
                             <div class="input-group-append">
                               <button class="btn btn-secondary" type="button">
                                 <i class="fas fa-search"></i>
@@ -73,10 +78,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6" style="padding-right: 0px">
-                        @if ($date == date('d/m/Y'))
-                            <button style="float: right; margin-top: 30px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#billAdd">Thêm lịch đặt</button>
-                        @endif
+                    <div class="col-lg-4" style="padding-right: 0px">
+                        <button style="float: right; margin-top: 30px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#billAdd">Thêm lịch đặt</button>
                     </div>
                 </div>
                 <div class="row" style="height: 400px; overflow: auto; margin-bottom: 20px">
@@ -84,52 +87,86 @@
                         <thead>
                             <tr style="background: #BBDEFB">
                               <th scope="col">STT</th>
-                              <th scope="col">SĐT</th>
+                              <th scope="col">Khách</th>
                               <th scope="col">Lịch hẹn</th>
                               <th scope="col">Dịch vụ</th>
                               <th scope="col">Trạng thái</th>
+                              <th scope="col">Hủy đơn</th>
                             </tr>
                         </thead>
                       <tbody class="order-list">
-                        @php $stt = 0; @endphp
-                        @foreach ($orderList as $order)
-                            <tr style="cursor: pointer;" 
-                                value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
-                                <th scope="row">{{ $order->id }}</th>
-                                <td>
-                                    {{ substr($order->customer->phone, 0, 4) }}.{{ substr($order->customer->phone, 4, 3) }}.{{ substr($order->customer->phone, 7) }}
-                                </td>
-                                <td>
-                                    {{ $order->time->time }}
-                                </td>
-                                <td>
-                                    @foreach ($order->orderDetail as $orderDetail)
-                                        @if ($orderDetail->employee_id != '')
-                                            <p>
-                                                {{ $orderDetail->service->name }} ({{ $orderDetail->employee->full_name }})
-                                            </p>
-                                        @else
-                                            <p>
-                                                <span style="font-weight: bold;">
-                                                </span> {{ $orderDetail->service->name }} + <i>Chưa chọn</i>
-                                            </p>
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    @if ($order->status == config('config.order.status.create'))
-                                        Chưa check-in
-                                    @elseif ($order->status == config('config.order.status.check-in'))
-                                        <span style="color: green; font-weight: bold;">
-                                            Đã check-in
+                        @php $stt = $orderList->count(); @endphp
+                        @if ($orderList->count() > 0)
+                            @foreach ($orderList as $order)
+                                <tr title="click để xem chi tiết" style="cursor: pointer;" 
+                                    value="{{ $order->id }}" class="list-order" id="order{{ $order->id }}">
+                                    <td style="text-align: center;" scope="row">{{ $stt-- }}</td>
+                                    <td>
+                                        <span style="font-weight: bold;">
+                                            {{ ($order->customer->full_name == '') ? 'chưa có tên' : $order->customer->full_name }}
                                         </span>
-                                        
-                                    @else
-                                        <span style="color: #007bff; font-weight: bold;">Hoàn thành</span>
-                                    @endif
-                                </td>
+                                        <br>
+                                        {{ substr($order->customer->phone, 0, 4) }}.{{ substr($order->customer->phone, 4, 3) }}.{{ substr($order->customer->phone, 7) }}
+                                    </td>
+                                    <td>
+                                        {{ $order->time->time }}
+                                    </td>
+                                    <td>
+                                        @foreach ($order->orderDetail as $orderDetail)
+                                            @if ($orderDetail->employee_id != '')
+                                                <p>
+                                                    {{ $orderDetail->service->name }} ({{ $orderDetail->employee_id }} - {{ $orderDetail->employee->full_name }})
+                                                </p>
+                                            @else
+                                                <p>
+                                                    @if ($orderDetail->service_id != 0)
+                                                        <span>
+                                                            {{ $orderDetail->service->name }} (Chưa chọn thợ)
+                                                        </span> 
+                                                    @else
+                                                        <span>
+                                                            Dịch vụ khác
+                                                        </span>
+                                                    @endif
+                                                </p>
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @if ($order->status == config('config.order.status.create'))
+                                            Chưa check-in
+                                        @elseif ($order->status == config('config.order.status.check-in'))
+                                            <span style="color: green; font-weight: bold;">
+                                                Đã check-in
+                                            </span>
+                                        @else
+                                            <span style="color: #007bff; font-weight: bold;">Hoàn thành</span>
+                                        @endif
+                                    </td>
+                                    <td style="text-align: center; font-size: 18px">
+                                        @if ($order->status == config('config.order.status.create'))
+                                            <a onclick="return deleteOrder()" href="{{ route('order.cancel', ['id' => $order->id]) }}" style="color: red; ">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        @endif
+                                        <script type="text/javascript">
+                                            function deleteOrder()
+                                            {
+                                                if (confirm('Có chắc chắn muốn xóa đơn này?')) {
+                                                    return true;
+                                                } else {
+                                                    return false;
+                                                }
+                                            }
+                                        </script>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td style="text-align: center;" colspan="6">Không có lịch đặt của khách</td>
                             </tr>
-                        @endforeach
+                        @endif
                       </tbody>
                     </table>
                 </div>
@@ -178,9 +215,11 @@
                                             <select disabled="disabled" id="cut-stylist" name="employee[]" class="cut input-control form-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($stylist as $stylist)
-                                                    <option value="{{ $stylist->id }}">
-                                                        {{ $stylist->full_name }}
-                                                    </option>
+                                                    @if ($stylist->service_id == config('config.employee.type.stylist'))
+                                                        <option value="{{ $stylist->id }}">
+                                                            {{ $stylist->id }}-{{ $stylist->full_name }}
+                                                        </option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </td>
@@ -194,11 +233,21 @@
                                             <select disabled="disabled" id="cut-skinner" name="employee[]" class="wash input-control form-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($skinner as $skinner)
-                                                    <option value="{{ $skinner->id }}">
-                                                        {{ $skinner->full_name }}
-                                                    </option>
+                                                    @if ($skinner->service_id == config('config.employee.type.skinner'))
+                                                        <option value="{{ $skinner->id }}">
+                                                            {{ $skinner->id }}-{{ $skinner->full_name }}
+                                                        </option>
+                                                    @endif
                                                 @endforeach
                                             </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input onclick="check3()" id="other-service" value="0" type="checkbox" name="service[]"> Khác
+                                        </td>
+                                        <td>
+                                            <input class="form-control other-service" value="0" type="hidden" disabled="disabled" name="employee[]">
                                         </td>
                                     </tr>
                                 </table>
@@ -219,6 +268,12 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày lập hóa đơn</td>
+                            <td>
+                                <input type="date" value="{{ date('Y-m-d') }}" id="date" class="input-control form-control" name="date">
                             </td>
                         </tr>
                         <tr>

@@ -62,7 +62,17 @@
 							@foreach ($customerHistory->billDetail as $service)
 								@if ($service->service_id !='')
 									<p>
-										{{ $service->service->name }} ({{ $service->employee->full_name }})
+										@if ($service->assistant_id == '')
+											{{ $service->service->name }} 
+											<b>
+												({{ $service->employee->id }}-{{ $service->employee->full_name }})
+											</b>
+										@else
+											{{ $service->service->name }} 
+											<b>({{ $service->employee->id }}-{{ $service->employee->full_name }}</b> và <b>
+												{{ $service->employeeAssistant->id }}-{{ $service->employeeAssistant->full_name }})
+											</b>
+										@endif
 									</p>
 								@else
 									<p>

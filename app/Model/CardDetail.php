@@ -11,6 +11,7 @@ class CardDetail extends Model
         'service_id', 
         'card_id',
         'percent',
+        'number',
     ];
 
     public function service()

@@ -46,7 +46,7 @@
                                     </p>
                                 </td>
                                 <td style="text-align: right; text-align: center;">
-                                    <a style="color: #fff" href="{{ route('mobile.employee.logout') }}"><i class="fas fa-power-off" style="font-size: 25px"></i>
+                                    <a style="color: #fff" href="{{ route('mobile.employee.logout') }}"><i class="fas fa-sign-out-alt" style="font-size: 25px"></i>
                                     <br>Đăng xuất</a>
                                 </td>
                             </tr>

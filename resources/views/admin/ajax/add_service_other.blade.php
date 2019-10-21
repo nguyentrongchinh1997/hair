@@ -10,9 +10,8 @@
         {{ number_format($data->money) }}<sup>đ</sup>
     </td>
     <td>
-        
     </td>
-    <td>
+    <td style="text-align: center;">
         <i onclick="xoa({{ $data->id }})" style="cursor: pointer; color: red" class="fas fa-times" id="close{{ $data->id }}"></i>
     </td>
 </tr>

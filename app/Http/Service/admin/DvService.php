@@ -26,7 +26,9 @@ class DvService
 
     public function serviceListView()
     {
-        $serviceList = $this->serviceModel->orderBy('created_at', 'desc')->paginate(20);
+        $serviceList = $this->serviceModel->where('status', '>', 0)
+                                          ->orderBy('created_at', 'desc')
+                                          ->paginate(20);
         $data = [
             'serviceList' => $serviceList,
         ];
@@ -54,5 +56,15 @@ class DvService
         $service->assistant_percent = $inputs['assistant_percent'];
         
         return $service->save();
+    }
+
+    public function serviceDelete($id)
+    {
+        return $this->serviceModel->updateOrCreate(
+            ['id' => $id],
+            [
+                'status' => 0
+            ]
+        );
     }
 }

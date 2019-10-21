@@ -33,10 +33,12 @@ class OrderController extends Controller
         return view('admin.pages.order.list', $this->orderService->postOrderListView($request));
     }
 
-    public function resultList($key, $date)
+    public function resultList(Request $request)
     {
+        $key = $request->get('keySearch');
+        $date = $request->get('date');
         $data = [
-            'orderList' => $this->orderService->resultList($key, $date),
+            'customer' => $this->orderService->resultList($key, $date),
         ];
 
         return view('admin.ajax.order_list', $data);
@@ -75,4 +77,18 @@ class OrderController extends Controller
     {
         $this->orderService->updateAssistant($assistantId, $id);
     }
+
+    public function orderCancel($id)
+    {
+        $this->orderService->orderCancel($id);
+
+        return back()->with('thongbao', 'Hủy đơn thành công');
+    }
+
+    public function serviceAdd(Request $request)
+    {
+        return view('admin.pages.order.add_service', $this->orderService->serviceAdd($request));
+    }
 }
+
+

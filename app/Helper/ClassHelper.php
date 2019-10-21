@@ -6,6 +6,7 @@ use App\Model\Bill;
 use App\Model\BillDetail;
 use App\Model\OrderDetail;
 use App\Model\Order;
+use App\Model\Card;
 
 class ClassHelper
 {
@@ -76,15 +77,17 @@ class ClassHelper
         }
     }
 
-    public static function customerNameOrder($billId)
+    public static function customerNameOrder($orderId)
     {       
         $employeeId = auth('employees')->user()->id;
-        $customerName = Order::where('id', $billId)
+        $customerName = Order::where('id', $orderId)
                             ->with(['orderDetail' => function($query) use ($employeeId){
                                 $query->where('employee_id', $employeeId)
                                     ->orWhere('assistant_id', $employeeId);
                             }])
                             ->first();
+        // $customerName = Order::where('id', $orderId)
+        //                     ->first();
         return $customerName;
     }
 
@@ -129,4 +132,21 @@ class ClassHelper
 
         return $customer;
     }
+
+    public static function getCustomerRate($billId)
+    {
+        $rate = Bill::where('id', $billId)->first();
+
+        return $rate->rate_id;
+    }
+
+    public static function checkEmptyServiceInCard($serviceId, $cardId)
+    {
+        $card = Card::where('id', $cardId)->whereHas('cardDetail', function($query) use ($serviceId){
+            $query->where('service_id', $serviceId);
+        })->get();
+
+        return $card->count();
+    }
 }
+

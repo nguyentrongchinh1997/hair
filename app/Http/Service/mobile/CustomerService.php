@@ -7,12 +7,13 @@ use App\Model\Service;
 use App\Model\Bill;
 use App\Model\Card;
 use App\Model\Membership;
+use App\Model\Order;
 
 class CustomerService
 {
-	protected $timeModel, $employeeModel, $serviceModel, $billModel, $cardModel, $membershipModel;
+	protected $timeModel, $employeeModel, $serviceModel, $billModel, $cardModel, $membershipModel, $orderModel;
 
-	public function __construct(Time $time, Employee $employee, Service $service, Bill $bill, Card $card, Membership $membership)
+	public function __construct(Time $time, Employee $employee, Service $service, Bill $bill, Card $card, Membership $membership, Order $order)
 	{
 		$this->timeModel = $time;
 		$this->employeeModel = $employee;
@@ -20,6 +21,7 @@ class CustomerService
 		$this->billModel = $bill;
 		$this->cardModel = $card;
         $this->membershipModel = $membership;
+        $this->orderModel = $order;
 	}
 	public function viewHome($phone)
     {
@@ -58,18 +60,24 @@ class CustomerService
     public function card()
     {
         $customerId = auth('customers')->user()->id;
-    	$membership = $this->membershipModel->where('customer_id', $customerId)->first();
-    	if (isset($membership)) {
-    		$data = [
-    			'card' => $membership,
-    		];
-    	} else {
-    		$data = [
-    			'card' => '',
-    		];
-    	}
-
+    	$membership = $this->membershipModel->where('customer_id', $customerId)->get();
+		$data = [
+			'membership' => $membership,
+		];
+    	
     	return $data;
+    }
+
+    public function bookHistory()
+    {
+        $order = $this->orderModel->where('customer_id', auth('customers')->user()->id)
+                         ->where('date', date('Y-m-d'))
+                         ->get();
+        $data = [
+            'order' => $order,
+        ];
+
+        return $data;
     }
 
 }

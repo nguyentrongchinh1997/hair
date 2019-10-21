@@ -13,7 +13,7 @@
                             </td>
                             <td style="width: 10%">:</td>
                             <td style="width: 50%">
-                                {{ $bill  ->sale_detail }}
+                                {{ $bill->sale_detail }}
                             </td>
                         </tr>
                     </table>
@@ -39,22 +39,44 @@
                     </td>
                     <td>:</td>
                     <td class="comment-customer" style="font-weight: bold;">
-                        @if ($bill->rate_id != '')
+                        @if ($bill->comment != '')
                             <span>{{ $bill->comment }}</span>
                         @else
                             <i>Khách chưa góp ý</i>
                         @endif
                     </td>
                 </tr>
-
+                
             </table><br>
+<!--             <table style="width: 100%">
+                <tr>
+                    <td>
+                        Thẻ khách hàng
+                    </td>
+                    <td>
+                        @foreach ($bill->customer->membership as $card)
+                            <label style="margin-bottom: 0px">
+                                <input type="checkbox" name=""> {{ $card->card->card_name }}
+                            </label><br>
+                            
+                        @endforeach
+                    </td>
+                </tr>
+            </table> -->
             <table class="list-table">
+                 <tr>
+                    <td colspan="5" style="text-align: right; border: 0px">
+                        <a target="_blank" href="{{ route('bill.print', ['id' => $billId]) }}" style="color: #727272; font-weight: bold; text-decoration: none;">
+                            <i class="fas fa-print"></i> In hóa đơn
+                        </a>
+                    </td>
+                </tr>
                 <tr style="background: #BBDEFB">
                     <th>Dịch vụ</th>
                     <th>Thợ</th>
                     <th>Giá</th>
                     <th>Ghi chú</th>
-                    <th>Thẻ hội viên</th>
+                    <!-- <th>Thẻ hội viên</th> -->
                 </tr>
                 @php $totalPrice = 0 @endphp
                 @foreach ($serviceListUse as $service)
@@ -72,21 +94,25 @@
                         <td style="text-align: right;">
                             {{ number_format($service->sale_money) }}<sup>đ</sup>
                         </td>
-                        <td></td>
-                        <td>
+                        <td style="font-weight: bold;">
+                            @if ($service->card_id != '')
+                                <span>Sử dụng thẻ {{ $service->card->card_name }}</span>
+                            @endif
+                        </td>
+<!--                         <td>
                             @if ($service->sale_money < $service->money)
                                 <span>{{ $cardName }}</span><br>
                                 <span style="color: red">
-                                     (đã tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b>)
+                                     (được tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b>)
                                 </span>
                             @endif
-                        </td>
+                        </td> -->
                     </tr>
                     @php $totalPrice = $totalPrice + $service->sale_money @endphp
                 @endforeach
                 @if ($bill->sale != 0)
                     <tr>
-                        <td colspan="3" style="text-align: right;">
+                        <td colspan="2" style="text-align: right;">
                             {{ number_format($bill->sale) }}<sup>đ</sup>
                         </td>
                         <td style="font-weight: bold;">Quà tặng</td>
@@ -98,10 +124,8 @@
                         <td colspan="3" style="text-align: right;">
                             {{ number_format($bill->customer->balance) }}<sup>đ</sup>
                         </td>
-                        <td style="font-weight: bold;">Số dư</td>
-                        @if ($bill->sale == 0)
-                            <td rowspan="2"></td>
-                        @endif
+                        <td style="font-weight: bold;">Số dư của bạn</td>
+                       
                         
                     </tr>
                     <tr>

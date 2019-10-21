@@ -66,7 +66,11 @@ class Kernel extends HttpKernel
         'loginMobileMiddleware' => \App\Http\Middleware\LoginMobileMiddleware::class,
         'mobileEmployeeMiddleware' => \App\Http\Middleware\MobileEmployeeMiddleware::class,
         'loginMobileEmployeeMiddleware'=> \App\Http\Middleware\LoginMobileEmployeeMiddleware::class,
-        'checkPhoneMiddleware' => \App\Http\Middleware\CheckPhoneMiddleware::class
+        'checkPhoneMiddleware' => \App\Http\Middleware\CheckPhoneMiddleware::class,
+        'checkOrderMiddleware' => \App\Http\Middleware\CheckOrderMiddleware::class,
+        'checkMembershipMiddleware' => \App\Http\Middleware\CheckMembershipMiddleware::class,
+        'checkExpiryMembership' => \App\Http\Middleware\CheckExpiryMembership::class,
+        'checkDeleteBillDetail' => \App\Http\Middleware\CheckDeleteBillDetail::class,
     ];
 
     /**

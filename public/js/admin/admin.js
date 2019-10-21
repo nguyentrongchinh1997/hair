@@ -7,11 +7,27 @@ $(document).ready(function(){
       var cb = e.originalEvent.clipboardData || window.clipboardData;      
       if(!$.isNumeric(cb.getData('text'))) e.preventDefault();
     });
+    $('.formattedNumberField').on('input', function(e){        
+      $(this).val(formatCurrency(this.value.replace(/[,VNĐ]/g,'')));
+    }).on('keypress',function(e){
+      if(!$.isNumeric(String.fromCharCode(e.which))) e.preventDefault();
+    }).on('paste', function(e){    
+      var cb = e.originalEvent.clipboardData || window.clipboardData;      
+      if(!$.isNumeric(cb.getData('text'))) e.preventDefault();
+    });
     function formatCurrency(number){
       var n = number.split('').reverse().join("");
       var n2 = n.replace(/\d\d\d(?!$)/g, "$&,");    
       return  n2.split('').reverse().join('');
     }
+    $('.formattedNumberField').on('input', function(e){        
+      $(this).val(formatCurrency(this.value.replace(/[,VNĐ]/g,'')));
+    }).on('keypress',function(e){
+      if(!$.isNumeric(String.fromCharCode(e.which))) e.preventDefault();
+    }).on('paste', function(e){    
+      var cb = e.originalEvent.clipboardData || window.clipboardData;      
+      if(!$.isNumeric(cb.getData('text'))) e.preventDefault();
+    });
 
 // search đơn đặt lịch
   $('#search-input').keyup(function(){
@@ -25,12 +41,10 @@ $(document).ready(function(){
       month = 0 + $('#month').val();
     }
     var date = year + '-' + month + '-' + day;
-    var keySerach = $('#search-input').val();
-    if (keySerach != '') {
-      $.get('admin/dat-lich/tim-kiem/' + keySerach + '/' + date, function(data){
+    var keySearch = $('#search-input').val();
+    $.get('admin/dat-lich/tim-kiem?keySearch=' + keySearch + '&date=' + date, function(data){
         $('.order-list').html(data);
-      });
-    }
+    });
   })
 
     $('.tab').click(function(){
@@ -53,12 +67,10 @@ $(document).ready(function(){
       month = 0 + $('#month').val();
     }
     var date = year + '-' + month + '-' + day;
-    var keySerach = $('#key-search').val();
-    if (keySerach != '') {
-      $.get('admin/hoa-don/tim-kiem/' + keySerach + '/' + date, function(data){
+    var keySearch = $('#key-search').val();
+    $.get('admin/hoa-don/tim-kiem?keySearch=' + keySearch + '&date=' + date, function(data){
         $('.order-list').html(data);
-      });
-    } 
+    });
   })
 
 // search khách hàng
@@ -142,12 +154,14 @@ function editEmployee(id)
 }
 function validateAddOrder()
 {
-    var phone = document.getElementById('phone').value;
-    var stylist = $('#cut-stylist').val();
-    var skinner = $('#cut-skinner').val();
-    var washLength = $('#wash:checkbox:checked').length;
-    var cutLength = $('#cut:checkbox:checked').length;
-    var timeId = $('#time-id').val();
+    phone = document.getElementById('phone').value;
+    stylist = $('#cut-stylist').val();
+    skinner = $('#cut-skinner').val();
+    washLength = $('#wash:checkbox:checked').length;
+    cutLength = $('#cut:checkbox:checked').length;
+    otherService = $('#other-service:checkbox:checked').length;
+    timeId = $('#time-id').val();
+    date = $('#date').val();
     if (isNaN(phone)) {
         alert('Số điện thoại không đúng định dạng');
 
@@ -156,7 +170,7 @@ function validateAddOrder()
         alert('Số điện thoại phải đủ 10 số');
 
         return false;
-    } else if (washLength == 0 && cutLength == 0) {
+    } else if (washLength == 0 && cutLength == 0 && otherService == 0) {
         alert('Chưa chọn dịch vụ');
 
         return false;
@@ -174,6 +188,10 @@ function validateAddOrder()
         return false;
     } else if (washLength == 0 && skinner != 0) {
         alert('Chưa chọn dịch vụ gội');
+
+        return false;
+    } else if (date == '') {
+        alert('Cần chọn ngày lập hóa đơn');
 
         return false;
     } else if (timeId == 0) {
@@ -200,10 +218,8 @@ function validateCard()
     customerId = document.getElementById('customer-id').value;
     cardName = document.getElementById('card-name').value;
     money = document.getElementById('formattedNumberField').value;
-    startTime = document.getElementById('start-time').value;
-    endTime = document.getElementById('end-time').value;
     service = document.getElementsByClassName("service");
-    var len = service.length;
+    len = service.length;
     serviceChecked = false;
     for (var i = 0; i < len; i++) {
         if (service[i].checked){
@@ -222,14 +238,6 @@ function validateCard()
     return false;
     } else if (money == '') {
         alert('Cần điền số tiền');
-
-        return false;
-    } else if (startTime == '') {
-        alert('Cần điền thời gian bắt đầu');
-
-        return false;
-    } else if (endTime == '') {
-        alert('Cần điền thời gian két thúc');
 
         return false;
     } else if (!serviceChecked) {
@@ -273,8 +281,9 @@ function employeeDetail(id)
 {
     $('.employee').removeClass('active');
     $('#employee' + id).addClass('active');
-    date = $('#date').val();
-    $.get('admin/nhan-vien/chi-tiet?id=' + id + '&date=' + date, function(data){
+    type = $('#type').val();
+    dateSearch = $('#date-search').val();
+    $.get('admin/nhan-vien/chi-tiet?id=' + id + '&type=' + type + '&date=' + dateSearch, function(data){
         $('.employee-detail').html(data);
     });
 }
@@ -286,7 +295,6 @@ function validateEmployeeAdd()
     employeeAddress = $('#employee-address').val();
     employeeSalary = $('#formattedNumberField').val();
     employeePassword = $('#employee-password').val();
-
     if (employeeName == '') {
         alert('Cần nhập tên nhân viên');
 
@@ -316,19 +324,59 @@ function validateEmployeeAdd()
     }
     return false;
 }
+function validateEmployeeEdit()
+{
+    employeeName = $('#edit-employee-name').val();
+    employeePhone = $('#edit-employee-phone').val();
+    employeeAddress = $('#edit-employee-address').val();
+    employeeSalary = $('#format-number').val();
+    if (employeeName == '') {
+        alert('Cần nhập tên nhân viên');
+
+        return false;
+    } else if (isNaN(employeePhone)) {
+        alert('Số điện thoại không đúng định dạng');
+
+        return false;
+    } else if (employeePhone.length !=10 ) {
+        alert('Số điện thoại phải đủ 10 số');
+
+        return false;
+    } else if (employeeAddress == '') {
+        alert('Cần nhập địa chỉ nhân viên');
+
+        return false;
+    } else if (employeeSalary == '') {
+        alert('Cần nhập lương cứng nhân viên');
+
+        return false;
+    } else {
+        return true;
+    }
+    return false;
+}
 $('#name-employee').keyup(function(){
+    type = $('#type').val();
+    date = $('#date-search').val();
     employeeName = $('#name-employee').val();
 
     if (employeeName != '') {
-        $.get('admin/nhan-vien/tim-kiem?name=' + employeeName, function(data){
+        $.get('admin/nhan-vien/tim-kiem?name=' + employeeName + '&type=' + type + '&date=' + date, function(data){
             $('#result-search').html(data);
         })  
     } else {
-        $.get('admin/nhan-vien/tim-kiem?name=null', function(data){
+        $.get('admin/nhan-vien/tim-kiem?name=null' + '&type=' + type + '&date=' + date, function(data){
             $('#result-search').html(data);
         })
     }
 
+})
+
+$('#member-search').keyup(function(){
+    key = $('#member-search').val();
+    $.get('admin/hoi-vien/tim-kiem?key=' + key, function(data){
+        $('#member-result').html(data);
+    })
 })
 
 function validateFormMembership()
@@ -372,3 +420,63 @@ function check2()
         $('.wash').prop('disabled', true);
     }
 }
+function check3()
+{
+    if ($('#other-service').is(":checked")) {
+        $('.other-service').prop('disabled', false);
+    } else {
+        $('.other-service').prop('disabled', true);
+    }
+}
+$(function(){
+    $('.tong').html($('#tong').html());
+    $('.tong-chi').html($('#tong-chi').html());
+    $('.tong-thu').html($('#tong-thu').html());
+})
+function deleteExpense()
+{
+    if (confirm('Bạn có chắc chắn muốn xóa mục này?')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function editExpese(id)
+{
+    $.get('admin/chi-tieu/sua/' + id, function(data){
+        $('#expense-edit .modal-body').html(data);
+    });
+}
+function deleteService()
+{
+    if (confirm('Bạn có chắc chắn muốn xóa dịch vụ này?')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function deleteCard()
+{
+    if (confirm('Bạn có chắc chắn muốn xóa thẻ này?')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function deleteMembership()
+{
+    if (confirm('Bạn có chắc chắn muốn xóa hội viên này?')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+$(function(){
+    $('.card-type').click(function(){
+        $('.card-type').removeClass('card-active');
+        $(this).addClass('card-active');
+        data = $(this).attr('data');
+        $('.form-card').hide();
+        $('#' + data).show();
+    })
+})

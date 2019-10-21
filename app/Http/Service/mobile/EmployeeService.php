@@ -82,13 +82,10 @@ class EmployeeService
 
 	public function search($request)
 	{
-		// $dateFrom = $request->get('from');
-		// $dateTo = $request->get('to');
-		$date = $request->get('date');
-		$dateFrom = str_replace('/', '-', trim(explode('-', $date)[0]));
-		$dateTo = str_replace('/', '-', trim(explode('-', $date)[1]));
-		$dateFromFormat = date('Y-m-d', strtotime($dateFrom));
-		$dateToFormat = date('Y-m-d', strtotime($dateTo));
+		$date_start = trim(str_replace('/', '-', $request->get('dateStart')));
+		$date_end = trim(str_replace('/', '-', $request->get('dateEnd')));
+		$dateFromFormat = date('Y-m-d', strtotime($date_start));
+		$dateToFormat = date('Y-m-d', strtotime($date_end));
 		$employeeId = auth('employees')->user()->id;
 		$salary = $this->employeeCommisionModel
 						->whereBetween('date', [$dateFromFormat, $dateToFormat])

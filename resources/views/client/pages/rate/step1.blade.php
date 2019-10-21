@@ -3,12 +3,6 @@
 @section('content')
 <!-- <script type="text/javascript">
     setTimeout(function(){
-        var href = 'danh-gia';
-       window.location.href = href;
-   },10000);
-</script> -->
-<script type="text/javascript">
-    setTimeout(function(){
         location.reload();
     },5000);
     $(function(){
@@ -18,13 +12,13 @@
             window.location.href = 'rate';
         }
     })
-</script>
+</script> -->
 <style type="text/css">
     table tr td {
         font-size: 30px;
     }
 </style>
-<div class="container">
+<div class="row">
     <input type="hidden" id="bill-id" value="@if(isset($bill)){{ $bill->id }}@else{{ '0' }}@endif">
     <div id="load-input">
         
@@ -36,7 +30,7 @@
         <h4 style="text-align: center;">XÁC NHẬN LẠI THÔNG TIN HÓA ĐƠN GIÚP CHÚNG EM</h4>
         <table style="width: 100%; background: #F9FBE7;">
             <tr>
-                <td style="text-align: center; padding: 10px">Anh vui lòng chỉ thanh toán đúng số tiền<br>
+                <td style="text-align: center; padding: 10px">Chị vui lòng chỉ thanh toán đúng số tiền<br>
                     <span  style="color: red; font-weight: bold; font-size: 30px">
                         {{ number_format($sum) }} Đ
                         
@@ -48,7 +42,7 @@
             </tr>
         </table><br>
         <p style="color: orange; text-align: center;">
-            Nếu chưa đúng anh vui lòng báo lễ tân để chỉnh sửa giúp em nhé
+            Nếu chưa đúng Chị vui lòng báo lễ tân để chỉnh sửa giúp em nhé
         </p>
         <table style="width: 100%">
             @php $stt = 0; @endphp

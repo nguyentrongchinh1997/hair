@@ -120,7 +120,7 @@ footer ul{
     list-style-type: none;
 }
 footer ul a li{
-    width: 33%;
+    width: 25%;
     height: 100%;
     text-align: center;
     padding: 0px 5px;
@@ -273,15 +273,7 @@ footer i{
     border: 1px solid #e5e5e5;
     padding: 8px;
 }
-.tab table tr td:nth-child(4){
-    color: #727272;
-}
-.tab table tr td:nth-child(2){
-    color: #727272;
-}
-.tab table tr td:nth-child(3){
-    font-weight: bold;
-}
+
 
 /*#pick-day table tr td{
     border:  0px !important;

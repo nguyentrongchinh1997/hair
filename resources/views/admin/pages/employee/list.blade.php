@@ -22,39 +22,71 @@
             @endif
             <input type="hidden" id="date" value="{{ $year }}-{{ $month }}" name="">
             <div class="row">
-
-                <form method="post" action="{{ route('commision.time') }}">
-                    @csrf
-                    <h3>Xem thời gian</h3>
-                    <table>
-                        <tr>
-                            <td>
-                                <select name="month" class="form-control input-control">
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <option @if ($i == $month) {{ 'selected' }} @endif value="@if ($i < 10) 0{{ $i }} @else {{ $i }} @endif">
-                                            Tháng {{ $i }}
-                                        </option>
-                                    @endfor
-                                </select>
-                            </td>
-                            <td>
-                                <select name="year" class="form-control input-control">
-                                    @for ($i = 2019; $i <= date('Y'); $i++)
-                                        <option @if ($i == $year) {{ 'selected' }} @endif value="{{ $i }}">
-                                            Năm {{ $i }}
-                                        </option>
-                                    @endfor
-                                </select>
-                            </td>
-                            <td>
-                                <input value="Xem thời gian" class="btn btn-primary input-control" type="submit" name="">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
+                <div class="col-lg-5" style="padding: 0px">
+                    <input type="hidden" id="type" value="{{$type}}" name="">
+                    <input type="hidden" id="date-search" value="@if ($type == 'month'){{ $year }}-{{$month}} @elseif ($type == 'between'){{ $date_start }}-{{ $date_end }}@endif" name="">
+                    <form method="post" action="{{ route('commision.time') }}?type=month">
+                        @csrf
+                        <h3>Xem lương theo tháng</h3>
+                        <table>
+                            <tr>
+                                <td>
+                                    <select name="month" class="form-control input-control">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option @if ($i == $month) {{ 'selected' }} @endif value="@if ($i < 10) 0{{ $i }} @else {{ $i }} @endif">
+                                                Tháng {{ $i }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="year" class="form-control input-control">
+                                        @for ($i = 2019; $i <= date('Y'); $i++)
+                                            <option @if ($i == $year) {{ 'selected' }} @endif value="{{ $i }}">
+                                                Năm {{ $i }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </td>
+                                <td>
+                                    <input value="Xem" class="btn btn-primary input-control" type="submit" name="">
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="col-lg-7">
+                    <form method="post" action="{{ route('commision.time') }}?type=between">
+                        @csrf
+                        <h3>Xem lương theo ngày</h3>
+                        <table style="width: 100%">
+                            <tr>
+                                <td>
+                                    <div class="input-group-prepend">
+                                      <div class="input-group-text input-control">Từ</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input placeholder="dd/mm/yyyy" value="{{ $date_start }}" type="text" id="demo-3_1" class="form-control form-control-sm date-pick" name="date_start">
+                                </td>
+                                <td>
+                                    <div class="input-group-prepend">
+                                      <div class="input-group-text input-control">Đến</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input placeholder="dd/mm/yyyy" value="{{ $date_end }}" type="text" id="demo-3_2" class="form-control form-control-sm date-pick" name="date_end">
+                                </td>
+                                <td>
+                                    <input value="Xem" class="btn btn-primary input-control" type="submit">
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div><br>
             <div class="row">
-                <div class="col-lg-6" style="padding: 0px">
+                <div class="col-lg-8" style="padding: 0px">
                     <h3>Tìm kiếm tại đây:</h3>
                     <div class="input-group">
                         <input type="text" id="name-employee" class="form-control" placeholder="Nhập tên nhân viên...">
@@ -65,12 +97,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6" style="padding: 0px">
+                <div class="col-lg-4" style="padding: 0px">
                     <button style="margin-top: 30px; float: right;" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#myModal">
                     Thêm nhân viên
                     </button>
                 </div>
-                
             </div>
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
@@ -105,9 +136,11 @@
                                         </td>
                                         <td>
                                             <select name="type" class="form-control input-control">
-                                                @foreach ($serviceList as $service)
+                                                <option value="1">Cắt</option>
+                                                <option value="2">Gội</option>
+                                                <!-- @foreach ($serviceList as $service)
                                                     <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                                @endforeach
+                                                @endforeach -->
                                             </select>
                                         </td>
                                     </tr>
@@ -176,29 +209,46 @@
                   </div>
                 </div>
             </div>
+            <div class="row">
+                <h3>
+                    @if ($type == 'month')
+                        Lương nhân viên tháng <span style="font-weight: bold; color: #007bff">{{ $month }}/{{ $year }}</span> :
+                    @elseif ($type == 'between')
+                        Lương nhân viên từ <span style="font-weight: bold; color: #007bff">{{ $date_start }}</span> đến <span style="font-weight: bold; color: #007bff">{{ $date_end }}</span>
+                    @endif
+                </h3>
+            </div><br>
             <div class="row" style="height: 400px; overflow: auto;">
                 <table class="list-table">
                     <thead>
                         <tr style="background: #BBDEFB">
-                            <th scope="col">Stt</th>
+                            <th scope="col">STT</th>
+                            <th scope="">Ảnh</th>
                             <th scope="col">Tên</th>
                             <th scope="col">Sđt</th>
                             <th scope="col">Vị trí</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Hoa hồng</th>
+                            <th scope="col">Tổng lương</th>
                             <th scope="col">Sửa</th>
                         </tr>
                     </thead>
                     <tbody id="result-search">
-                        @php $stt = 0; @endphp
+                        <tr style="background: #fcf8e3; font-weight: bold;">
+                            <td class="tong" colspan="8" style="text-align: right; color: #007bff; font-size: 18px">
+                                
+                            </td>
+                            <td></td>
+                        </tr>
+                        @php $stt = 0; $totalAll = 0; @endphp
                         @foreach ($employeeList as $employee)
-                            <tr style="cursor: pointer;" onclick="employeeDetail({{ $employee->id }})" class="employee" id="employee{{ $employee->id }}">
+                            <tr title="Click để xem chi tiết" style="cursor: pointer;" onclick="employeeDetail({{ $employee->id }})" class="employee" id="employee{{ $employee->id }}">
                                 <td scope="row">{{ ++$stt }}</td>
                                 <td>
+                                    <img src='{{ asset("upload/images/employee/$employee->image") }}' width="50px">
+                                </td>
+                                <td>
                                     {{ $employee->full_name }}
-                                    <!-- <a href="{{ route('salary.list', ['id' => $employee->id]) }}">
-                                        {{ $employee->full_name }}
-                                    </a> -->
                                 </td>
                                 <td>
                                     {{ substr($employee->phone, 0, 4) }}.{{ substr($employee->phone, 4, 3) }}.{{ substr($employee->phone, 7) }}
@@ -213,7 +263,7 @@
                                         }}
                                     </span>
                                 </td>
-                                <td style="color: #007bff; font-weight: bold; text-align: right; font-size: 20px">
+                                <td style="text-align: right;">
                                     @php 
                                         $commisionTotal = 0;
                                     @endphp
@@ -226,13 +276,34 @@
                                     @endforeach
                                     {{ number_format($commisionTotal) }}<sup>đ</sup>
                                 </td>
+                                <td style="text-align: right; font-weight: bold;">
+                                    @if (isset($type) && $type == 'month')
+                                        {{ number_format($commisionTotal + $employee->salary) }}<sup>đ</sup>
+                                    @elseif (isset($type) && $type == 'between')
+                                        {{ number_format($commisionTotal) }}<sup>đ</sup>
+                                    @endif
+                                </td>
                                 <td style="text-align: center;">
                                     <button style="border: 1px solid #ccc; outline: none;" onclick="editEmployee({{ $employee->id }})" type="button" class="button-control" data-toggle="modal" data-target="#edit">
                                         <i class="far fa-edit"></i>
                                     </button>
                                 </td>
                             </tr>
+                                @if (isset($type) && $type == 'month')
+                                    @php 
+                                        $totalAll = $totalAll +  ($commisionTotal + $employee->salary);
+                                    @endphp
+                                @elseif (isset($type) && $type == 'between')
+                                    @php
+                                        $totalAll = $totalAll +  $commisionTotal;
+                                    @endphp
+                                @endif
                         @endforeach
+                        <tr style="display: none;">
+                            <td id="tong" colspan="7">
+                                {{ number_format($totalAll) }}<sup>đ</sup>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

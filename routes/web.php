@@ -11,7 +11,7 @@
 |
 */
 Route::get('demo', function(){
-    return view('demo');
+    dd(strtotime('2019-10-18'));
 });
 /*========================Route cho Mobile khách hàng======================*/
 Route::get('mobile/dang-nhap', 'mobile\LoginController@loginView')->name('mobile.login')->middleware('loginMobileMiddleware');
@@ -24,6 +24,8 @@ Route::group(['prefix' => 'mobile', 'middleware' => 'mobileMiddleware'], functio
     Route::get('lich-su', 'mobile\CustomerController@history')->name('mobile.history');
 
     Route::get('the', 'mobile\CustomerController@card')->name('mobile.card');
+
+    Route::get('book', 'mobile\CustomerController@bookHistory')->name('mobile.book');
 });
 /*========================End======================*/
 
@@ -60,13 +62,16 @@ Route::get('input', 'client\ClientController@input');
 Route::get('rate', 'client\ClientController@rateView');
 
 Route::get('stylist/list/{serviceId}', 'client\AjaxController@getService');
+
 Route::get('skinner/list/{serviceId}', 'client\AjaxController@getSkinner');
 
 /*================================== CHỨC NĂNG ĐÁNH GIÁ =====================================*/
 Route::group(['prefix' => 'danh-gia'], function(){
+    Route::get('ket-thuc', 'client\ClientController@viewFinish')->name('rate.end');
+
     Route::get('buoc', 'client\ClientController@rate')->name('client.rate');
 
-    Route::get('ket-thuc', 'client\ClientController@finishRate')->name('rate.finish');
+    Route::post('xac-nhan', 'client\ClientController@finishRate')->name('rate.finish');
 
     Route::get('muc-do/{noiDung}/{billId}', 'client\ClientController@updateRate');
 
@@ -101,33 +106,57 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::get('chi-tiet', 'admin\EmployeeController@detail');
 
         Route::get('tim-kiem', 'admin\EmployeeController@resultSearch');
+
     });
 
     Route::group(['prefix' => 'dich-vu', 'middleware' => 'accessMiddleware'], function(){
         Route::post('them', 'admin\ServiceController@serviceAdd')->name('service.add');
+
         Route::get('danh-sach', 'admin\ServiceController@serviceListView')->name('service.list');
+
         Route::get('sua/{id}', 'admin\ServiceController@serviceEditView')->name('service.edit');
+
         Route::post('sua/{id}', 'admin\ServiceController@serviceEdit')->name('service.edit');
+
+        Route::get('xoa/{id}', 'admin\ServiceController@serviceDelete')->name('service.delete');
     });
 
     Route::group(['prefix' => 'dat-lich'], function(){
         Route::post('check/{orderId}', 'admin\OrderController@checkIn')->name('check-in');
+        
         Route::get('danh-sach', 'admin\OrderController@orderListView')->name('order.list');
+        
         Route::post('danh-sach', 'admin\OrderController@postOrderListView')->name('order.post.list');
-        Route::get('tim-kiem/{key}/{date}', 'admin\OrderController@resultList');
+        
+        Route::get('tim-kiem', 'admin\OrderController@resultList');
+        
         Route::get('chi-tiet/{orderId}', 'admin\OrderController@orderDetail');
+        
         Route::get('xoa/{orderDetailId}/{orderId}', 'admin\OrderController@deleteOrder');
+        
         Route::get('dich-vu/sua/{serviceId}/{id}', 'admin\OrderController@editService');
+        
         Route::get('nhan-vien/sua/{employeeId}/{id}', 'admin\OrderController@editEmployee');
+        
         Route::post('them', 'admin\OrderController@addOrder')->name('order.add');
+        
         Route::get('nhan-vien/cap-nhat/{assistantId}/{id}', 'admin\OrderController@updateAssistant');
+        
+        Route::get('huy/{id}', 'admin\OrderController@orderCancel')->name('order.cancel')->middleware('checkOrderMiddleware');
+
+        Route::get('dich-vu/them', 'admin\OrderController@serviceAdd');
+        
     });
 
     Route::group(['prefix' => 'khach-hang'], function(){
         Route::get('cap-nhat/{id}/{ten}/{birthday}', 'admin\CustomerController@updateCustomer');
+
         Route::get('danh-sach', 'admin\CustomerController@customerListview')->name('customer.list')->middleware('accessMiddleware');
+
         Route::post('danh-sach', 'admin\CustomerController@postDeposit')->name('recharge');
+
         Route::get('chi-tiet/{id}', 'admin\CustomerController@viewDetailCustomer');
+
         Route::get('tim-kiem/{phone}', 'admin\CustomerController@customerSerachResult');
     });
 
@@ -139,13 +168,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
 
         Route::post('danh-sach', 'admin\BillController@postBillList')->name('bill.post.list');
 
-        Route::get('tim-kiem/{keySearch}/{date}', 'admin\BillController@search');
+        Route::get('tim-kiem', 'admin\BillController@search');
 
         Route::get('chi-tiet/{billId}', 'admin\BillController@billDetail');
 
         Route::get('dich-vu/them', 'admin\BillController@serviceAdd');
 
-        Route::get('xoa/dich-vu/{billDetailId}', 'admin\BillController@serviceDelete');
+        Route::get('xoa/dich-vu/{billDetailId}', 'admin\BillController@serviceDelete')->middleware('checkDeleteBillDetail');
 
         Route::get('dich-vu-khac/them', 'admin\BillController@serviceOtherAdd');
 
@@ -156,6 +185,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::post('them', 'admin\BillController@addBill')->name('bill.add');
 
         Route::get('danh-gia/{billId}', 'admin\BillController@rateUpdate');
+
+        Route::get('in/{id}', 'admin\BillController@printBill')->name('bill.print');
+
+        Route::get('kiem-tra-the/{idBillDetail}/{cardId}', 'admin\BillController@cardCheck');
+
+        Route::get('khoi-phuc/{idBillDetail}', 'admin\BillController@priceRestore');
     });
 
     Route::group(['prefix' => 'danh-gia', 'middleware' => 'accessMiddleware'], function(){
@@ -165,21 +200,48 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
 
     Route::group(['prefix' => 'the', 'middleware' => 'accessMiddleware'], function(){
         Route::get('danh-sach', 'admin\CardController@getCardList')->name('card.list');
+
         Route::post('them', 'admin\CardController@postCard')->name('card.add');
+
+        Route::post('them/khac', 'admin\CardController@postOtherCard')->name('other.card.add');
+
+        Route::get('xoa/{id}', 'admin\CardController@cardDelete')->name('card.delete');
         
     });
 
     Route::group(['prefix' => 'chi-tieu', 'middleware' => 'accessMiddleware'], function(){
         Route::get('danh-sach', 'admin\ExpenseController@getViewExpense')->name('expense.list');
+
         Route::post('them', 'admin\ExpenseController@expenseAdd')->name('expense.add');
+
+        Route::post('them-thu-nhap', 'admin\ExpenseController@revenueAdd')->name('income.add');
+
         Route::post('danh-sach', 'admin\ExpenseController@expenseMonth')->name('expense.month');
+
+        Route::get('xoa/{id}', 'admin\ExpenseController@deleteExpense')->name('expense.delete');
+
+        Route::get('sua/{id}', 'admin\ExpenseController@editExpense')->name('edit.delete');
+
+        Route::post('sua/{id}', 'admin\ExpenseController@editPostExpense')->name('edit.post.delete');
+
     });
 
-    Route::group(['prefix' => 'hoi-vien'], function(){
+    Route::group(['prefix' => 'hoi-vien', 'middleware' => 'accessMiddleware'], function(){
         Route::get('danh-sach', 'admin\MembershipController@viewListMemberShip')->name('membership.list');
-        Route::post('danh-sach', 'admin\MembershipController@membershipAdd')->name('membership.add');
-        Route::get('gia-han/{id}', 'admin\MembershipController@getExtensionView');
-        Route::post('gia-han/{id}', 'admin\MembershipController@postExtension')->name('extension');
+
+        Route::post('them-thanh-vien', 'admin\MembershipController@membershipAdd')->name('membership.add')->middleware('checkMembershipMiddleware');
+
+        Route::post('them', 'admin\MembershipController@membershipAddOther')->name('membership.add.other')->middleware('checkMembershipMiddleware');
+
+        Route::get('xoa/{id}', 'admin\MembershipController@membershipDelete')->name('membership.delete')->middleware('checkExpiryMembership');
+
+        Route::post('danh-sach', 'admin\MembershipController@membershipTimeList')->name('membership.post.list');
+
+        // Route::get('gia-han/{id}', 'admin\MembershipController@getExtensionView');
+
+        // Route::post('gia-han/{id}', 'admin\MembershipController@postExtension')->name('extension');
+
+        Route::get('tim-kiem', 'admin\MembershipController@search');
     });
     Route::get('logout', 'admin\LoginController@logout')->name('logout');
 });

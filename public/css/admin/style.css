@@ -263,6 +263,9 @@ h3{
 #thu{
     display: none;
 }
+#thu2{
+    display: none;
+}
 .expense-right table{
     width: 100%;
 }
@@ -275,4 +278,32 @@ h3{
 }
 .order-detail tr td{
     padding: 5px;
+}
+.sub-menu ul{
+    display: none;
+    z-index: 33;
+    width: 300px;
+    padding-left: 0px;
+    position: absolute;
+    width: 200%;
+    left: 0px;
+    top: 40px;
+    background: red;
+    background: #BBDEFB;
+}
+.sub-menu ul li:hover{
+    background: #eee;
+}
+.sub-menu:hover ul{
+    display: block;
+}
+.sub-menu ul li{
+    border-bottom: 1px solid #fff;
+    width: 100%;
+}
+.card-active{
+    background: #BBDEFB !important;
+}
+#the-dich-vu{
+    display: none;
 }

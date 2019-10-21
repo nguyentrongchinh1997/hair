@@ -11,5 +11,6 @@ class Expense extends Model
         'content', 
         'money', 
         'date',
+        'type',
     ];
 }

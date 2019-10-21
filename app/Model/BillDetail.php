@@ -12,6 +12,7 @@ class BillDetail extends Model
         'service_id', 
         'employee_id',
         'other_service_percent',
+        'card_id',
         'money',
         'sale_money',
         'other_service',
@@ -45,4 +46,10 @@ class BillDetail extends Model
     {
         return $this->hasMany(BillDetail::class);
     }
+
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
+    }
 }
+

@@ -10,6 +10,8 @@ class Card extends Model
     protected $fillable = [
         'card_name', 
         'price',
+        'status',
+        'type',
     ];
 
     public function cardDetail()
@@ -20,5 +22,9 @@ class Card extends Model
     public function membership()
     {
     	return $this->hasMany(Membership::class);
+    }
+    public function billDetail()
+    {
+        return $this->hasMany(BillDetail::class);
     }
 }

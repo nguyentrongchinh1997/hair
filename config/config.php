@@ -20,6 +20,7 @@ return [
             'create' => 0,
             'check-in' => 1,
             'check-out' => 2,
+            'cancel' => -1,
         ],
     ],
     'rate' => [

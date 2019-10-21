@@ -45,6 +45,22 @@ class BillService
         $total = $sumService - $bill->sale;
         $balance = $customer->balance;
 
+        foreach ($bill->billDetail as $billDetail) {
+            $checkUseCard = $this->membershipModel->where('customer_id', $bill->customer->id)
+                                                  ->where('card_id', $billDetail->card_id)
+                                                  ->where('number', '!=', '')
+                                                  ->where('status', 1)
+                                                  ->first();
+            if (isset($checkUseCard)) {
+                $this->membershipModel->updateOrCreate(
+                    ['id' => $checkUseCard->id],
+                    [
+                        'number' => ($checkUseCard->number - 1)
+                    ]
+                );
+            }
+        }
+
         if ($balance >= $total) {
             $balanceUpdate = $balance - $total;
         } else {
@@ -91,12 +107,10 @@ class BillService
         $year = date('Y');
         $date = date('Y-m-d');
         $bill = $this->billModel
-                    ->where('status', '>', config('config.order.status.create'))
-                    ->orderBy('created_at', 'DESC')
-                    ->with('billDetail')
-                    ->with('order')
-                    ->get();
-        $serviceList = $this->serviceModel->all();
+                     ->where('date', $date)
+                     ->orderBy('id', 'desc')
+                     ->get();
+        $serviceList = $this->serviceModel->where('status', '>', 0)->get();
         $timeList = $this->timeModel->all();
         $employeeList = $this->employeeModel->all();
         $data = [
@@ -126,9 +140,9 @@ class BillService
         }
         $date = $year . '-' . $month . '-' . $day;
         $bill = $this->billModel
-                    ->where('status', '>', config('config.order.status.create'))
-                    ->with('order')
-                    ->get();
+                     ->where('date', $date)
+                     ->orderBy('id', 'desc')
+                     ->get();
         $serviceList = $this->serviceModel->all();
         $timeList = $this->timeModel->all();
         $employeeList = $this->employeeModel->all();
@@ -148,10 +162,28 @@ class BillService
 
     public function billSearchResult($keySearch, $date)
     {
-        $customer = $this->customerModel
-                        ->where('phone', 'like', $keySearch . '%')
-                        ->with('bill')
-                        ->get();
+        if ($keySearch != '') {
+            $customer = $this->customerModel
+                             ->where('phone', 'like', $keySearch . '%')
+                             ->orWhere('full_name', 'like', '%' . $keySearch . '%')
+                             ->with(['bill' => function($query) use ($date){
+                                    $query->where('date', $date);
+                                }
+                             ])
+                             ->has('bill')
+                             ->orderBy('id', 'desc')
+                             ->get();
+        } else {
+            $customer = $this->customerModel
+                             ->with(['bill' => function($query) use ($date){
+                                    $query->where('date', $date);
+                                }
+                             ])
+                             ->has('bill')
+                             ->orderBy('id', 'desc')
+                             ->get();
+        }
+        
         $data = [
             'customer' => $customer,
             'date' => $date,
@@ -166,7 +198,7 @@ class BillService
         $comment = $this->billModel->findOrFail($billId);
         $bill = $this->billModel->findOrFail($billId);
         $employeeList = $this->employeeModel->where('status', config('config.employee.status.doing'))->get();
-        $serviceList = $this->serviceModel->where('id', '!=', $bill->order->service_id)->get();
+        $serviceList = $this->serviceModel->where('status', '>', 0)->get();
         $moneyServiceTotal = $this->billDetailModel->where('bill_id', $billId)->sum('money');
         $serviceListUse = $this->billDetailModel->where('bill_id', $billId)->get();
         $customer = $this->customerModel->findOrFail($bill->customer_id);
@@ -208,25 +240,25 @@ class BillService
         $date = date('Y-m-d');
         $bill = $this->billModel->findOrFail($billId);
         $service = $this->serviceModel->findOrFail($serviceId);
-        $checkMembership = $this->membershipModel->where('customer_id', $bill->order->customer_id)
-                                                ->first();
-    /*kiểm tra thẻ hội viên*/
-        if (isset($checkMembership)) {
-            $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
-                                              ->where('service_id', $serviceId)
-                                              ->first();
-            if (strtotime($date) <= strtotime($checkMembership->end_time) && isset($detailCard)) {
-                $cardName = $checkMembership->card->card_name;
-                $saleMoney = $service->price - ($service->price * $detailCard->percent/100);
-            } else {
-                $saleMoney = $service->price;
-                $cardName = '';
-            }
-        } else {
-            $saleMoney = $service->price;
-            $cardName = '';
-        }
-    /*end*/
+    //     $checkMembership = $this->membershipModel->where('customer_id', $bill->order->customer_id)
+    //                                             ->first();
+    // /*kiểm tra thẻ hội viên*/
+    //     if (isset($checkMembership)) {
+    //         $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
+    //                                           ->where('service_id', $serviceId)
+    //                                           ->first();
+    //         if (strtotime($date) <= strtotime($checkMembership->end_time) && isset($detailCard)) {
+    //             $cardName = $checkMembership->card->card_name;
+    //             $saleMoney = $service->price - ($service->price * $detailCard->percent/100);
+    //         } else {
+    //             $saleMoney = $service->price;
+    //             $cardName = '';
+    //         }
+    //     } else {
+    //         $saleMoney = $service->price;
+    //         $cardName = '';
+    //     }
+    // /*end*/
 
         if ($assistantId == 0) {
             $assistantId = NULL;
@@ -245,7 +277,7 @@ class BillService
                 'employee_id' => $employeeId,
                 'assistant_id' => $assistantId,
                 'money' => $service->price,
-                'sale_money' => $saleMoney,
+                'sale_money' => $service->price,
                 'date' => date('Y-m-d'),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
@@ -271,7 +303,7 @@ class BillService
             $billDetail = $this->billDetailModel->findOrFail($id);
             $data = [
                 'billDetail' => $billDetail,
-                'cardName' => $cardName,
+                // 'cardName' => $cardName,
             ];
 
             return $data;
@@ -289,15 +321,16 @@ class BillService
             $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
                                               ->where('service_id', $serviceId)
                                               ->first();
-            if (isset($checkMembership) && (strtotime($date) <= strtotime($checkMembership->end_time)) && isset($detailCard)) {
+            if ($checkMembership->status > 0 && isset($detailCard)) {
+
                 $saleMoney = $price - ($price * $detailCard->percent/100);
             } else {
+
                 $saleMoney = $price;
             }
         } else {
             $saleMoney = $price;
         }
-        
         return $saleMoney;
     }
 
@@ -387,7 +420,7 @@ class BillService
         $phone = $request->phone;
         $service_id = $request->service_id;
         $employee = $request->employee_id;
-        $date = date('Y-m-d');
+        $date = $request->date;
         $time = $request->time_id;
 
         $checkPhone = $this->customerModel->where('phone', $phone)->first();
@@ -434,6 +467,7 @@ class BillService
             'customer_id' => $customer_id,
             'order_id' => $orderId,
             'price' => $service->price,
+            'date' => $date,
             'status' => config('config.order.status.check-in'),
             'created_at' => date('Y-m-d H:i:s'),
         ]);
@@ -549,5 +583,86 @@ class BillService
         ];
 
         return $data;
+    }
+
+    public function printBill($billId)
+    {
+        $bill = $this->billModel->findOrFail($billId);
+        $card = $this->membershipModel->where('customer_id', $bill->customer_id)
+                                ->where('end_time', '>=', date('Y-m-d'))
+                                ->first();
+
+        if (isset($card)) {
+            $cardName = $card->card->card_name;
+        } else {
+            $cardName = '';
+        }
+        $data = [
+            'bill' => $bill,
+            'cardName' => $cardName
+        ];
+
+        return $data;
+    }
+
+    public function checkEmptyServiceInCard($serviceId, $cardId)
+    {
+        $card = $this->cardModel->where('id', $cardId)->whereHas('cardDetail', function($query) use ($serviceId){
+            $query->where('service_id', $serviceId);
+        })->get();
+
+        return $card->count();
+    }
+
+    public function cardCheck($idBillDetail, $cardId)
+    {
+        $card = $this->cardModel->findOrFail($cardId);
+        $billDetail = $this->billDetailModel->findOrFail($idBillDetail);
+        $customer_id = $billDetail->bill->customer->id;
+        $service_id = $billDetail->service_id;
+    /*Nếu là thẻ hội viên theo thời gian ngược lại nếu là thẻ tính theo số lần*/
+        if ($card->type == 0) {
+            $cardDetail = $this->cardDetailModel->where('card_id', $cardId)->where('service_id', $service_id)->first();
+            $saleMoney = $billDetail->money - ($billDetail->money * $cardDetail->percent/100);
+        } elseif ($card->type == 1) {
+            foreach ($card->cardDetail as $service) {
+                $serviceId = $service->service_id; // id dịch vụ ứng với thẻ đó
+            }
+
+            if ($service_id == $serviceId) {
+                $saleMoney = 0;
+            } else {
+                $saleMoney = $billDetail->money;
+            }
+        }
+
+        $checkEmptyServiceInCard = $this->checkEmptyServiceInCard($service_id, $cardId);
+
+        if ($checkEmptyServiceInCard > 0) {
+            $this->billDetailModel->updateOrCreate(
+                ['id' => $idBillDetail],
+                [
+                    'card_id' => $cardId,
+                    'sale_money' => $saleMoney
+                ]
+            );
+        }
+
+        return number_format($saleMoney) . '<sup>đ</sup>';;
+    /*end*/
+    }
+
+    public function priceRestore($idBillDetail)
+    {
+        $billDetail = $this->billDetailModel->findOrFail($idBillDetail);
+        $this->billDetailModel->updateOrCreate(
+            ['id' => $idBillDetail],
+            [
+                'card_id' => NULL,
+                'sale_money' => $billDetail->money,
+            ]
+        );
+
+        return number_format($billDetail->money) . '<sup>đ</sup>';
     }
 }

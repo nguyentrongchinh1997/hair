@@ -30,14 +30,22 @@
                                 Dịch vụ
                             </li>
                         </a>
-                        <a href="{{ route('customer.list') }}">
-                            <li @if(Request::is('admin/khach-hang/danh-sach')) {{"class=menu-active"}} @endif>
-                                QL.Khách hàng
-                            </li>
-                        </a>
-                        <a href="{{ route('employee.list') }}">
+                        <a href="{{ route('employee.list') }}?type=month">
                             <li @if(Request::is('admin/nhan-vien/danh-sach')) {{"class=menu-active"}} @endif>
                                 QL.Nhân viên
+                            </li>
+                        </a>
+                        <a href="{{ route('customer.list') }}">
+                            <li class="sub-menu @if(Request::is('admin/khach-hang/danh-sach') || Request::is('admin/hoi-vien/danh-sach')) {{'menu-active'}} @endif" style="position: relative;">
+                                QL.Khách hàng <i class="fas fa-sort-down"></i>
+                                <ul>
+                                    <a href="{{ route('customer.list') }}">
+                                        <li><i class="fas fa-caret-right"></i> Danh sách</li>
+                                    </a>
+                                    <a href="{{ route('membership.list') }}">
+                                        <li><i class="fas fa-caret-right"></i> Thẻ khách hàng</li>
+                                    </a>
+                                </ul>
                             </li>
                         </a>
                         <a href="{{ route('card.list') }}">
@@ -45,11 +53,11 @@
                                 QL.Thẻ
                             </li>
                         </a>
-                        <a href="{{ route('membership.list') }}">
+                        <!-- <a href="{{ route('membership.list') }}">
                             <li @if(Request::is('admin/hoi-vien/danh-sach')) {{"class=menu-active"}} @endif>
                                 QL.Hội viên
                             </li>
-                        </a>
+                        </a> -->
                         <a href="{{ route('expense.list') }}">
                             <li @if(Request::is('admin/chi-tieu/danh-sach')) {{"class=menu-active"}} @endif>
                                 QL.Thu-chi
@@ -62,7 +70,7 @@
                         </a>
                         @if (auth()->check())
                             <a style="float: right;" href="{{ route('logout') }}">
-                                <li>
+                                <li style="background: #fafafa">
                                     Đăng xuất
                                 </li>
                             </a>
@@ -73,7 +81,7 @@
                             </a>
                         @elseif (auth('employees')->check())
                             <a style="float: right;" href="{{ route('logout') }}">
-                                <li>
+                                <li style="background: #fafafa">
                                     Đăng xuất
                                 </li>
                             </a>

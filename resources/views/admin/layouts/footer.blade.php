@@ -1,8 +1,4 @@
     </body>
-    <!-- thư hiện lightpick -->
-    
-
-    <!-- end -->
     <script src="{{ asset('/js/jquery.min.js') }}"></script>
     <script src="{{ asset('/js/admin/admin.js') }}"></script>
 
@@ -12,7 +8,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.bundle.min.js"></script>
 <!-- end -->
     <script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
-    @if(Request::is('admin/chi-tieu/danh-sach'))
+    @if(Request::is('admin/chi-tieu/danh-sach') || Request::is('admin/nhan-vien/danh-sach'))
     <script async src="{{ asset('/js/datepicker/js/button.js') }}"></script>
     <script src="{{ asset('/js/datepicker/js/moment.min.js') }}"></script>
     <script src="{{ asset('/js/datepicker/js/lightpick.js') }}"></script>
@@ -28,11 +24,25 @@
 			            str += end ? end.format('Do MMMM YYYY') : '...';
 			            // document.getElementById('result-2').innerHTML = str;
 			        }
-			    }); 
-			})
+			    });
 
+			})
+            $(function(){
+                var picker = new Lightpick({
+                    field: document.getElementById('demo-3_1'),
+                    secondField: document.getElementById('demo-3_2'),
+                    singleDate: false,
+                    onSelect: function(start, end){
+                        var str = '';
+                        str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+                        str += end ? end.format('Do MMMM YYYY') : '...';
+                        // document.getElementById('result-3').innerHTML = str;
+                    }
+                });
+            })
 			/*end*/
     </script>
+
     @endif
 
 </html>

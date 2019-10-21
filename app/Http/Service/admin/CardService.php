@@ -21,8 +21,8 @@ class CardService
 
     public function getCartList()
     {
-        $serviceList = $this->serviceModel->all();
-        $cardList = $this->cardModel->paginate(20);
+        $serviceList = $this->serviceModel->where('status', '>', 0)->get();
+        $cardList = $this->cardModel->where('status', '>', 0)->orderBy('id', 'desc')->paginate(20);
         $data = [
             'serviceList' => $serviceList,
             'cardList' => $cardList,
@@ -51,5 +51,33 @@ class CardService
             );
             $i++;
         }
+    }
+
+    public function cardDelete($id)
+    {
+        $card = $this->cardModel->findOrFail($id);
+        $card->status = 0;
+
+        return $card->save();
+    }
+
+    public function postOtherCard($request)
+    {
+        $price = str_replace(',', '', $request->price);
+        $cardNew = $this->cardModel->create(
+            [
+                'card_name' => $request->card_name,
+                'price' => $price,
+                'type' => 1,
+            ]
+        );
+
+        return $this->cardDetailModel->create(
+            [
+                'service_id' => $request->service_id,
+                'card_id' => $cardNew->id,
+                'number' => $request->number,
+            ]
+        );
     }
 }

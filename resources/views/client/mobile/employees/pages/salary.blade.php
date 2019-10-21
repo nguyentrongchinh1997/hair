@@ -22,6 +22,7 @@
            
         </div>
     </div>
+<!-- Lương hôm nay -->
     <div class="col-12 tab" id="today" style="text-align: center; padding: 15px 5px;">
         <h5>Tổng lương thực nhận</h5>
         <h3 style="font-weight: bold;">
@@ -38,36 +39,58 @@
         </h3><br>
         <h6 style="margin-bottom: 0px; background: #eee; padding: 10px 0px; font-weight: bold;">CHIẾT KHẤU DỊCH VỤ</h6>
         <table>
+            <tr style="background: #BBDEFB; color: #000">
+                <td>Dịch vụ</td>
+                <td>Chiết khấu</td>
+                <td>Thời gian</td>
+                <td>Tổng</td>
+            </tr>
+            <tr>
+                <td style="text-align: right; font-weight: bold; font-size: 18px" colspan="4" class="tong"></td>
+            </tr>
+            @php $tong = 0; @endphp
             @if ($salaryToday->count() > 0)
                 @foreach ($salaryToday as $salary)
                     @if ($salary->billDetail->bill->status == config('config.order.status.check-out'))
                         <tr>
-                            <td style="text-align: left;">
+                            <td style="text-align: center;">
                                 @if ($salary->billDetail->service_id != '')
                                     {{ $salary->billDetail->service->name }}
                                 @else
                                     {{ $salary->billDetail->other_service }}
                                 @endif
                             </td>
-                            <td>
+                            <td style="color: #727272">
                                 {{ $salary->percent }}%
+                            </td>
+                            <td style="color: #727272">
+                                {{ date('d/m/Y', strtotime($salary->created_at)) }}
                             </td>
                             <td style="text-align: right;">
                                 {{ number_format($salary->percent/100 * $salary->billDetail->money) }}<sup>đ</sup>
                             </td>
-                            <td>
-                                {{ date('d/m/Y H:i', strtotime($salary->created_at)) }}
-                            </td>
+                            @php
+                                $tong = $tong + ($salary->percent/100 * $salary->billDetail->money);
+                            @endphp
                         </tr>
                     @endif
                 @endforeach
+                <tr style="display: none;">
+                    <td colspan="4" id="tong">{{ number_format($tong) }}<sup>đ</sup></td>
+                </tr>
             @else
                 <tr>
-                    <i>chưa có dịch vụ nào</i>
+                    <td colspan="4" style="text-align: center;">
+                        <i>Bạn không phục vụ khách nào</i>
+                    </td>
+                    
                 </tr>
             @endif
         </table>
     </div>
+<!-- end -->
+
+<!-- Lương hôm qua -->
     <div class="col-12 tab" id="last-day" style="text-align: center; padding: 15px 5px; display: none;">
         <h5>Tổng lương thực nhận</h5>
         <h3 style="font-weight: bold;">
@@ -85,6 +108,16 @@
         <br>
         <h6 style="margin-bottom: 0px; background: #eee; padding: 10px 0px; font-weight: bold;">CHIẾT KHẤU DỊCH VỤ</h6>
         <table>
+            <tr style="background: #BBDEFB; color: #000">
+                <td>Dịch vụ</td>
+                <td>Chiết khấu</td>
+                <td>Thời gian</td>
+                <td>Tổng</td>
+            </tr>
+            <tr>
+                <td style="text-align: right; font-weight: bold; font-size: 18px" colspan="4" class="total-yesterday"></td>
+            </tr>
+        @php $tong = 0; @endphp
         @if ($salaryYesterday->count() > 0)
             @foreach ($salaryYesterday as $salary)
                 @if ($salary->billDetail->bill->status == config('config.order.status.check-out'))
@@ -99,27 +132,34 @@
                         <td>
                             {{ $salary->percent }}%
                         </td>
+                        <td>
+                            {{ date('d/m/Y', strtotime($salary->created_at)) }}
+                        </td>
                         <td style="text-align: right;">
                             {{ number_format($salary->percent/100 * $salary->billDetail->money) }}<sup>đ</sup>
                         </td>
-                        <td>
-                            {{ date('d/m/Y H:i', strtotime($salary->created_at)) }}
-                        </td>
+                        @php
+                            $tong = $tong + ($salary->percent/100 * $salary->billDetail->money);
+                        @endphp
                     </tr>
                 @endif
             @endforeach
-        @else
-            <tr>
-                <td colspan="3">
-                    <i>
-                        Chưa có dịch vụ nào
-                    </i>
-                </td>
+                <tr style="display: none;">
+                    <td colspan="4" id="total-yesterday">{{ number_format($tong) }}<sup>đ</sup></td>
+                </tr>
+            @else
+                <tr>
+                    <td colspan="4" style="text-align: center;">
+                            <i>Bạn không phục vụ khách nào</i>
+                    </td>
 
-            </tr>
-        @endif
+                </tr>
+            @endif
         </table>
     </div>
+<!-- end -->
+
+<!-- Lương tháng này -->
     <div class="col-12 tab" id="month" style="text-align: center; padding: 15px 5px; display: none;">
         <h5>Tổng lương thực nhận</h5>
         <h3 style="font-weight: bold;">
@@ -136,6 +176,16 @@
         </h3><br>
         <h6 style="margin-bottom: 0px; background: #eee; padding: 10px 0px; font-weight: bold;">CHIẾT KHẤU DỊCH VỤ</h6>
         <table>
+            <tr style="background: #BBDEFB; color: #000">
+                <td>Dịch vụ</td>
+                <td>Chiết khấu</td>
+                <td>Thời gian</td>
+                <td>Tổng</td>
+            </tr>
+            <tr>
+                <td style="text-align: right; font-weight: bold; font-size: 18px" class="total-month" colspan="4"></td>
+            </tr>
+            @php $tong = 0; @endphp
             @if ($salaryMonth->count() > 0)
                 @foreach ($salaryMonth as $salary)
                     @if ($salary->billDetail->bill->status == config('config.order.status.check-out'))
@@ -150,30 +200,38 @@
                             <td>
                                 {{ $salary->percent }}%
                             </td>
+                            <td>
+                                {{ date('d/m/Y', strtotime($salary->created_at)) }}
+                            </td>
                             <td style="text-align: right;">
                                 {{ number_format($salary->percent/100 * $salary->billDetail->money) }}<sup>đ</sup>
                             </td>
-                            <td>
-                                {{ date('d/m/Y H:i', strtotime($salary->created_at)) }}
-                            </td>
+                            @php
+                                $tong = $tong + ($salary->percent/100 * $salary->billDetail->money);
+                            @endphp
                         </tr>
                     @endif
                 @endforeach
+                <tr style="display: none;">
+                    <td id="total-month">{{ number_format($tong) }}<sup>đ</sup></td>
+                </tr>
             @else
                 <tr>
-                    <td colspan="3">
-                        <i>Chưa có dịch vụ nào</i>
+                    <td colspan="4">
+                        <i>Bạn không phục vụ khách nào</i>
                     </td>
                     
                 </tr>
             @endif
         </table>
     </div>
+<!-- end -->
+
+<!-- Lương tháng trước -->
     <div class="col-12 tab" id="last-month" style="text-align: center; padding: 15px 5px; display: none;">
         <h5>Tổng lương thực nhận</h5>
         <h3 style="font-weight: bold;">
             @php $total = 0; @endphp
-
             @foreach ($salaryLastMonth as $salary)
                 @if ($salary->billDetail->bill->status == config('config.order.status.check-out'))    
                     @php 
@@ -185,6 +243,16 @@
         </h3><br>
         <h6 style="margin-bottom: 0px; background: #eee; padding: 10px 0px; font-weight: bold;">CHIẾT KHẤU DỊCH VỤ</h6>
         <table>
+            <tr style="background: #BBDEFB; color: #000">
+                <td>Dịch vụ</td>
+                <td>Chiết khấu</td>
+                <td>Thời gian</td>
+                <td>Tổng</td>
+            </tr>
+            <tr>
+                <td style="text-align: right; font-weight: bold; font-size: 18px" class="total-last-month" colspan="4"></td>
+            </tr>
+            @php $tong = 0; @endphp
             @if ($salaryLastMonth->count() > 0)
                 @foreach ($salaryLastMonth as $salary)
                     @if ($salary->billDetail->bill->status == config('config.order.status.check-out'))
@@ -199,59 +267,60 @@
                             <td>
                                 {{ $salary->percent }}%
                             </td>
-                            <td style="text-align: right;">
-                                {{ number_format($salary->percent/100 * $salary->billDetail->money) }} Đ
-                            </td>
                             <td>
-                                {{ date('H:i', strtotime($salary->created_at)) }}
+                                {{ date('d/m/Y', strtotime($salary->created_at)) }}
+                            </td>
+                            <td style="text-align: right;">
+                                {{ number_format($salary->percent/100 * $salary->billDetail->money) }}<sup>đ</sup>
                             </td>
                         </tr>
+                        @php
+                            $tong = $tong + ($salary->percent/100 * $salary->billDetail->money);
+                        @endphp
                     @endif
                 @endforeach
+                <tr style="display: none;">
+                    <td id="total-last-month">{{ number_format($tong) }}<sup>đ</sup></td>
+                </tr>
             @else
                 <tr>
-                    <td colspan="3">
-                        <i>Chưa có dịch vụ nào</i>
+                    <td colspan="4" style="text-align: center;">
+                        <i>Bạn không phục vụ khách nào</i>
                     </td>
-                    
                 </tr>
             @endif
         </table>
-
     </div>
+<!-- end -->
+
+<!-- Lương chọn theo ngày -->
     <div class="col-12 tab" id="pick-day" style="padding: 15px 15px; display: none;">
         <label>Chọn ngày <b>bắt đầu</b> và <b>kết thúc</b></label>
-        <input type="text" placeholder="dd/mm/yyyy - dd/mm/yyyy" id="demo-2" class="form-control form-control-sm date-pick"/>
+        <table>
+            <tr>
+                <td>
+                    Từ
+                </td>
+                <td>
+                    <input type="text" placeholder="dd/mm/yyyy" id="demo-3_1" class="date-start form-control form-control-sm date-pick"/>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    Đến
+                </td>
+                <td>
+                    <input type="text" placeholder="dd/mm/yyyy" id="demo-3_2" class="date-end form-control form-control-sm date-pick"/>
+                </td>
+            </tr>
+        </table>
         <button id="seen" style="margin-top: 20px">XEM</button>
-        <!-- <table style="width: 100%">
-            <tr>
-                <td>
-                    TỪ
-                </td>
-                <td>
-                    <input placeholder="Chọn ngày bắt đầu" id="date-from" type="date" name="">
-                </td>
-            </tr>
-            <tr>
-                <td style="padding-top: 10px">
-                    ĐẾN
-                </td>
-                <td style="padding-top: 10px">
-                    <input placeholder="Chọn ngày kết thúc" id="date-to" type="date" name="">
-                </td>
-            </tr>
-            <tr>
-                <td style="padding-top: 10px">
-                    
-                </td>
-                <td id="seen" style="padding-top: 10px">
-                    <button>XEM</button>
-                </td>
-            </tr>
-        </table> -->
+        
         <div class="row" id="result">
             
         </div>
     </div>
+<!-- end -->
 </div>
 @endsection

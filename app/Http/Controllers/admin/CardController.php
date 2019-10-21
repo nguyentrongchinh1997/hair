@@ -22,9 +22,17 @@ class CardController extends Controller
 
     public function postCard(Request $request)
     {
+        $this->validate($request,
+            [
+                'service' => 'required|array',
+            ],
+            [
+                'service.required' =>'* Bạn chưa chọn dịch vụ áp dụng cho thẻ hội viên',
+            ]
+        );
         $this->cardService->postCard($request);
 
-        return back()->with('thongbao', 'Thêm thẻ hội viên thành công');
+        return back()->withInput()->with('thongbao', 'Thêm thẻ hội viên thành công');
     }
 
     public function postExtension(Request $request, $id)
@@ -32,5 +40,19 @@ class CardController extends Controller
         $this->cardService->postExtension($request, $id);
 
         return back()->with('thongbao', 'Gia hạn thành công');
+    }
+
+    public function cardDelete($id)
+    {
+        $this->cardService->cardDelete($id);
+
+        return back()->with('thongbao', 'Xóa thẻ thành công');
+    }
+
+    public function postOtherCard(Request $request)
+    {
+        $this->cardService->postOtherCard($request);
+        
+        return back()->with('thongbao', 'Thêm thẻ thành công');
     }
 }

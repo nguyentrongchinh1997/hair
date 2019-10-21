@@ -11,26 +11,19 @@ $(function(){
     })
 
     $('#seen').click(function(){
-        date = $('.date-pick').val();
+        date_start = $('.date-start').val();
+        date_end = $('.date-end').val();
 
-        if (date == '') {
-            alert('Cần chọn ngày');
+        if (date_start == '') {
+            alert('Cần chọn ngày bắt đầu');
+        } else if (date_end == '') {
+            alert('Cần chọn ngày kết thúc');
         } else {
-            $.get('mobile/nhan-vien/thu-nhap/tim-kiem?date=' + date, function(data){
+            $.get('mobile/nhan-vien/thu-nhap/tim-kiem?dateStart=' + date_start + '&dateEnd=' + date_end, function(data){
                 $('#result').html(data);
             })
         }
-        /*dateTo = $('#date-to').val();
-        dateFrom = $('#date-from').val();
-        if (dateFrom == '') {
-            alert('Cần chọn ngày bắt đầu');
-        } else if (dateTo == '') {
-            alert('Cần chọn ngày kết thúc');
-        } else {
-            $.get('mobile/nhan-vien/thu-nhap/tim-kiem?from=' + dateFrom + '&to=' + dateTo, function(data){
-                $('#result').html(data);
-            })
-        }*/
+        
     })
 
     $('.history-employee .pick-date').change(function(){
@@ -109,11 +102,21 @@ $(function(){
     if ($('.wash').is(":checked")) {
         serviceId = $('.wash').val();
         $('.skinner').show();
-        $.get('skinner/list/' + serviceId, function(data){
-            $('.skinner').html(data);
-        })
+        // $.get('skinner/list/' + serviceId, function(data){
+        //     $('.skinner').html(data);
+        // })
     }
 })
+function pickOther(serviceId)
+{
+    if ($('.service' + serviceId).is(":checked")) {
+        $('#check0').show();
+        $('.other').append('<input style="display: none;" checked class="other-serevice" type="checkbox" value="0" name="other">');
+    } else {
+        $('.other-serevice').remove();
+        $('#check0').hide();
+    }
+}
 function pickHair(serviceId)
 {
     if ($('.service' + serviceId).is(":checked")) {
@@ -166,7 +169,27 @@ $(function(){
             str += end ? end.format('Do MMMM YYYY') : '...';
             // document.getElementById('result-2').innerHTML = str;
         }
-    }); 
+    });
+})
+$(function(){
+    var picker = new Lightpick({
+        field: document.getElementById('demo-3_1'),
+        secondField: document.getElementById('demo-3_2'),
+        singleDate: false,
+        onSelect: function(start, end){
+            var str = '';
+            str += start ? start.format('Do MMMM YYYY') + ' to ' : '';
+            str += end ? end.format('Do MMMM YYYY') : '...';
+            // document.getElementById('result-3').innerHTML = str;
+        }
+    });
 })
 
 /*end*/
+
+$(function(){
+    $('.tong').html($('#tong').html());
+    $('.total-month').html($('#total-month').html());
+    $('.total-last-month').html($('#total-last-month').html());
+    $('.total-yesterday').html($('#total-yesterday').html());
+})

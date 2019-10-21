@@ -104,9 +104,13 @@ class ClientController extends Controller
 
     public function book(Request $request)
     {
-        $this->clientService->book($request);
-
-        return back()->with('thongbao', 'Đặt lịch thành công');
+        $data = $this->clientService->book($request);
+        if ($data == 1) {
+            return back()->with('thongbao', 'Đặt lịch thành công, bạn đã thay đổi lịch đặt');
+        } else {
+            return back()->with('thongbao', 'Đặt lịch thành công');
+        }
+        
     }
 
     public function logout()
@@ -116,10 +120,15 @@ class ClientController extends Controller
         return redirect()->route('client.home');
     }
 
-    public function finishRate()
+    public function finishRate(Request $request)
     {
-        $this->clientService->finishRate();
+        $this->clientService->finishRate($request);
 
-        return redirect('rate');
+        return redirect()->route('rate.end');
+    }
+
+    public function viewFinish()
+    {
+        return view('client.pages.rate.step4');
     }
 }

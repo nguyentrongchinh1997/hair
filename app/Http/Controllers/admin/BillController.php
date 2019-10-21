@@ -32,8 +32,10 @@ class BillController extends Controller
         return view('admin.pages.bill.list', $this->billService->postBillList($request));
     }
 
-    public function search($keySearch, $date)
+    public function search(Request $request)
     {
+        $keySearch = $request->get('keySearch');
+        $date = $request->get('date');
         return view('admin.ajax.bill_list', $this->billService->billSearchResult($keySearch, $date));
     }
 
@@ -99,5 +101,20 @@ class BillController extends Controller
     public function payView(Request $request, $billId)
     {
         return view('admin.pages.bill.bill', $this->billService->payView($billId, $request));
+    }
+
+    public function printBill($billId)
+    {
+        return view('admin.pages.bill.print', $this->billService->printBill($billId));
+    }
+
+    public function cardCheck($idBillDetail, $cardId)
+    {
+        echo $this->billService->cardCheck($idBillDetail, $cardId);
+    }
+
+    public function priceRestore($idBillDetail)
+    {
+        echo $this->billService->priceRestore($idBillDetail);
     }
 }

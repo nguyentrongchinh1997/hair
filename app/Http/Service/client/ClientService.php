@@ -43,6 +43,10 @@ class ClientService
         $hairCut = $this->serviceModel->findOrFail(config('config.service.cut'));
         $wash = $this->serviceModel->findOrFail(config('config.service.wash'));
         $employee = $this->employeeModel->where('service_id', config('config.employee.type.skinner'))->get();
+        $history = $this->orderModel->where('customer_id', auth('customers')->user()->id)
+                                    ->where('status', config('config.order.status.check-out'))
+                                    ->orderBy('id', 'desc')
+                                    ->get();
         $data = [
             'skinner' => $skinner,
             'stylist' => $stylist,
@@ -52,6 +56,7 @@ class ClientService
             'employee' => $employee,
             'time' => $timeList,
             'serviceList' => $serviceList,
+            'historyList' => $history,
         ];
         
         return $data;
@@ -64,7 +69,7 @@ class ClientService
         if ($check > 0) {
             Auth::guard('customers')->attempt(['phone' => $request->phone, 'password' => $request->phone]);
         } else {
-            /*insert vào bảng orders*/
+            /*insert vào bảng khách hàng*/
                 $user = $this->customerModel->create([
                     'phone' => $request->phone,
                     'password' => bcrypt($request->phone),
@@ -89,26 +94,29 @@ class ClientService
 
     public function book($request)
     {
+        $customerId = auth('customers')->user()->id;
+        $checkBook = $this->orderModel->where('customer_id', auth('customers')->user()->id)
+                                      ->where('date', date('Y-m-d'))
+                                      ->where('status', config('config.order.status.create'))
+                                      ->first();
         $phone = $request->phone;
         $service = $request->service;
-        $stylist = $request->stylist;
+        $stylist = $request->stylist; // nhân viên cắt
+        $skinner = $request->skinner; // nhân viên gội
+        $otherEmployee = $request->other;
+
         if ($stylist == NULL) {
             $requestInsert = config('config.request.no');
         } else {
             $requestInsert = config('config.request.yes');
         }
-        $checkPhone = $this->customerModel->where('phone', $phone)->first();
 
-        if (isset($checkPhone)) {
-            $customerId = $checkPhone->id;
+        if (isset($checkBook)) {
+            $this->orderDetailModel->where('order_id', $checkBook->id)->delete();
+            $checkBook->delete();
+            $true = 1;
         } else {
-            $customerId = $this->customerModel->insertGetId(
-                [
-                    'phone' => $phone,
-                    'password' => bcrypt($phone),
-                    'created_at' => date('Y-m-d H:i:s'),
-                ]
-            );
+            $true = 0;
         }
 
         $orderId = $this->orderModel->insertGetId([
@@ -119,12 +127,22 @@ class ClientService
             'created_at' => date('Y-m-d H:i:s'),
         ]);
         for ($i = 0; $i < count($service) ; $i++) {
+            if ($service[$i] == config('config.employee.type.skinner')) {
+                $employeeId = $skinner;
+            } elseif ($service[$i] == config('config.employee.type.stylist')) {
+                $employeeId = $stylist;
+            } elseif ($service[$i] == 0) {
+                $employeeId = $otherEmployee;
+            }
+
             $this->orderDetailModel->create([
                 'service_id' => $service[$i],
-                'employee_id' => $stylist[$i],
+                'employee_id' => $employeeId,
                 'order_id' => $orderId,
             ]);
         }
+
+        return $true;
     }
 
     public function order($request)
@@ -269,8 +287,21 @@ class ClientService
         }
     }
 
-    public function finishRate()
+    public function finishRate($request)
     {
+        $comment = $request->comment;
+        $commentNumber = count($comment);
+        $string = '';
+        for ($i = 0; $i < $commentNumber; $i ++) {
+            $string = $string . $comment[$i];
+        }
+        $this->billModel->updateOrCreate(
+            ['rate_status' => 1],
+            [
+                'comment' => $string
+            ]
+        );
+
         return $this->billModel
                     ->where('rate_status', 1)
                     ->update(['rate_status' => 0]);

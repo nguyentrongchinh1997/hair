@@ -36,4 +36,9 @@ class CustomerController extends Controller
     {
     	return view('client.mobile.customers.pages.card', $this->customerService->card());
     }
+
+    public function bookHistory()
+    {
+        return view('client.mobile.customers.pages.book', $this->customerService->bookHistory());
+    }
 }

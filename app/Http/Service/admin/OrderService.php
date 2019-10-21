@@ -41,7 +41,11 @@ class OrderService
         $month = date('m');
         $year = date('Y');
         $date = date('d/m/Y');
-        $orderList = $this->orderModel->where('date', date('Y-m-d'))->orderBy('created_at', 'desc')->with('orderDetail')->get();
+        $orderList = $this->orderModel->where('date', date('Y-m-d'))
+                                      ->where('status', '>=', config('config.order.status.create'))
+                                      ->orderBy('id', 'desc')
+                                      ->with('orderDetail')
+                                      ->get();
         $bill = $this->billModel->where('status', config('config.order.status.check-in'))->paginate(20);
         $stylist = $this->employeeModel->where('service_id', config('config.service.cut'))->get();
         $skinner = $this->employeeModel->where('service_id', config('config.service.wash'))->get();
@@ -84,20 +88,21 @@ class OrderService
         $bill_id = $this->billModel->insertGetId([
             'customer_id' => $order->customer_id,
             'order_id' => $orderId,
+            'date' => $order->date,
             'created_at' => date('Y-m-d H:i:s'),
             'status' => config('config.order.status.check-in'),
         ]);
     /*end*/
 
         foreach ($orderDetail as $service) {
-            $saleMoney = $this->checkMembership($order->customer_id, $service->service_id, $service->service->price);
+            // $saleMoney = $this->checkMembership($order->customer_id, $service->service_id, $service->service->price);
             $billDetailId = $this->billDetailModel->insertGetId([
                 'bill_id' => $bill_id,
                 'service_id' => $service->service_id,
                 'employee_id' => $service->employee_id,
                 'assistant_id' => $service->assistant_id,
                 'money' => $service->service->price,
-                'sale_money' => $saleMoney,
+                'sale_money' => $service->service->price,
                 'created_at' => date('Y-m-d H:i:s'),
                 'date' => date('Y-m-d'),
             ]);
@@ -173,7 +178,10 @@ class OrderService
             $day = '0'.$day;
         }
         $date = $year . '-' . $month . '-' . $day;
-        $orderList = $this->orderModel->where('date', $date)->orderBy('created_at', 'desc')->paginate(20);
+        $orderList = $this->orderModel->where('date', $date)
+                                      ->where('status', '>=', config('config.order.status.create'))
+                                      ->orderBy('id', 'desc')
+                                      ->get();
         $time = $this->timeModel->all();
 
         $data = [
@@ -196,7 +204,7 @@ class OrderService
         $service = $request->service;
         $employee = $request->employee;
         $time_id = $request->time_id;
-        $date = date('Y-m-d');
+        $date = $request->date;
         $checkPhone = $this->customerModel->where('phone', $phone)->first();
 
         if (isset($checkPhone)) {
@@ -239,7 +247,7 @@ class OrderService
     {
         $employeeList = $this->employeeModel->where('status', config('config.employee.status.doing'))->get();
         $order = $this->orderModel->where('id', $orderId)->with('orderDetail')->first();
-        $serviceList = $this->serviceModel->all();
+        $serviceList = $this->serviceModel->where('status', '>', 0)->get();
         $data = [
             'serviceList' => $serviceList,
             'orderDetail' => $order,
@@ -251,14 +259,32 @@ class OrderService
 
     public function resultList($key, $date1)
     {
-        $orderList = $this->customerModel
-                            ->where('phone', 'like', $key . '%')
-                            ->with(['order' => function($q) use ($date1)
-                            {
-                                $q->where('orders.date', $date1);
-                                }
-                            ])
-                            ->get();
+        if ($key != '') {
+            $orderList = $this->customerModel
+                              ->where('phone', 'like', $key . '%')
+                              ->orWhere('full_name', 'like', '%' . $key . '%')
+                              ->with(['order' => function($q) use ($date1) {
+                                    $q->where('orders.date', $date1)
+                                      ->where('status', '>', config('config.order.status.cancel'))
+                                      ->orderBy('id', 'desc');
+                                    }
+                                ])
+                              ->has('order')
+                              ->orderBy('id', 'desc')
+                              ->get();
+        } else {
+            $orderList = $this->customerModel
+                              ->with(['order' => function($q) use ($date1) {
+                                    $q->where('orders.date', $date1)
+                                      ->where('status', '>', config('config.order.status.cancel'))
+                                      ->orderBy('id', 'desc');
+                                    }
+                                ])
+                              ->has('order')
+                              ->orderBy('id', 'desc')
+                              ->get();
+        }
+
 
         return $orderList;
     }
@@ -309,5 +335,45 @@ class OrderService
                 'assistant_id' => $assistantId,
             ]
         );
+    }
+
+    public function orderCancel($id)
+    {
+        return $this->orderModel->updateOrCreate(
+            ['id' => $id],
+            ['status' => config('config.order.status.cancel')]
+        );
+    }
+
+    public function serviceAdd($request)
+    {
+        $orderId = $request->get('orderId');
+        $serviceId = $request->get('serviceId');
+        $employeeId = $request->get('employeeId');
+        if ($request->get('assistantId') == 0) {
+            $assistantId = NULL;
+        } else {
+            $assistantId = $request->get('assistantId');
+        }
+        $orderDetailId = $this->orderDetailModel->create(
+            [
+                'service_id' => $serviceId,
+                'employee_id' => $employeeId,
+                'assistant_id' => $assistantId,
+                'order_id' => $orderId,
+            ]
+        );
+        $orderDetail = $this->orderDetailModel->findOrFail($orderDetailId->id);
+        $data = [
+            'orderId' => $orderId,
+            'serviceId' => $serviceId,
+            'employeeId' => $employeeId,
+            'assistantId' => $assistantId,
+            'orderDetail' => $orderDetailId,
+        ];
+
+
+
+        return $data;
     }
 }

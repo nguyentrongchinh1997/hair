@@ -4,10 +4,10 @@
     <div class="row employee-add" style="padding-left: 40px; padding-top: 40px">
         <div class="col-lg-6">
             <div class="col-lg-12">
-                <div class="offset-lg-6">
+                <div class="offset-lg-4">
                     <label>Tìm kiếm tại đây:</label>
                     <div class="input-group">
-                        <input type="text" id="search-customer" class="form-control" placeholder="Nhập số điện thoại...">
+                        <input type="text" id="search-customer" class="form-control" placeholder="Số điện thoại hoặc tên...">
                         <div class="input-group-append">
                           <button class="btn btn-secondary" type="button">
                             <i class="fas fa-search"></i>

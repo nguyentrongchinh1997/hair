@@ -59,6 +59,35 @@
 //  return false
 // }
 
+$(function(){
+    $('.nav-bar').click(function(){
+        $('.list-menu-mobile').show('slide');
+    })
+    $('.exit').click(function(){
+        $('.list-menu-mobile').hide();
+    })
+})
+function validatePhone()
+{
+    phone = $('#phone').val();
+    if (phone == '') {
+        alert('Cần nhập số điện thoại');
+
+        return false;
+    } else if (isNaN(phone)) {
+        alert('Số điện thoại không đúng định dạng');
+
+        return false;
+    } else if (phone.length != 10) {
+        alert('Số điện thoại phải đủ 10 số');
+
+        return false;
+    } else {
+        return true;
+    }
+
+    return false;
+}
 function validateForm()
 {
     var checkbox = document.getElementsByClassName('service');
@@ -153,6 +182,16 @@ function pickSkinner(serviceId)
         $('#icon-check-skinner').hide();
         $('.skinner').hide();
         $('#skinner').hide();
+    }
+}
+function pickOther(serviceId)
+{
+    if ($('.service' + serviceId).is(":checked")) {
+        $('#check0').show();
+        $('.other').append('<input style="display: none;" checked class="other-serevice" type="checkbox" value="0" name="other">');
+    } else {
+        $('.other-serevice').remove();
+        $('#check0').hide();
     }
 }
 $(function(){

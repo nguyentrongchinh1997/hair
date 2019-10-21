@@ -6,7 +6,7 @@
                         <a href="{{ route('mobile.home') }}">
                             <li>
                                 <i style="@if(Request::is('mobile/trang-chu'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-home"></i>
-                                <p style="@if(Request::is('mobile/trang-chu'))@php echo 'color: #fff;';@endphp@endif">Home</p>
+                                <p style="@if(Request::is('mobile/trang-chu'))@php echo 'color: #fff;';@endphp@endif">Đặt lịch</p>
                             </li>
                         </a>
                         <a href="{{ route('mobile.history') }}">
@@ -14,6 +14,14 @@
                                 <i style="@if(Request::is('mobile/lich-su'))@php echo 'color: #fff;';@endphp@endif" class="fas fa-history"></i>
                                 <p style="@if(Request::is('mobile/lich-su'))@php echo 'color: #fff;';@endphp@endif">
                                     Lịch sử
+                                </p>
+                            </li>
+                        </a>
+                        <a href="{{ route('mobile.book') }}">
+                            <li>
+                                <i style="@if(Request::is('mobile/book'))@php echo 'color: #fff;';@endphp@endif" class="far fa-clock"></i>
+                                <p style="@if(Request::is('mobile/book'))@php echo 'color: #fff;';@endphp@endif">
+                                    Lịch đặt
                                 </p>
                             </li>
                         </a>

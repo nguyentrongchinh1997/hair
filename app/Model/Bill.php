@@ -20,6 +20,7 @@ class Bill extends Model
         'status',
         'cashier',
         'rate_status',
+        'date',
         'created_at',
         'updated_at',
     ];

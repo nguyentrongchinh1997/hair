@@ -27,7 +27,7 @@ class EmployeeController extends Controller
 
     public function commisionTime(Request $request)
     {
-        return view('admin.pages.employee.list', $this->employeeService->commisionTime($request));
+        return view('admin.pages.employee.list', $this->employeeService->commisionTime($request, $request->get('type')));
     }
 
     public function employeeEditView($id)
@@ -67,8 +67,9 @@ class EmployeeController extends Controller
     {
         $employeeId = $request->id;
         $date = $request->date;
+        $type = $request->type;
 
-        return view('admin.pages.employee.detail', $this->employeeService->detail($employeeId, $date));
+        return view('admin.pages.employee.detail', $this->employeeService->detail($employeeId, $date, $type));
     }
 
     public function resultSearch(Request $request)

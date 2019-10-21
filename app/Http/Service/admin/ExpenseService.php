@@ -24,15 +24,27 @@ class ExpenseService
         $yearMonth = $year . '-' . $month;
         $date = date('Y/m/d');
         $expenseList = $this->expenseModel->where('date', 'like', $yearMonth . '%')
-                                            ->orderBy('created_at', 'desc')
-                                            ->get();
-        $revenueList = $this->orderModel->where('date', 'like', $yearMonth . '%')
-                                        ->where('status', config('config.order.status.check-out'))
-                                        ->get();
+                                          ->where('type', 0)
+                                          ->orderBy('id', 'desc')
+                                          ->get();
+        // $revenueList = $this->orderModel->where('date', 'like', $yearMonth . '%')
+        //                                 ->where('status', config('config.order.status.check-out'))
+        //                                 ->orderBy('id', 'desc')
+        //                                 ->get();
+        $revenueList = $this->billModel->where('date', 'like', $yearMonth . '%')
+                                       ->where('status', config('config.order.status.check-out'))
+                                       ->orderBy('id', 'desc')
+                                       ->with('billDetail')
+                                       ->get();
+        $otherRevenueList = $this->expenseModel->where('date', 'like', $yearMonth . '%')
+                                               ->where('type', 1)
+                                               ->orderBy('id', 'desc')
+                                               ->get();                          
         $data = [
             'date' => $date,
             'month' => $month,
             'year' => $year,
+            'otherRevenueList' => $otherRevenueList,
             'revenueList' => $revenueList,
             'expenseList' => $expenseList,
         ];
@@ -54,15 +66,26 @@ class ExpenseService
             }
             $yearMonth = $year . '-' . $month;
             $expenseList = $this->expenseModel->where('date', 'like', $yearMonth . '%')
-                                                ->orderBy('created_at', 'desc')
-                                                ->get();
-            $revenueList = $this->orderModel->where('date', 'like', $yearMonth . '%')
-                                            ->where('status', config('config.order.status.check-out'))
-                                            ->get();
+                                              ->where('type', 0)
+                                              ->orderBy('id', 'desc')
+                                              ->get();
+            // $revenueList = $this->orderModel->where('date', 'like', $yearMonth . '%')
+            //                                 ->where('status', config('config.order.status.check-out'))
+            //                                 ->orderBy('id', 'desc')
+            //                                 ->get();
+            $revenueList = $this->billModel->where('date', 'like', $yearMonth . '%')
+                                           ->where('status', config('config.order.status.check-out'))
+                                           ->orderBy('id', 'desc')
+                                           ->get();
+            $otherRevenueList = $this->expenseModel->where('date', 'like', $yearMonth . '%')
+                                                   ->where('type', 1)
+                                                   ->orderBy('id', 'desc')
+                                                   ->get();          
             $data = [
                 'date' => $date,
                 'month' => $month,
                 'year' => $year,
+                'otherRevenueList' => $otherRevenueList,
                 'expenseList' => $expenseList,
                 'revenueList' => $revenueList,
             ];
@@ -71,21 +94,29 @@ class ExpenseService
             $year = date('Y');
             // $dateFrom = $request->date_from;
             // $dateTo = $request->date_to;
+            $date_start = str_replace('/', '-', $request->date_start);
+            $dateStartFormat = date('Y-m-d', strtotime($date_start));
+            $date_end = str_replace('/', '-', $request->date_end);
+            $dateEndFormat = date('Y-m-d', strtotime($date_end));
+            $expenseList = $this->expenseModel->whereBetween('date', [$dateStartFormat, $dateEndFormat])
+                                              ->where('type', 0)
+                                              ->orderBy('id', 'desc')
+                                              ->get();
+            $revenueList = $this->billModel->where('status', config('config.order.status.check-out'))
+                                            ->whereBetween('date', [$dateStartFormat, $dateEndFormat])
+                                            ->orderBy('id', 'desc')
+                                            ->get();
 
-            $date = $request->date_limit;
-            $dateFrom = str_replace('/', '-', trim(explode('-', $date)[0]));
-            $dateTo = str_replace('/', '-', trim(explode('-', $date)[1]));
-            $dateFromFormat = date('Y-m-d', strtotime($dateFrom));
-            $dateToFormat = date('Y-m-d', strtotime($dateTo));
-            $expenseList = $this->expenseModel->whereBetween('date', [$dateFromFormat, $dateToFormat])
-                                            ->get();
-            $revenueList = $this->orderModel->where('status', config('config.order.status.check-out'))
-                                            ->whereBetween('date', [$dateFromFormat, $dateToFormat])
-                                            ->get();
+            $otherRevenueList = $this->expenseModel->whereBetween('date', [$dateStartFormat, $dateEndFormat])
+                                                   ->where('type', 1)
+                                                   ->orderBy('id', 'desc')
+                                                   ->get();
             $data = [
                 'month' => $month,
                 'year' => $year,
-                'dateLimit' => $request->date_limit,
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+                'otherRevenueList' => $otherRevenueList,
                 'expenseList' => $expenseList,
                 'revenueList' => $revenueList,
             ];
@@ -101,7 +132,19 @@ class ExpenseService
             [
                 'content' => $inputs['content'],
                 'money' => str_replace(',', '', $inputs['money']),
-                'date' => date('Y-m-d'),
+                'date' => $inputs['date'],
+            ]
+        );
+    }
+
+    public function revenueAdd($inputs)
+    {
+        return $this->expenseModel->create(
+            [
+                'content' => $inputs['content'],
+                'money' => str_replace(',', '', $inputs['money']),
+                'date' => $inputs['date'],
+                'type' => 1,
             ]
         );
     }
@@ -113,7 +156,8 @@ class ExpenseService
         $dateFrom = $request->date_from;
         $dateTo = $request->date_to;
         $expenseList = $this->expenseModel->whereBetween('date', [$dateFrom, $dateTo])
-                                        ->get();
+                                          ->where('type', 0)
+                                          ->get();
         $revenueList = $this->orderModel->where('status', config('config.order.status.check-out'))
                                         ->whereBetween('date', [$dateFrom, $dateTo])
                                         ->get();
@@ -127,5 +171,31 @@ class ExpenseService
         ];
 
         return $data;
+    }
+
+    public function deleteExpense($id)
+    {
+        return $this->expenseModel->findOrFail($id)->delete();
+    }
+
+    public function editExpense($id)
+    {
+        $expense = $this->expenseModel->findOrFail($id);
+        $data = ['expense' => $expense];
+
+        return $data;
+    }
+
+    public function editPostExpense($id, $request)
+    {
+        $money = str_replace(',', '', $request->money);
+        $this->expenseModel->updateOrCreate(
+            ['id' => $id],
+            [
+                'content' => $request->content,
+                'money' => $money,
+                'date' => $request->date
+            ]
+        );
     }
 }

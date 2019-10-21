@@ -1,4 +1,4 @@
-<form onsubmit="return validateEmployeeAdd()" method="post" action="{{ route('employee.edit', ['id' => $oldData->id]) }}">
+<form onsubmit="return validateEmployeeEdit()" method="post" action="{{ route('employee.edit', ['id' => $oldData->id]) }}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <table class="list-table">
         <tr>
@@ -7,7 +7,7 @@
                 <input type="hidden" value="{{ $oldData->id }}" name="id">
             </td>
             <td>
-                <input type="text" class="form-control input-control" required="required" value="{{ $oldData->full_name }}" name="full_name">
+                <input type="text" class="form-control input-control" required="required" id="edit-employee-name" value="{{ $oldData->full_name }}" name="full_name">
             </td>
         </tr>
         <tr>
@@ -15,7 +15,7 @@
                 Số điện thoại
             </td>
             <td>
-                <input type="text" class="input-control form-control" required="required" value="{{ $oldData->phone }}" name="phone">
+                <input id="edit-employee-phone" type="text" class="input-control form-control" required="required" value="{{ $oldData->phone }}" name="phone">
             </td>
         </tr>
         <tr>
@@ -34,7 +34,7 @@
                 Địa chỉ
             </td>
             <td>
-                <input value="{{ $oldData->address }}" type="text" class="input-control form-control" name="address">
+                <input id="edit-employee-address" value="{{ $oldData->address }}" type="text" class="input-control form-control" name="address">
             </td>
         </tr>
         <tr>
@@ -58,6 +58,15 @@
                         Nghỉ làm
                     </option>
                 </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Mật khẩu (nếu muốn)
+            </td>
+            <td>
+                <input type="hidden" value="{{ $oldData->password }}" name="older_password">
+                <input id="edit-employee-password"  type="password" class="form-control input-control" name="password">
             </td>
         </tr>
         <tr>

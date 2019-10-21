@@ -60,10 +60,11 @@ class CustomerService
         return $data;
     }
 
-    public function customerSerachResult($phone)
+    public function customerSerachResult($key)
     {
         $customerList = $this->customerModel
-                            ->where('phone', 'like', $phone . '%')
+                            ->where('phone', 'like', $key . '%')
+                            ->orWhere('full_name', 'like', '%' . $key . '%')
                             ->get();
         $data = [
             'customerList' => $customerList,

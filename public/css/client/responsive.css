@@ -1,0 +1,31 @@
+@media screen and (min-width: 768px) and (max-width: 1024px){
+	.order form {
+		max-width: 80%;
+	}
+}
+@media screen and (max-width: 768px){
+	.order form {
+		max-width: 100%;
+	}
+}
+@media screen and (max-width: 425px){
+	.notification-book{
+		left: 0px;
+		width: 100%;
+	}
+	.menu{
+		display: none;
+	}
+	.menu-mobile{
+		border-bottom: 1px solid #e5e5e5;
+		display: block;
+	}
+	.input-sologan{
+		padding-top: 70px !important;
+	}
+}
+@media screen and (max-width: 992px){
+	.card{
+		width: 100%;
+	}
+}

@@ -1,11 +1,19 @@
 @if ($customer->count() == 0)
     <tr>
-        <td colspan="9" style="text-align: center; font-size: 20px">
+        <td colspan="11" style="text-align: center; font-size: 20px">
             <i>Không có kết quả</i>
         </td>
     </tr>
 @else
-    @php $stt = 0; @endphp
+    <tr style="background: #fcf8e3; font-weight: bold;">
+        <td style="text-align: right;" class="tong" colspan="10">
+            
+        </td>
+        <td>
+            
+        </td>
+    </tr>
+    @php $stt = 0; $tong = 0; @endphp
     @foreach ($customer as $customer)
         @foreach ($customer->membership as $member)
             <tr>
@@ -49,31 +57,34 @@
                             
                         @endif
                     @else
-                        <span>
+                        <span style="color: #007bff; font-weight: bold;">
                             Còn {{ $member->number }} lần
                         </span>
                     @endif
+                </td>
+                <td style="text-align: right;">
+                    {{ number_format($member->card->price) }}<sup>đ</sup>
                 </td>
                 <td style="text-align: center;">
                     <a onclick="return deleteMembership()" style="color: red" href="{{ route('membership.delete', ['id' => $member->id]) }}">
                         <i class="fas fa-times"></i>
                     </a>
-                    <!-- <button type="button" onclick="extension({{ $member->id }})" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart-extension">Gia hạn</button>
-                    <div class="modal fade" id="cart-extension">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h3 class="modal-title">Gia hạn thẻ</h3>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body extension">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </td>
             </tr>
+            @php $tong = $tong +  $member->card->price; @endphp
         @endforeach
     @endforeach
+    <tr style="display: none;">
+        <td id="tong" style="text-align: right;" colspan="10">
+            <span style="font-size: 18px; font-weight: bold;">
+                {{ number_format($tong) }}<sup>đ</sup>
+            </span>
+        </td>
+        <td>
+            
+        </td>
+    </tr>
 @endif
+<script type="text/javascript">
+    $('.tong').html($('#tong').html());
+</script>

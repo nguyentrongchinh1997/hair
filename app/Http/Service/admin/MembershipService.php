@@ -97,13 +97,19 @@ class MembershipService
 
     public function search($key)
     {
-    	$customer = $this->customerModel->where(function($query) use ($key){
+    	if ($key != '') {
+    	   $customer = $this->customerModel->where(function($query) use ($key){
     										$query->where('full_name', 'like', '%' . $key . '%')
     											  ->orWhere('phone', 'like', $key . '%');
-    								  })
-    								  ->with('membership')
-    								  ->has('membership')
-    								  ->get();
+    								    })
+    								    ->with('membership')
+    								    ->has('membership')
+    								    ->get();
+        } else {
+            $customer = $this->customerModel->with('membership')
+                                            ->has('membership')
+                                            ->get();
+        }
     	$data = [
     		'customer' => $customer,
     	];

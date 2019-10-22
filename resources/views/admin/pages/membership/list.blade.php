@@ -117,7 +117,7 @@
         							
         						@endif
                             @else
-                                <span>
+                                <span style="color: #007bff; font-weight: bold;">
                                     Còn {{ $member->number }} lần
                                 </span>
                             @endif

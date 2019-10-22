@@ -191,7 +191,7 @@
                                     @endif
                                     @foreach ($employeeList as $employee)
                                             <option  @if ($employee->id == $serviceOrder->employee_id) {{ 'selected' }}@endif value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                                {{ $employee->full_name }}
                                             </option>
                                     @endforeach
                                 </select>
@@ -216,7 +216,7 @@
                                                     {{ 'selected' }}
                                                 @endif
                                             value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                                {{ $employee->full_name }}
                                             </option>
                                         @endif
                                     @endforeach
@@ -331,7 +331,7 @@
                                 <option value="0">Chọn thợ chính</option>
                             @foreach ($employeeList as $employee)
                                     <option value="{{ $employee->id }}">
-                                        {{ $employee->id }}-{{ $employee->full_name }}
+                                        {{ $employee->full_name }}
                                     </option>
                             @endforeach
                         </select>
@@ -349,7 +349,7 @@
                                 <option value="0">Chọn thợ phụ (nếu cần)</option>
                             @foreach ($employeeList as $employee)
                                     <option value="{{ $employee->id }}">
-                                        {{ $employee->id }}-{{ $employee->full_name }}
+                                        {{ $employee->full_name }}
                                     </option>
                             @endforeach
                         </select>

@@ -69,8 +69,8 @@
 											</b>
 										@else
 											{{ $service->service->name }} 
-											<b>({{ $service->employee->id }}-{{ $service->employee->full_name }}</b> và <b>
-												{{ $service->employeeAssistant->id }}-{{ $service->employeeAssistant->full_name }})
+											<b>({{ $service->employee->full_name }}</b> và <b>
+												{{ $service->employeeAssistant->full_name }})
 											</b>
 										@endif
 									</p>

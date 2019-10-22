@@ -155,8 +155,8 @@ function editEmployee(id)
 function validateAddOrder()
 {
     phone = document.getElementById('phone').value;
-    stylist = $('#cut-stylist').val();
-    skinner = $('#cut-skinner').val();
+    // stylist = $('#cut-stylist').val();
+    // skinner = $('#cut-skinner').val();
     washLength = $('#wash:checkbox:checked').length;
     cutLength = $('#cut:checkbox:checked').length;
     otherService = $('#other-service:checkbox:checked').length;
@@ -174,22 +174,22 @@ function validateAddOrder()
         alert('Chưa chọn dịch vụ');
 
         return false;
-    } else if (washLength > 0 && skinner == 0) {
-        alert('Chưa chọn thợ gội');
+    // } else if (washLength > 0 && skinner == 0) {
+    //     alert('Chưa chọn thợ gội');
 
-        return false;
-    } else if (cutLength > 0 && stylist == 0) {
-        alert('Chưa chọn thợ cắt');
+    //     return false;
+    // } else if (cutLength > 0 && stylist == 0) {
+    //     alert('Chưa chọn thợ cắt');
 
-      return false;
-    } else if (cutLength == 0 && stylist != 0) {
-        alert('Chư chọn dịch vụ cắt');
+    //   return false;
+    // } else if (cutLength == 0 && stylist != 0) {
+    //     alert('Chư chọn dịch vụ cắt');
 
-        return false;
-    } else if (washLength == 0 && skinner != 0) {
-        alert('Chưa chọn dịch vụ gội');
+    //     return false;
+    // } else if (washLength == 0 && skinner != 0) {
+    //     alert('Chưa chọn dịch vụ gội');
 
-        return false;
+    //     return false;
     } else if (date == '') {
         alert('Cần chọn ngày lập hóa đơn');
 

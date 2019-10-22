@@ -115,7 +115,7 @@
                                         @foreach ($order->orderDetail as $orderDetail)
                                             @if ($orderDetail->employee_id != '')
                                                 <p>
-                                                    {{ $orderDetail->service->name }} ({{ $orderDetail->employee_id }} - {{ $orderDetail->employee->full_name }})
+                                                    {{ $orderDetail->service->name }} ({{ $orderDetail->employee->full_name }})
                                                 </p>
                                             @else
                                                 <p>

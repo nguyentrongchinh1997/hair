@@ -210,7 +210,7 @@
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
                                                     <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                        {{ $employee->id }}-{{ $employee->full_name }}
+                                                        {{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -245,7 +245,7 @@
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
                                                     <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                            {{ $employee->id }}-{{ $employee->full_name }}
+                                                            {{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -380,7 +380,7 @@
                                         <option value="0">Chọn thợ chính</option>
                                     @foreach ($employeeList as $employee)
                                             <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                                {{ $employee->full_name }}
                                             </option>
                                     @endforeach
                                 </select>

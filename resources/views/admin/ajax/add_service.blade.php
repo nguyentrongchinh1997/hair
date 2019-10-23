@@ -6,7 +6,7 @@
             {{ $billDetail->employeeAssistant->full_name }}
         @endif
     </td>
-    <td style="text-align: right">
+    <td id="price{{ $billDetail->id }}" style="text-align: right">
         {{ number_format($billDetail->sale_money) }}<sup>đ</sup>
     </td>
 

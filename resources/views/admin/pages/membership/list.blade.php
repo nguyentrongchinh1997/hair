@@ -117,7 +117,7 @@
         							
         						@endif
                             @else
-                                <span>
+                                <span style="color: #007bff; font-weight: bold;">
                                     Còn {{ $member->number }} lần
                                 </span>
                             @endif
@@ -162,14 +162,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div data="the-hoi-vien" class="col-lg-6 card-active card-type" style="padding: 0px; cursor: pointer; background: #eee">
-                            <h3 style="text-align: center; margin-bottom: 0px; padding: 10px 0px">
-                                Thẻ hội viên
-                            </h3>
-                        </div>
-                        <div data="the-dich-vu" class="col-lg-6 card-type" style="padding: 0px; background: #eee; cursor: pointer;">
+                        <div data="the-dich-vu" class="col-lg-6 card-active card-type" style="padding: 0px; background: #eee; cursor: pointer;">
                             <h3 style="text-align: center; margin-bottom: 0px; padding: 10px 0px">
                                 Thẻ dịch vụ
+                            </h3>
+                        </div>
+                        <div data="the-hoi-vien" class="col-lg-6 card-type" style="padding: 0px; cursor: pointer; background: #eee">
+                            <h3 style="text-align: center; margin-bottom: 0px; padding: 10px 0px">
+                                Thẻ hội viên
                             </h3>
                         </div>
                     </div>

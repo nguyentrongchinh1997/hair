@@ -5,16 +5,18 @@ namespace App\Http\Service\admin;
 use App\Model\Membership;
 use App\Model\Card;
 use App\Model\Customer;
+use App\Model\Expense;
 
 class MembershipService
 {
-	protected $membershipModel, $cardModel, $customerModel;
+	protected $membershipModel, $cardModel, $customerModel, $expenseModel;
 
-	public function __construct(Membership $membership, Card $card, Customer $customer)
+	public function __construct(Membership $membership, Card $card, Customer $customer, Expense $expenseModel)
 	{
 		$this->membershipModel = $membership;
 		$this->cardModel = $card;
 		$this->customerModel = $customer;
+        $this->expenseModel = $expenseModel;
 	}
 
 	public function viewListMemberShip()
@@ -74,6 +76,15 @@ class MembershipService
 
 	public function membershipAdd($request)
 	{
+        $card = $this->cardModel->find($request->card_id);
+        $this->expenseModel->create(
+            [
+                'content' => 'Bán thẻ ' . $card->card_name,
+                'money' => $card->price,
+                'date' => date('Y-m-d'),
+                'type' => 1,
+            ]
+        );
 		return $this->membershipModel->create(
 			$request->all()
 		);
@@ -97,13 +108,19 @@ class MembershipService
 
     public function search($key)
     {
-    	$customer = $this->customerModel->where(function($query) use ($key){
+        if ($key != '') {
+    	   $customer = $this->customerModel->where(function($query) use ($key){
     										$query->where('full_name', 'like', '%' . $key . '%')
     											  ->orWhere('phone', 'like', $key . '%');
-    								  })
-    								  ->with('membership')
-    								  ->has('membership')
-    								  ->get();
+    								    })
+    								    ->with('membership')
+    								    ->has('membership')
+    								    ->get();
+        } else {
+            $customer = $this->customerModel->with('membership')
+                                            ->has('membership')
+                                            ->get();
+        }
     	$data = [
     		'customer' => $customer,
     	];
@@ -117,6 +134,14 @@ class MembershipService
     	foreach ($card->cardDetail as $cardDetail) {
     		$number = $cardDetail->number;
     	}
+        $this->expenseModel->create(
+            [
+                'content' => 'Bán thẻ ' . $card->card_name,
+                'money' => $card->price,
+                'date' => date('Y-m-d'),
+                'type' => 1,
+            ]
+        );
 
     	return $this->membershipModel->create(
     		[

@@ -1,7 +1,7 @@
 @extends('client.layouts.index')
 
 @section('content')
-<div class="container" style="background: hsla(0,0%,100%,.52); min-height: 500px">
+<div class="container" style="background-image:url('image/bg_juna.jpg') ; min-height: 800px; background-size: cover;">
     <div class="row">
     <!--     <div id="demo" class="carousel slide" data-ride="carousel">
           <ul class="carousel-indicators">
@@ -28,15 +28,16 @@
           </a>
         </div> -->
         @if (auth('customers')->check() && $card != '')
-            <div class="d-none d-sm-none d-md-block col-lg-4">
+            <div class="d-none d-sm-none d-md-block col-lg-4" style="padding-top: 40px">
+                <p style="text-align: center; font-weight: bold; font-size: 25px">THẺ CỦA BẠN</p>
                 @foreach ($card as $membership)
                     <div class="card">
-                        <img src="http://moviee.vn/public/img/moviee.vn.png" style="max-width: 40%; margin: auto;">
-                        <p style="text-transform: uppercase;">{{ $membership->card->card_name }}</p>
+                        <h3 style="text-align: center; padding-top: 60px; margin-bottom: 0px; text-align: center;">JUNA HAIR</h3>
+                        <p style="text-transform: uppercase; position: absolute;bottom: 0px">{{ $membership->card->card_name }}</p>
                     </div>
+
                 @endforeach
             </div>
-
         @else
             <div class="col-lg-4">
             </div>
@@ -53,8 +54,8 @@
                     <div class="input-phone" style="background: #fff">
                         <div class="input-text">
                             <div class="icon">
-                                <img width="40px" height="40px" src="https://v3.30shine.org/data/images/Trangchu/item_call.png" alt="Icon">
-                                <img style="width:1px; height:40px; margin-left: 5px" src="https://v3.30shine.org/data/images/Trangchu/gachh.png" alt="Icon" class="right">
+                                <img width="40px" height="40px" src="{{ asset('image/item_call.png') }}" alt="Icon">
+                                <img style="width:1px; height:40px; margin-left: 5px" src="{{ asset('image/gachh.png') }}" alt="Icon" class="right">
                                 <input id="phone" placeholder="* Nhập số điện thoại..." type="tel" name="phone" value=""> 
                             </div>
                         </div>
@@ -62,7 +63,7 @@
                             <div class="btn-booking">
                                 <div>
                                     <button type="submit" name="action" value="submit-phone" class="booking-text">
-                                        ĐẶT LỊCH GIỮ CHỖ &nbsp;<img src="https://v3.30shine.org/data/images/click1.png" alt="click" style="width: 30px; height: 30px; margin-bottom: 5px; vertical-align: middle;">
+                                        ĐẶT LỊCH GIỮ CHỖ &nbsp;<img src="{{ asset('image/click1.png') }}" alt="click" style="width: 30px; height: 30px; margin-bottom: 5px; vertical-align: middle;">
                                     </button>
                                 </div>
                             </div>
@@ -114,7 +115,7 @@
                                             </td>
                                             <td style="text-align: right;">
                                                 <span style="background: #ffd800;padding: 5px 30px;border-radius: 4px;font-weight: bold;">
-                                                    Free {{ $service->number }} lần
+                                                    Tặng {{ $service->number }} lần
                                                 </span>
                                                 
                                             </td>
@@ -142,7 +143,7 @@
                 /*position: absolute;*/
                 width: 100%;
                 margin: auto;
-                padding-top: 100px;
+                padding-top: 280px;
             }
             .input-sologan .input-phone .input-text, .input-sologan .input-phone .input-text .icon {
                 display: -webkit-flex;

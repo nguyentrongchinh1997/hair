@@ -7,6 +7,7 @@
 	</p>
 </div>
 <div class="col-6 col-sm-6 col-lg-6">
-	<img src="http://moviee.vn/public/img/moviee.vn.png" style="float: right; width: 150px; padding: 10px">
+	<h3 style="float: right; padding: 10px">JUNA HAIR</h3>
+	<!-- <img src="http://moviee.vn/public/img/moviee.vn.png" > -->
 </div>
 </div>

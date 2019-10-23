@@ -202,33 +202,51 @@ class EmployeeService
                               ->where('employee_id', $employeeId)
                               ->where('created_at', 'like', $date . '%')
                               ->get();
-            $rate = $this->billDetailModel->where('created_at', 'like', $date . '%')
-                                          ->where(function($query) use ($employeeId){
+            $rate = $this->billDetailModel->where(function($query) use ($employeeId){
                                                 $query->where('employee_id', $employeeId)
                                                       ->orWhere('assistant_id', $employeeId);
                                           })
-                                          ->get()
-                                          ->groupBy('bill_id');
+                                          ->with(['bill' => function($query) use ($date){
+                                                $query->where('date', 'like', $date . '%');
+                                              }])
+                                          ->get();            
         } elseif ($type == 'between') {
             $startTime = explode('-', $date)[0];
             $startTimeFormat = date('Y-m-d', strtotime(str_replace('/', '-', $startTime)));
             $endTime = explode('-', $date)[1];
             $endTimeFormat = date('Y-m-d', strtotime(str_replace('/', '-', $endTime)));
             $commisionList = $this->employeeCommisionModel
-                              ->where('employee_id', $employeeId)
-                              ->whereBetween('date', [$startTimeFormat, $endTimeFormat])
-                              ->get();
-            $rate = $this->billDetailModel->whereBetween('created_at', [$startTimeFormat, $endTimeFormat])
-                                          ->where(function($query) use ($employeeId){
+                                  ->where('employee_id', $employeeId)
+                                  ->whereBetween('date', [$startTimeFormat, $endTimeFormat])
+                                  ->get();
+            $rate = $this->billDetailModel->where(function($query) use ($employeeId){
                                                 $query->where('employee_id', $employeeId)
                                                       ->orWhere('assistant_id', $employeeId);
                                           })
-                                          ->get()
-                                          ->groupBy('bill_id');
+                                          ->with(['bill' => function($query) use ($startTimeFormat, $endTimeFormat){
+                                            $query->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
+                                          }])
+                                          ->get();
         }
+        /*đêm đánh giá*/
+            $rate1 = $rate2 = $rate3 = 0;
+            foreach ($rate as $billDetail) {
+                if (isset($billDetail->bill)) {
+                    if ($billDetail->bill->rate_id == 1) {
+                        $rate1++;
+                    } else if ($billDetail->bill->rate_id == 2) {
+                        $rate2++;
+                    } else if ($billDetail->bill->rate_id == 3) {
+                        $rate3++;
+                    }
+                }
+            }
+        /*end*/
         $data = [
             'type' => $type,
-            'rate' => $rate,
+            'rate1' => $rate1,
+            'rate2' => $rate2,
+            'rate3' => $rate3,
             'employee' => $employee,
             'date' => $date,
             'commisionList' => $commisionList,

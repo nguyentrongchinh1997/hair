@@ -6,18 +6,20 @@ use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\Bill;
 use App\Model\BillDetail;
+use App\Model\Membership;
 
 class CustomerService
 {
-	protected $orderModel, $billModel, $customerModel, $orderDetailModel, $billDetailModel;
+	protected $orderModel, $billModel, $customerModel, $orderDetailModel, $billDetailModel, $membershipModel;
 
-    public function __construct(Order $order, Bill $bill, Customer $customer, OrderDetail $orderDetail, BillDetail $billDetail)
+    public function __construct(Order $order, Bill $bill, Customer $customer, OrderDetail $orderDetail, BillDetail $billDetail, Membership $membershipModel)
     {
         $this->orderModel = $order;
         $this->billModel = $bill;
         $this->customerModel = $customer;
         $this->orderDetailModel = $orderDetail;
         $this->billDetailModel = $billDetail;
+        $this->membershipModel = $membershipModel;
     }
 
     public function customerListview()
@@ -52,7 +54,9 @@ class CustomerService
                                 ->where('status', config('config.order.status.check-out'))
                                 ->with('billDetail')
                                 ->get();
+        $card = $this->membershipModel->where('customer_id', $customerId)->get();
         $data = [
+            'card' => $card,
             'customer' => $customer,
             'customerHistory' => $customerHistory,
         ];

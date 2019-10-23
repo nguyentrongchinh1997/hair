@@ -5,6 +5,15 @@
 		</h3>
 		<table>
 			<tr>
+				<td>
+					Tên nhân viên
+				</td>
+				<td>:</td>
+				<td>
+					{{ $employee->full_name }}
+				</td>
+			</tr>
+			<tr>
 				<td>Địa chỉ</td>
 				<td>:</td>
 				<td>
@@ -34,34 +43,17 @@
 				<th style="text-align: center;">Tệ</th>
 				<th style="text-align: center;">Được</th>
 				<th style="text-align: center;">Rất hài lòng</th>
+				
 			</tr>
 			<tr>
 				<td style="text-align: center;">
-					@php $stt1 = 0;  @endphp
-					@foreach ($rate as $billId => $billDetail)
-						@if (App\Helper\ClassHelper::getCustomerRate($billId) == 1)
-							@php $stt1++ @endphp
-						@endif
-					@endforeach
-					{{ $stt1 }}
+					{{ $rate1 }}
 				</td>
 				<td style="text-align: center;">
-					@php $stt2 = 0;  @endphp
-					@foreach ($rate as $billId => $billDetail)
-						@if (App\Helper\ClassHelper::getCustomerRate($billId) == 2)
-							@php $stt2++ @endphp
-						@endif
-					@endforeach
-					{{ $stt2 }}
+					{{ $rate2 }}
 				</td>
 				<td style="text-align: center;">
-					@php $stt3 = 0;  @endphp
-					@foreach ($rate as $billId => $billDetail)
-						@if (App\Helper\ClassHelper::getCustomerRate($billId) == 3)
-							@php $stt3++ @endphp
-						@endif
-					@endforeach
-					{{ $stt3 }}
+					{{ $rate3 }}
 				</td>
 			</tr>
 		</table><br>

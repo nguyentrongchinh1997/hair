@@ -174,22 +174,22 @@ function validateAddOrder()
         alert('Chưa chọn dịch vụ');
 
         return false;
-    } else if (washLength > 0 && skinner == 0) {
-        alert('Chưa chọn thợ gội');
+    // } else if (washLength > 0 && skinner == 0) {
+    //     alert('Chưa chọn thợ gội');
 
-        return false;
-    } else if (cutLength > 0 && stylist == 0) {
-        alert('Chưa chọn thợ cắt');
+    //     return false;
+    // } else if (cutLength > 0 && stylist == 0) {
+    //     alert('Chưa chọn thợ cắt');
 
-      return false;
-    } else if (cutLength == 0 && stylist != 0) {
-        alert('Chư chọn dịch vụ cắt');
+    //   return false;
+    // } else if (cutLength == 0 && stylist != 0) {
+    //     alert('Chư chọn dịch vụ cắt');
 
-        return false;
-    } else if (washLength == 0 && skinner != 0) {
-        alert('Chưa chọn dịch vụ gội');
+    //     return false;
+    // } else if (washLength == 0 && skinner != 0) {
+    //     alert('Chưa chọn dịch vụ gội');
 
-        return false;
+    //     return false;
     } else if (date == '') {
         alert('Cần chọn ngày lập hóa đơn');
 
@@ -430,6 +430,7 @@ function check3()
 }
 $(function(){
     $('.tong').html($('#tong').html());
+    $('.transfer').html($('#transfer').html());
     $('.tong-chi').html($('#tong-chi').html());
     $('.tong-thu').html($('#tong-thu').html());
 })
@@ -478,5 +479,12 @@ $(function(){
         data = $(this).attr('data');
         $('.form-card').hide();
         $('#' + data).show();
+    })
+
+    $('#phone').keyup(function(){
+        phone = $('#phone').val();
+        $.get('admin/dat-lich/tim-kiem/khach-hang?phone=' + phone, function(data){
+            $('#name-customer').val(data);
+        })
     })
 })

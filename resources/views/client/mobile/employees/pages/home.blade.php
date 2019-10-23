@@ -49,7 +49,7 @@
             </table>
         </div>
         <div class="col-12" style="background: #eee; padding: 10px 15px; margin-top: 20px">
-            » Khách đặt lịch
+            » Khách đặt lịch book bạn
         </div>
         <div class="col-12">
             <table>

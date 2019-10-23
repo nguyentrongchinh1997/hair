@@ -1,9 +1,15 @@
 <tr style="background: #fcf8e3; font-weight: bold;">
-    <td class="tong" style="text-align: right; font-size: 20px" colspan="4">
-
+    <td style="text-align: right; font-size: 20px" colspan="3">
+                                    
+    </td>
+    <td class="transfer" style="text-align: right; font-size: 20px; font-weight: bold;">
+        
+    </td>
+    <td class="tong" style="text-align: right; font-size: 20px; font-weight: bold;">
+        
     </td>
 </tr>
-@php $stt = 0; $total = 0;@endphp
+@php $stt = 0; $total = 0; $transfer = 0;@endphp
 @if ($customer->count() > 0)
     @foreach ($customer as $customer)
         @foreach ($customer->bill as $bill)
@@ -22,6 +28,16 @@
                         <span style="color: green">Đã thanh toán</span>
                     @endif
                 </td>
+                <td style="text-align: right; font-size: 18px">
+                    @if ($bill->money_transfer != '')
+                        {{ number_format($bill->money_transfer) }}<sup>đ</sup>
+                        @php 
+                            $transfer = $transfer + $bill->money_transfer
+                        @endphp
+                    @else
+                        0<sup>đ</sup>
+                    @endif
+                </td>
                 <td style="text-align: right; font-weight: bold;">
                     @php $tong = 0; @endphp
                     @foreach ($bill->billDetail as $servicePrice)
@@ -29,9 +45,11 @@
                             $tong = $tong + $servicePrice->sale_money; 
                         @endphp
                     @endforeach
-                    @php 
-                        $total = $total + $tong - $bill->sale;
-                    @endphp
+                    @if ($bill->status == config('config.order.status.check-out'))
+                        @php 
+                            $total = $total + $tong - $bill->sale;
+                        @endphp
+                    @endif
                     {{ number_format($tong) }}<sup>đ</sup>
                 </td>
             </tr>
@@ -44,6 +62,15 @@
         <td id="tong" style="text-align: right; font-size: 20px; font-weight: bold;">
             {{ number_format($total) }}<sup>đ</sup>
         </td>
+    </tr>
+    <tr style="display: none;">
+        <td style="text-align: right; font-size: 20px" colspan="3">
+            Tổng
+        </td>
+        <td id="transfer" style="text-align: right; font-size: 20px; font-weight: bold;">
+            {{ number_format($transfer) }}<sup>đ</sup>
+        </td>
+        <td></td>
     </tr>
 @else
     <tr>
@@ -75,5 +102,6 @@
             }
         });
         $('.tong').html($('#tong').html());
+        $('.transfer').html($('#transfer').html());
     })
 </script>

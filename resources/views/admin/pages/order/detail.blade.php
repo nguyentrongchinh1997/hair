@@ -163,7 +163,7 @@
                                     @endif 
                                     onchange="editService({{ $serviceOrder->id }})" 
                                     id="service{{ $serviceOrder->id }}" 
-                                    style="width: 100%" name="service1[]" class="service form-control input-control"
+                                    style="width: 100%" name="service1[]" class="chosen service form-control input-control"
                                 >
                                     <option value="0">Chưa chọn</option>
                                     @foreach ($serviceList as $service)
@@ -184,21 +184,21 @@
                                     @endif 
                                     onchange="editEmployee({{ $serviceOrder->id }})" 
                                     id="employee{{ $serviceOrder->id }}" name="employee1[]" 
-                                    class="form-control input-control employee"
+                                    class="form-control chosen input-control employee"
                                 >
                                     @if ($serviceOrder->employee_id == '')
                                         <option value="0">Chọn thợ</option>
                                     @endif
                                     @foreach ($employeeList as $employee)
                                             <option  @if ($employee->id == $serviceOrder->employee_id) {{ 'selected' }}@endif value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                                {{ $employee->full_name }}
                                             </option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
                                 <select 
-                                    @if ($serviceOrder->service_id == 1 || $serviceOrder->service_id == 2)
+                                    @if ($serviceOrder->service_id == 2)
                                         {{ "disabled='disabled'" }}
                                     @endif
                                     @if ($orderDetail->status != config('config.order.status.create'))
@@ -206,23 +206,21 @@
                                     @endif 
                                     onchange="assistant({{ $serviceOrder->id }})" 
                                     id="assistant{{ $serviceOrder->id }}" 
-                                    class="form-control input-control employee"
+                                    class="form-control chosen input-control employee"
                                 >
                                     <option value="0">Chọn thợ phụ</option>
                                     @foreach ($employeeList as $employee)
-                                        @if ($employee->service_id == config('config.employee.type.skinner'))
-                                            <option 
-                                                @if ($serviceOrder->assistant_id != '' && $serviceOrder->assistant_id == $employee->id)
-                                                    {{ 'selected' }}
-                                                @endif
-                                            value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
-                                            </option>
-                                        @endif
+                                        <option 
+                                            @if ($serviceOrder->assistant_id != '' && $serviceOrder->assistant_id == $employee->id)
+                                                {{ 'selected' }}
+                                            @endif
+                                        value="{{ $employee->id }}">
+                                            {{ $employee->full_name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </td>
-                            <td style="text-align: right;">
+                            <td id="price{{ $serviceOrder->id }}" style="text-align: right;">
                                 @if ($serviceOrder->service_id != 0)
                                 {{ number_format($serviceOrder->service->price) }}<sup>đ</sup>
                                 @endif
@@ -272,12 +270,14 @@
     function editService(id)
     {
         serviceId = $('#service' + id).val();
-        if (serviceId == 1 || serviceId == 2) {
+        if (serviceId == 2) {
             $('#assistant' + id).prop('disabled', true);
         } else {
             $('#assistant' + id).prop('disabled', false);
         }
-        $.get('admin/dat-lich/dich-vu/sua/' + serviceId + '/' + id);
+        $.get('admin/dat-lich/dich-vu/sua/' + serviceId + '/' + id, function(data){
+            $('#price' + id).html(data);
+        });
     }
 
     function editEmployee(id)
@@ -292,6 +292,7 @@
         $.get('admin/dat-lich/nhan-vien/cap-nhat/' + assisatantId + '/' + id);
     }
 </script>
+
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -331,7 +332,7 @@
                                 <option value="0">Chọn thợ chính</option>
                             @foreach ($employeeList as $employee)
                                     <option value="{{ $employee->id }}">
-                                        {{ $employee->id }}-{{ $employee->full_name }}
+                                        {{ $employee->full_name }}
                                     </option>
                             @endforeach
                         </select>
@@ -349,7 +350,7 @@
                                 <option value="0">Chọn thợ phụ (nếu cần)</option>
                             @foreach ($employeeList as $employee)
                                     <option value="{{ $employee->id }}">
-                                        {{ $employee->id }}-{{ $employee->full_name }}
+                                        {{ $employee->full_name }}
                                     </option>
                             @endforeach
                         </select>
@@ -395,6 +396,12 @@
         })
         
     })
+</script>
+<script type="text/javascript">
+    $(function(){
+        $(".chosen").chosen();
+    })
+    
 </script>
 <script type="text/javascript">
     function validateForm()

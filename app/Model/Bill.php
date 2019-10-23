@@ -23,6 +23,7 @@ class Bill extends Model
         'date',
         'created_at',
         'updated_at',
+        'money_transfer'
     ];
 
     public function customer()

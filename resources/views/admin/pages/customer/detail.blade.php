@@ -41,6 +41,60 @@
 	</div><hr>
 	<div class="row">
 		<div class="col-lg-12">
+			<h3>Thẻ khách hàng</h3>
+		</div>
+		<div class="col-lg-12">
+			<table class="list-table" style="width: 100%">
+				<tr style="background: #BBDEFB">
+					<th>STT</th>
+					<th>Tên thẻ</th>
+					<th>Loại thẻ</th>
+					<th>Số lần còn (thời hạn hết hạn)</th>
+					<th>
+						Trang thái
+					</th>
+					<th>Giá thẻ</th>
+				</tr>
+			@if ($card->count() > 0)
+				@php $stt = 0; @endphp
+				@foreach ($card as $card)
+					<tr>
+						<th>{{ ++$stt }}</th>
+						<td>
+							{{ $card->card->card_name }}
+						</td>
+						<td>
+							{{ ($card->card->type == 0 ? 'Thẻ hội viên' : 'Thẻ dịch vụ') }}
+						</td>
+						<td style="text-align: center;">
+							@if ($card->card->type == 0)
+								{{ date('d/m/Y', strtotime($card->end_time)) }}
+							@else
+								{{ $card->number }} lần
+							@endif
+						</td>
+						<td>
+							{!! ($card->status == 1 ? '<span style="color: #007bff; font-weight:bold;">Còn hạn</span>' : '<span style="color: red; font-weight:bold;">Còn hạn</span>Hết hạn</span>') !!}
+						</td>
+						<td style="text-align: right;">
+							{{ number_format($card->card->price) }}<sup>đ</sup>
+						</td>
+					</tr>
+				@endforeach
+			@else
+				<tr>
+					<td style="text-align: center;" colspan="6">
+						<i>
+							Khách hàng chưa mua thẻ
+						</i>
+					</td>
+				</tr>
+			@endif
+			</table>
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="col-lg-12">
 			<h3>Lịch sử</h3>
 		</div>
 		<div class="col-lg-12" style="height: 410px; overflow: auto;">
@@ -65,12 +119,12 @@
 										@if ($service->assistant_id == '')
 											{{ $service->service->name }} 
 											<b>
-												({{ $service->employee->id }}-{{ $service->employee->full_name }})
+												({{ $service->employee->full_name }})
 											</b>
 										@else
 											{{ $service->service->name }} 
-											<b>({{ $service->employee->id }}-{{ $service->employee->full_name }}</b> và <b>
-												{{ $service->employeeAssistant->id }}-{{ $service->employeeAssistant->full_name }})
+											<b>({{ $service->employee->full_name }}</b> và <b>
+												{{ $service->employeeAssistant->full_name }})
 											</b>
 										@endif
 									</p>

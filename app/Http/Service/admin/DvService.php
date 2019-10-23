@@ -26,9 +26,9 @@ class DvService
 
     public function serviceListView()
     {
-        $serviceList = $this->serviceModel->where('status', '>', 0)
+        $serviceList = $this->serviceModel->where('status', 1)
                                           ->orderBy('created_at', 'desc')
-                                          ->paginate(20);
+                                          ->paginate(8);
         $data = [
             'serviceList' => $serviceList,
         ];

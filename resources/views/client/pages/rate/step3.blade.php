@@ -53,7 +53,7 @@
         <form method="post" action="{{ route('rate.finish') }}">
             @csrf
             <center>
-                <h2>30SHINE NÊN CẢI THIỆN ĐIỀU GÌ <br>ĐỂ ANH HÀI LÒNG HƠN?</h2>
+                <h2>JUNA NÊN CẢI THIỆN ĐIỀU GÌ <br>ĐỂ BẠN HÀI LÒNG HƠN?</h2>
                 <center>
                     <p style="margin-top: 30px; font-weight: bold; margin-bottom: 30px">Bước 2/2</p>
                 </center>

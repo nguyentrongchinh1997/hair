@@ -108,14 +108,14 @@
                                 name="service[]" 
                                 value="0"
                             >
-                            <div style="width: 20px; height: 20px; border: 1px solid #ccc; position: relative;">
-                                <i id="check0" style="position: absolute; top: 3px; left: 3px;font-size: 13px; color: #000; display: none;" class="fas fa-check check">
+                            <div style="width: 30px; height: 30px; border: 1px solid #ccc; position: relative;">
+                                <i id="check0" style="position: absolute; top: 3px; left: 3px;font-size: 18px; color: #000; display: none;" class="fas fa-check check">
                                 </i>                      
                             </div>
                         </label>
                     </div>
                     <div class="col-2 col-sm-2 col-md-2 col-lg-2">
-                        <p style="font-weight: bold; margin-top: 10px; margin-bottom: 0px">
+                        <p style="font-weight: bold; margin-top: 10px; margin-bottom: 0px; font-size: 20px">
                             KHÁC
                         </p>
                     </div>

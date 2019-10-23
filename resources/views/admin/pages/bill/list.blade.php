@@ -81,16 +81,21 @@
                                 <th scope="col">STT</th>
                                 <th scope="col">Khách</th>
                                 <th scope="col">Trạng thái</th>
+                                <th scope="col">Chuyển khoản</th>
                                 <th scope="col">Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody class="order-list">
                             <tr style="background: #fcf8e3; font-weight: bold;">
-                                <td class="tong" style="text-align: right; font-size: 20px" colspan="5">
-
+                                <td style="text-align: right; font-size: 20px" colspan="3">
+                                    
                                 </td>
+                                <td class="transfer" style="text-align: right; font-size: 20px; font-weight: bold;">
+                                    
+                                </td>
+                                <td class="tong" style="text-align: right; font-size: 20px; font-weight: bold;"></td>
                             </tr>
-                            @php $stt = $billList->count(); $total = 0;@endphp
+                            @php $stt = $billList->count(); $total = 0; $transfer = 0@endphp
                             @foreach ($billList as $bill)
                                 <!-- @if ($bill->order->date == $date) -->
                                     <tr title="click để xem chi tiết" style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
@@ -109,17 +114,29 @@
                                                 <span style="@if ($bill->status == config('config.order.status.check-out')) {{ 'color: #007BDF; font-weight: bold;' }} @endif">Đã thanh toán</span>
                                             @endif
                                         </td>
-                                        <td style="text-align: right; font-size: 20px">
-                                            @php $tong = 0; @endphp
-                                            @foreach ($bill->billDetail as $servicePrice)
+                                        <td style="text-align: right; font-size: 18px">
+                                            @if ($bill->money_transfer != '')
+                                                {{ number_format($bill->money_transfer) }}<sup>đ</sup>
                                                 @php 
-                                                    $tong = $tong + $servicePrice->sale_money; 
+                                                    $transfer = $transfer + $bill->money_transfer
                                                 @endphp
-                                            @endforeach
-                                            @php 
-                                                $total = $total + $tong - $bill->sale;
-                                            @endphp
-                                            {{ number_format($tong-$bill->sale) }}<sup>đ</sup>
+                                            @else
+                                                0<sup>đ</sup>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: right; font-size: 18px">
+                                            @php $tong = 0; @endphp
+                                                @foreach ($bill->billDetail as $servicePrice)
+                                                    @php 
+                                                        $tong = $tong + $servicePrice->sale_money; 
+                                                    @endphp
+                                                @endforeach
+                                            @if ($bill->status == config('config.order.status.check-out'))
+                                                @php 
+                                                    $total = $total + $tong - $bill->sale;
+                                                @endphp
+                                            @endif
+                                            {{ number_format($tong - $bill->sale) }}<sup>đ</sup>
                                         </td>  
                                     </tr>
                                 <!-- @endif -->
@@ -131,6 +148,15 @@
                                 <td id="tong" style="text-align: right; font-size: 20px; font-weight: bold;">
                                     {{ number_format($total) }}<sup>đ</sup>
                                 </td>
+                            </tr>
+                            <tr style="display: none;">
+                                <td style="text-align: right; font-size: 20px" colspan="3">
+                                    Tổng
+                                </td>
+                                <td id="transfer" style="text-align: right; font-size: 20px; font-weight: bold;">
+                                    {{ number_format($transfer) }}<sup>đ</sup>
+                                </td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -157,15 +183,15 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <table class="add-bill" style="width: 100%">
                         <tr>
-                            <td>Tên khách hàng</td>
-                            <td>
-                                <input placeholder="Nhập tên khách hàng..." type="text" required="required" class="form-control input-control" name="full_name">
-                            </td>
-                        </tr>
-                        <tr>
                             <td>Số điện thoại</td>
                             <td>
                                 <input id="phone" required="required" placeholder="Số điện thoại khách hàng" type="text" class="form-control input-control" name="phone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tên khách hàng</td>
+                            <td>
+                                <input id="name-customer" placeholder="Nhập tên khách hàng..." type="text" required="required" class="form-control input-control" name="full_name">
                             </td>
                         </tr>
                         <tr>

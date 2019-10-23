@@ -34,7 +34,7 @@
     </div>
     <div id="load_tweets">
         <center>
-            <img src="https://cdn1.mywork.com.vn/company-logo-medium/201702/5dc078b451f4.jpg">
+            <img src="{{ asset('image/bg_juna.jpg') }}" width="800px">
         </center>
     </div>
 @endsection

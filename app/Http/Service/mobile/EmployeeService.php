@@ -180,7 +180,7 @@ class EmployeeService
             		'date' => $date,
             	],
             	[
-            		'money' => $commisionTotal,
+            		'money' => $commisionTotal + $employee->salary,
             	]
             );
         }

@@ -58,7 +58,7 @@ class OrderController extends Controller
 
     public function editService($serviceId, $orderDetailId)
     {
-        $this->orderService->editService($serviceId, $orderDetailId);
+        echo $this->orderService->editService($serviceId, $orderDetailId);
     }
 
     public function editEmployee($employeeId, $orderDetailId)
@@ -89,6 +89,9 @@ class OrderController extends Controller
     {
         return view('admin.pages.order.add_service', $this->orderService->serviceAdd($request));
     }
+
+    public function customerName(Request $request)
+    {
+        echo $this->orderService->customerName($request->get('phone'));
+    }
 }
-
-

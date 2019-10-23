@@ -1,4 +1,3 @@
-
     <div style="margin: auto; max-width: 500px">
         <!-- <h2 style="text-align: center;">HÓA ĐƠN</h2> -->
         <form method="post" action="{{ route('finish', ['id' => $billId]) }}">
@@ -46,23 +45,16 @@
                         @endif
                     </td>
                 </tr>
-                
-            </table><br>
-<!--             <table style="width: 100%">
                 <tr>
                     <td>
-                        Thẻ khách hàng
+                        Số tiền khách chuyển khoản (nếu có)
                     </td>
+                    <td>:</td>
                     <td>
-                        @foreach ($bill->customer->membership as $card)
-                            <label style="margin-bottom: 0px">
-                                <input type="checkbox" name=""> {{ $card->card->card_name }}
-                            </label><br>
-                            
-                        @endforeach
+                        <input id="formattedNumberField" class="form-control input-control" type="text" placeholder="Nhập số tiền..." name="money_transfer">
                     </td>
                 </tr>
-            </table> -->
+            </table><br>
             <table class="list-table">
                  <tr>
                     <td colspan="5" style="text-align: right; border: 0px">
@@ -99,14 +91,6 @@
                                 <span>Sử dụng thẻ {{ $service->card->card_name }}</span>
                             @endif
                         </td>
-<!--                         <td>
-                            @if ($service->sale_money < $service->money)
-                                <span>{{ $cardName }}</span><br>
-                                <span style="color: red">
-                                     (được tặng <b>{{ number_format($service->money - $service->sale_money) }}<sup>đ</sup></b>)
-                                </span>
-                            @endif
-                        </td> -->
                     </tr>
                     @php $totalPrice = $totalPrice + $service->sale_money @endphp
                 @endforeach
@@ -125,8 +109,6 @@
                             {{ number_format($bill->customer->balance) }}<sup>đ</sup>
                         </td>
                         <td style="font-weight: bold;">Số dư của bạn</td>
-                       
-                        
                     </tr>
                     <tr>
                         @php 
@@ -172,3 +154,22 @@
             @endif
         </form>
     </div>
+<style type="text/css">
+    .update-rate tr td{
+        padding: 10px;
+    }
+</style>
+<script type="text/javascript">
+    $('#formattedNumberField').keyup(function(event) {
+      // skip for arrow keys
+      if(event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function(index, value) {
+        return value
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        ;
+      });
+    });
+</script>

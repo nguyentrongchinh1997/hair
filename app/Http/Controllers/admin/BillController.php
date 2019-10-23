@@ -15,9 +15,9 @@ class BillController extends Controller
         $this->billService = $billService;
     }
 
-    public function finish($billId)
+    public function finish(Request $request, $billId)
     {
-        $this->billService->finish($billId);
+        $this->billService->finish($billId, $request);
 
         return back()->with('thongbao', 'Thanh toán thành công');
     }

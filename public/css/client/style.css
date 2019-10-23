@@ -1,5 +1,7 @@
 body {
     background: #eee;
+    /*background-size: cover;
+    background: url('https://storage.30shine.com/banner/20191017_bannerslide_w.jpg') no-repeat center center fixed;*/
 }
 .row {
     margin: 0px !important;
@@ -73,10 +75,11 @@ footer .time-word {
 }
 .order{
     padding: 0px;
-    background: hsla(0,0%,100%,.52);
+    /*background: hsla(0,0%,100%,.52);*/
 }
 .order form {
     background: #fff;
+    opacity: 0.9;
     margin: auto;
     max-width: 100%;
     padding: 0px 0px 15px 0px;

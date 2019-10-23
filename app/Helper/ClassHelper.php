@@ -143,8 +143,8 @@ class ClassHelper
     public static function checkEmptyServiceInCard($serviceId, $cardId)
     {
         $card = Card::where('id', $cardId)->whereHas('cardDetail', function($query) use ($serviceId){
-            $query->where('service_id', $serviceId);
-        })->get();
+                                                $query->where('service_id', $serviceId);})
+                                          ->get();
 
         return $card->count();
     }

@@ -98,62 +98,68 @@
                 </div>
             </div><br>
             <table class="list-table">
-              <thead>
-                <tr style="background: #BBDEFB">
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên dịch vụ</th>
-                    <th style="text-align: center;" scope="col">Giá</th>
-                    <th style="text-align: center;" scope="col">
-                        Thợ chính (%) <br>
-                    </th>
-                    <th style="text-align: center;" scope="col">
-                        Thợ chính (%)<br> (yêu cầu khách) 
-                    </th>
-                    <th style="text-align: center;" scope="col">
-                        Thợ phụ (%)
-                    </th>
-                    <th scope="col">Sửa</th>
-                    <th scope="col">
-                        Xóa
-                    </th>
-                </tr>
-              </thead>
-              <tbody>
-                @php $stt = 0; @endphp
-                @foreach ($serviceList as $service)
-                    <tr>
-                        <th scope="row">{{ ++$stt }}</th>
-                        <td>
-                            {{ $service->name }}
-                        </td>
-                        <td style="text-align: right;">
-                            {{ number_format($service->price) }}<sup>đ</sup>
-                        </td>
-                        <td style="text-align: center;">
-                            {{ $service->percent }} %
-                        </td>
-                        <td style="text-align: center;">
-                            {{ $service->main_request_percent }} %
-                        </td>
-                        <td style="text-align: center;">
-                            {{ $service->assistant_percent }} %
-                        </td>
-                        <td style="text-align: center;">
-                            <button onclick="editService({{ $service->id }})" type="button" class="btn btn-primary input-control" data-toggle="modal" data-target="#edit">
-                                <i class="far fa-edit"></i>
-                            </button>
-                        </td>
-                        <td style="text-align: center;">
-                            @if ($service->id != config('config.service.cut') && $service->id != config('config.service.wash'))
-                            <a onclick="return deleteService()" href="{{ route('service.delete', ['id' => $service->id]) }}" style="color: red;">
-                                <i class="fas fa-times"></i>
-                            </a>
-                            @endif
-                        </td>
+                  <thead>
+                    <tr style="background: #BBDEFB">
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên dịch vụ</th>
+                        <th style="text-align: center;" scope="col">Giá</th>
+                        <th style="text-align: center;" scope="col">
+                            Thợ chính (%) <br>
+                        </th>
+                        <th style="text-align: center;" scope="col">
+                            Thợ chính (%)<br> (yêu cầu khách) 
+                        </th>
+                        <th style="text-align: center;" scope="col">
+                            Thợ phụ (%)
+                        </th>
+                        <th scope="col">Sửa</th>
+                        <th scope="col">
+                            Xóa
+                        </th>
                     </tr>
-                @endforeach
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    @php $stt = 0; @endphp
+                    @foreach ($serviceList as $service)
+                        <tr>
+                            <th scope="row">{{ ++$stt }}</th>
+                            <td>
+                                {{ $service->name }}
+                            </td>
+                            <td style="text-align: right;">
+                                {{ number_format($service->price) }}<sup>đ</sup>
+                            </td>
+                            <td style="text-align: center;">
+                                {{ $service->percent }} %
+                            </td>
+                            <td style="text-align: center;">
+                                {{ $service->main_request_percent }} %
+                            </td>
+                            <td style="text-align: center;">
+                                {{ $service->assistant_percent }} %
+                            </td>
+                            <td style="text-align: center;">
+                                <button onclick="editService({{ $service->id }})" type="button" class="btn btn-primary input-control" data-toggle="modal" data-target="#edit">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </td>
+                            <td style="text-align: center;">
+                                @if ($service->id != config('config.service.cut') && $service->id != config('config.service.wash'))
+                                <a onclick="return deleteService()" href="{{ route('service.delete', ['id' => $service->id]) }}" style="color: red;">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                  </tbody>
+            </table><br>
+            {{ $serviceList->links() }}
+            <style type="text/css">
+                .pagination{
+                    float: right;
+                }
+            </style>
             <div class="modal fade" id="edit">
                 <div class="modal-dialog">
                   <div class="modal-content">

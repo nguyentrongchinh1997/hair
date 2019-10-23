@@ -39,7 +39,7 @@ class BillService
         $this->salaryModel = $salary;
     }
 
-	public function finish($billId)
+	public function finish($billId, $request)
     {
         $bill = $this->billModel->findOrFail($billId);
         $customer = $this->customerModel->findOrFail($bill->customer_id);
@@ -54,10 +54,16 @@ class BillService
                                                   ->where('status', 1)
                                                   ->first();
             if (isset($checkUseCard)) {
+                if (($checkUseCard->number - 1) == 0) {
+                    $status = 0;
+                } else {
+                    $status = 1;
+                }
                 $this->membershipModel->updateOrCreate(
                     ['id' => $checkUseCard->id],
                     [
-                        'number' => ($checkUseCard->number - 1)
+                        'number' => ($checkUseCard->number - 1),
+                        'status' => $status,
                     ]
                 );
             }
@@ -79,6 +85,11 @@ class BillService
         } else {
             $comment = $bill->comment;
         }
+        if ($request->money_transfer == NULL) {
+            $moneyTransfer = NULL;
+        } else {
+            $moneyTransfer = str_replace(',', '', $request->money_transfer);
+        }
         $this->billModel->updateOrCreate(
             ['id' => $billId],
             [
@@ -87,6 +98,7 @@ class BillService
                 'status' => 2,
                 'total' => $total,
                 'rate_status' => 0,
+                'money_transfer' => $moneyTransfer,
             ]
         );
 

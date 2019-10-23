@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Trang quản trị Admin</title>
+        <title>JUNA HAIR SALON - Tạo mẫu tóc hàng đầu Việt Nam</title>
         <base href="{{ asset('/') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('/css/client/style.css') }}">
@@ -30,7 +30,8 @@
             <div class="row top-header">
                 <div class="container">
                     <center>
-                        <img src="{{ asset('/image/logo.webp') }}">
+                        <!-- <img src="{{ asset('/image/logo.webp') }}"> -->
+                        <h3 style="color: #fff">JUNA HAIR</h3>
                     </center>
                 </div>
             </div>
@@ -68,9 +69,6 @@
                                 <li>
                                     <i class="fas fa-home"></i> Trang chủ
                                 </li>
-                            </a>
-                            <a href="">
-                                <li>Dịch Vụ</li>
                             </a>
                             @if (auth('customers')->check())
                                 <a href="logout" style="float: right;">

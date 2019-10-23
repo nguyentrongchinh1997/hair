@@ -107,6 +107,7 @@
                     <p style="margin-bottom: 0px">Thu<span style="font-size: 12px; font-weight: normal;"> (khoản tiền khác)</span></p>
                 </div>
             </div>
+        <!-- các khoản chi --> 
             <div class="row list-expense" id="chi" style="border: 1px solid #e5e5e5; padding: 15px; height: 420px; overflow: auto;">
                 <table class="list-table">
                     @if (session('thongbao'))
@@ -176,6 +177,8 @@
                         </tr>
                 </table>
             </div>
+        <!-- end -->
+        <!-- khoản thu khác -->
             <div class="row list-expense" id="thu2" style="border: 1px solid #e5e5e5; padding: 15px; height: 420px; overflow: auto;">
                 <table class="list-table">
                     <tr>
@@ -217,13 +220,18 @@
                             <td style="text-align: right; font-size: 20px">
                                 {{ number_format($expense->money) }}<sup>đ</sup>
                             </td>
-                            <td style="text-align: center;">
-                                <a onclick="return deleteExpense()" style="color: red" href="{{ route('expense.delete', ['id' => $expense->id]) }}">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </td>
+                            
                             <td style="text-align: center; color: #007bff">
-                                <i onclick="editExpese({{ $expense->id }})" data-toggle="modal" data-target="#expense-edit" class="expense-edit fas fa-edit"></i>
+                                @if (auth()->user()->level == 2)
+                                    <i onclick="editExpese({{ $expense->id }})" data-toggle="modal" data-target="#expense-edit" class="expense-edit fas fa-edit"></i>
+                                @endif
+                            </td>
+                            <td style="text-align: center;">
+                                @if (auth()->user()->level == 2)
+                                    <a onclick="return deleteExpense()" style="color: red" href="{{ route('expense.delete', ['id' => $expense->id]) }}">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
                             </td>
                             @php $tongThu2 = $tongThu2 + $expense->money @endphp
                         </tr>
@@ -236,6 +244,8 @@
                         </tr>
                 </table>
             </div>
+        <!-- end -->
+        <!-- khoản thu từ hóa đơn -->
             <div class="row list-expense" id="thu" style="border: 1px solid #e5e5e5; padding: 15px; height: 420px; overflow: auto;">
                 <table class="list-table">
                     <tr style="background: #BBDEFB">
@@ -285,6 +295,7 @@
                         </tr>
                 </table>
             </div>
+        <!-- end -->
         </div>
         <div class="col-lg-4 expense-right">
             <table style="width: 100%;">

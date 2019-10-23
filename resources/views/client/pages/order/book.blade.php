@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="row">
-    <div class="container">
+    <div class="container" style="background-image: url(image/bg_juna.jpg);
+    background-size: cover;">
         <div class="row order" style="margin-top: 20px !important">
             <div class="col-lg-4"></div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-4" style="padding: 0px">

@@ -23,14 +23,15 @@
                     {{ session('thongbao') }}
                 </div>
             @endif
-            <button style="float: right; margin-bottom: 20px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart">Thêm thẻ hội viên</button>
-            <button style="float: left; margin-bottom: 20px; background: #FF9800; border: 0px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart-other">Thêm thẻ khác</button>
+            <button style="float: left; margin-bottom: 20px; background: #FF9800; border: 0px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart">Thêm thẻ hội viên</button>
+            <button style="float: right; margin-bottom: 20px; border: 0px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#cart-other">Thêm thẻ dịch vụ</button>
             <table class="list-table" style="margin-top: 20px">
                 <thead>
                     <tr style="background: #BBDEFB">
                         <th scope="col">STT</th>
                         <th scope="col">Tên thẻ</th>
                         <th scope="col">Dịch vụ áp dụng</th>
+                        <th scope="col">Giá thẻ</th>
                         <th scope="col" style="text-align: center;">Xóa</th>
                     </tr>
                 </thead>
@@ -54,6 +55,9 @@
                                     </span><br>
                                     @endif
                                 @endforeach
+                            </td>
+                            <td style="text-align: right;">
+                                {{ number_format($card->price) }}<sup>đ</sup>
                             </td>
                             <td style="text-align: center;">
                                 <a onclick="return deleteCard()" href="{{ route('card.delete', ['id' => $card->id]) }}" style="color: red;">
@@ -124,7 +128,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Thêm thẻ khác</h3>
+                    <h3 class="modal-title">Thêm thẻ dịch vụ</h3>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">

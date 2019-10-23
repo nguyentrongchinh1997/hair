@@ -15,7 +15,7 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->check() || auth('employees')->check()) {
+        if (auth()->check()) {
             return $next($request);
         } else {
             return redirect()->route('login');

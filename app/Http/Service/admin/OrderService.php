@@ -71,7 +71,7 @@ class OrderService
         $orderDetail = $this->orderDetailModel->where('order_id', $orderId)->get();
         $customer = $this->customerModel->findOrFail($order->customer_id);
     /*nếu không có tên + ngày sinh thì update*/
-        if ($customer->full_name == '' && $customer->birthday == '') {
+        if ($customer->full_name == '' || $customer->birthday == '') {
             $this->customerModel->updateOrCreate(
                 ['id' => $order->customer_id],
                 [
@@ -306,12 +306,16 @@ class OrderService
 
     public function editService($serviceId, $orderDetailId)
     {
-        return $this->orderDetailModel->updateOrCreate(
+        $this->orderDetailModel->updateOrCreate(
             ['id' => $orderDetailId],
             [
                 'service_id' => $serviceId
             ]
         );
+        $service = $this->serviceModel->findOrFail($serviceId);
+        $price = number_format($service->price) . "<sup>đ</sup>";
+        
+        return $price;
     }
 
     public function editEmployee($employeeId, $orderDetailId)
@@ -372,8 +376,15 @@ class OrderService
             'orderDetail' => $orderDetailId,
         ];
 
-
-
         return $data;
+    }
+
+    public function customerName($phone)
+    {
+        $customer = $this->customerModel->where('phone', $phone)->first();
+
+        if (isset($customer)) {
+            return $customer->full_name;
+        }
     }
 }

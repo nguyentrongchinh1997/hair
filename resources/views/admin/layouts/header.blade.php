@@ -79,17 +79,6 @@
                                     {{ auth()->user()->name }}
                                 </li>
                             </a>
-                        @elseif (auth('employees')->check())
-                            <a style="float: right;" href="{{ route('logout') }}">
-                                <li style="background: #fafafa">
-                                    Đăng xuất
-                                </li>
-                            </a>
-                            <a style="float: right;">
-                                <li>
-                                    {{ auth('employees')->user()->full_name }}
-                                </li>
-                            </a>
                         @endif
                     </ul>
                 </div>

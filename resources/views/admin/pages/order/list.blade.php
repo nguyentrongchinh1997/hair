@@ -115,7 +115,7 @@
                                         @foreach ($order->orderDetail as $orderDetail)
                                             @if ($orderDetail->employee_id != '')
                                                 <p>
-                                                    {{ $orderDetail->service->name }} ({{ $orderDetail->employee_id }} - {{ $orderDetail->employee->full_name }})
+                                                    {{ $orderDetail->service->name }} ({{ $orderDetail->employee->full_name }})
                                                 </p>
                                             @else
                                                 <p>
@@ -198,7 +198,7 @@
                         <tr>
                             <td>Tên khách hàng</td>
                             <td>
-                                <input placeholder="Nhập tên khách hàng..." type="text" required="required" class="input-control form-control" name="full_name">
+                                <input id="name-customer" placeholder="Nhập tên khách hàng..." type="text" required="required" class="input-control form-control" name="full_name">
                             </td>
                         </tr>
                         <tr>

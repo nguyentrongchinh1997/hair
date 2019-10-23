@@ -133,6 +133,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::post('danh-sach', 'admin\OrderController@postOrderListView')->name('order.post.list');
         
         Route::get('tim-kiem', 'admin\OrderController@resultList');
+
+        Route::get('tim-kiem/khach-hang', 'admin\OrderController@customerName');
         
         Route::get('chi-tiet/{orderId}', 'admin\OrderController@orderDetail');
         

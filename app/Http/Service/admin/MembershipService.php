@@ -108,7 +108,7 @@ class MembershipService
 
     public function search($key)
     {
-        if ($key != '') {
+    	if ($key != '') {
     	   $customer = $this->customerModel->where(function($query) use ($key){
     										$query->where('full_name', 'like', '%' . $key . '%')
     											  ->orWhere('phone', 'like', $key . '%');

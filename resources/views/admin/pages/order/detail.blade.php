@@ -210,6 +210,7 @@
                                 >
                                     <option value="0">Chọn thợ phụ</option>
                                     @foreach ($employeeList as $employee)
+<<<<<<< HEAD
                                         <option 
                                             @if ($serviceOrder->assistant_id != '' && $serviceOrder->assistant_id == $employee->id)
                                                 {{ 'selected' }}
@@ -217,6 +218,17 @@
                                         value="{{ $employee->id }}">
                                             {{ $employee->full_name }}
                                         </option>
+=======
+                                        @if ($employee->service_id == config('config.employee.type.skinner'))
+                                            <option 
+                                                @if ($serviceOrder->assistant_id != '' && $serviceOrder->assistant_id == $employee->id)
+                                                    {{ 'selected' }}
+                                                @endif
+                                            value="{{ $employee->id }}">
+                                                {{ $employee->full_name }}
+                                            </option>
+                                        @endif
+>>>>>>> cb2cb2930e411681ba2d209c06774757b0fab094
                                     @endforeach
                                 </select>
                             </td>

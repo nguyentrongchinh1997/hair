@@ -155,8 +155,8 @@ function editEmployee(id)
 function validateAddOrder()
 {
     phone = document.getElementById('phone').value;
-    stylist = $('#cut-stylist').val();
-    skinner = $('#cut-skinner').val();
+    // stylist = $('#cut-stylist').val();
+    // skinner = $('#cut-skinner').val();
     washLength = $('#wash:checkbox:checked').length;
     cutLength = $('#cut:checkbox:checked').length;
     otherService = $('#other-service:checkbox:checked').length;

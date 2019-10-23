@@ -67,4 +67,20 @@ class DvService
             ]
         );
     }
+
+    public function serviceSearch($serviceName)
+    {
+        if ($serviceName != '') {
+            $serviceList = $this->serviceModel->where('name', 'like', '%' . $serviceName . '%')
+                                              ->orderBy('id', 'desc')
+                                              ->get();
+        } else {
+            $serviceList = $this->serviceModel->where('name', 'like', '%' . $serviceName . '%')
+                                              ->orderBy('id', 'desc')
+                                              ->paginate(8);
+        }
+        $data = ['serviceList' => $serviceList];
+
+        return $data;
+    }
 }

@@ -1,7 +1,7 @@
 @extends('client.pages.rate.layouts.index')
 
 @section('content')
-<!-- <script type="text/javascript">
+<script type="text/javascript">
     setTimeout(function(){
         location.reload();
     },5000);
@@ -12,7 +12,7 @@
             window.location.href = 'rate';
         }
     })
-</script> -->
+</script>
 <style type="text/css">
     table tr td {
         font-size: 30px;

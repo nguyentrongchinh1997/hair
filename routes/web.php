@@ -123,6 +123,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::post('sua/{id}', 'admin\ServiceController@serviceEdit')->name('service.edit');
 
         Route::get('xoa/{id}', 'admin\ServiceController@serviceDelete')->name('service.delete');
+
+        Route::get('tim-kiem', 'admin\ServiceController@serviceSearch');
     });
 
     Route::group(['prefix' => 'dat-lich'], function(){

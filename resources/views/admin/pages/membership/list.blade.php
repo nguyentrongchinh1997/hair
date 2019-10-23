@@ -55,7 +55,7 @@
     				<th>Tên thẻ</th>
     				<th>Dịch vụ áp dụng</th>
                     <th>Ngày bán</th>
-    				<th>Ngày làm thẻ</th>
+    				<th>Ngày áp dụng thẻ</th>
     				<th>Ngày hết hạn</th>
     				<th>Trạng thái</th>
                     <th>Tổng tiền</th>
@@ -95,7 +95,7 @@
                         </td>
                         
                         <td>
-                            {{ date('d/m/Y', strtotime($member->created_at)) }}
+                            {{ date('d/m/Y', strtotime($member->date)) }}
                         </td>
     					<td>
                             @if ($member->start_time != '')
@@ -202,8 +202,14 @@
 	                    			</select>
 	                    		</td>
 	                    	</tr>
+                            <tr>
+                                <td>Ngày bán</td>
+                                <td>
+                                    <input type="date" value="{{ date('Y-m-d') }}" name="date" class="form-control input-control">
+                                </td>
+                            </tr>
 	                    	<tr>
-	                    		<td>Ngày bắt đầu</td>
+	                    		<td>Ngày áp dụng</td>
 	                    		<td>
 	                    			<input value="{{ date('Y-m-d') }}" type="date" class="input-control form-control" name="start_time">
 	                    		</td>
@@ -238,6 +244,12 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ngày bán</td>
+                                <td>
+                                    <input type="date" value="{{ date('Y-m-d') }}" name="date" class="form-control input-control">
                                 </td>
                             </tr>
                             <tr>

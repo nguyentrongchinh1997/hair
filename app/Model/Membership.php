@@ -13,6 +13,7 @@ class Membership extends Model
         'start_time',
         'end_time',
         'number',
+        'date',
     ];
 
     public function card()

@@ -487,4 +487,11 @@ $(function(){
             $('#name-customer').val(data);
         })
     })
+
+    $('#name-service').keyup(function(){
+        nameService = $('#name-service').val();
+        $.get('admin/dich-vu/tim-kiem?name=' + nameService, function(data){
+            $('#search-service').html(data);
+        });
+    })
 })

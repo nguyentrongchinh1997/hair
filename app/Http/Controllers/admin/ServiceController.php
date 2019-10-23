@@ -45,5 +45,9 @@ class ServiceController extends Controller
 
         return back()->with('thongbao', 'Xóa thành công');
     }
-}
 
+    public function serviceSearch(Request $request)
+    {
+        return view('admin.pages.service.list_search', $this->service->serviceSearch($request->get('name')));
+    }
+}

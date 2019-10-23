@@ -53,7 +53,7 @@ class MembershipService
     {
         $date = $request->date;
         $membershipList = $this->membershipModel->where('status', 1)
-                                                ->where('created_at', 'like', $date . '%')
+                                                ->where('date', $date)
                                                 ->orderBy('id', 'desc')
                                                 ->paginate(10);
         $customerList = $this->customerModel->all();
@@ -77,14 +77,7 @@ class MembershipService
 	public function membershipAdd($request)
 	{
         $card = $this->cardModel->find($request->card_id);
-        $this->expenseModel->create(
-            [
-                'content' => 'Bán thẻ ' . $card->card_name,
-                'money' => $card->price,
-                'date' => date('Y-m-d'),
-                'type' => 1,
-            ]
-        );
+        
 		return $this->membershipModel->create(
 			$request->all()
 		);
@@ -130,24 +123,18 @@ class MembershipService
 
     public function membershipAddOther($request)
     {
+        $date = $request->date;
     	$card = $this->cardModel->find($request->card_id);
     	foreach ($card->cardDetail as $cardDetail) {
     		$number = $cardDetail->number;
     	}
-        $this->expenseModel->create(
-            [
-                'content' => 'Bán thẻ ' . $card->card_name,
-                'money' => $card->price,
-                'date' => date('Y-m-d'),
-                'type' => 1,
-            ]
-        );
 
     	return $this->membershipModel->create(
     		[
     			'customer_id' => $request->customer_id,
     			'card_id' => $request->card_id,
     			'number' => $number,
+                'date' => $date,
     		]
     	);
     }

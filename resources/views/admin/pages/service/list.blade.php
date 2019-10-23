@@ -15,9 +15,25 @@
                     {{ session('thongbao') }}
                 </div>
             @endif
-            <button style="float: right; margin-bottom: 20px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#myModal">
-            Thêm dịch vụ
-          </button><br>
+            <div class="row">
+                <div class="col-lg-8" style="padding: 0px">
+                    <h3>Tìm kiếm tại đây:</h3>
+                    <div class="input-group">
+                        <input type="text" id="name-service" class="form-control" placeholder="Nhập tên sản phẩm...">
+                        <div class="input-group-append">
+                          <button class="btn btn-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                          </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <button style="float: right; margin-top: 30px" type="button" class="btn btn-primary button-control" data-toggle="modal" data-target="#myModal">
+                    Thêm dịch vụ
+                  </button>
+                </div>
+            </div>
+            <br>
           <!-- The Modal -->
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
@@ -98,7 +114,7 @@
                 </div>
             </div><br>
             <table class="list-table">
-                  <thead>
+                <thead>
                     <tr style="background: #BBDEFB">
                         <th scope="col">STT</th>
                         <th scope="col">Tên dịch vụ</th>
@@ -117,8 +133,8 @@
                             Xóa
                         </th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody id="search-service">
                     @php $stt = 0; @endphp
                     @foreach ($serviceList as $service)
                         <tr>
@@ -152,7 +168,7 @@
                             </td>
                         </tr>
                     @endforeach
-                  </tbody>
+                </tbody>
             </table><br>
             {{ $serviceList->links() }}
             <style type="text/css">

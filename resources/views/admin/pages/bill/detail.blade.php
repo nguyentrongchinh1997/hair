@@ -465,7 +465,7 @@
                                         <option @if ($membership->card->id == $service->card_id) {{ 'selected' }} @endif value="{{ $membership->card->id }}">
                                             {{ $membership->card->card_name }}
                                         </option>
-                                    @elseif ($membership->card->type == 0 && $membership->status == 1 && (strtotime($dateNow) >= strtotime($membership->start_time) && strtotime($dateNow) <= strtotime($membership->end_time)) && (App\Helper\ClassHelper::checkEmptyServiceInCard($service->service->id, $membership->card->id)) > 0)
+                                    @elseif ($membership->card->type == 0 && $membership->status == 1 && strtotime($dateNow) >= strtotime($membership->start_time) && strtotime($dateNow) <= strtotime($membership->end_time) && (App\Helper\ClassHelper::checkEmptyServiceInCard($service->service->id, $membership->card->id)) > 0)
                                         <option @if ($membership->card->id == $service->card_id) {{ 'selected' }} @endif value="{{ $membership->card->id }}">
                                             {{ $membership->card->card_name }}
                                         </option>

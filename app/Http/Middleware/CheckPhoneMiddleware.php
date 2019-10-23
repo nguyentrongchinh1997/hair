@@ -19,7 +19,7 @@ class CheckPhoneMiddleware
         $phone = $request->phone;
         $check = Customer::where('phone', $phone)->count();
 
-        if (strlen($phone) != 10) {
+        if (strlen($phone) != 10 || !is_numeric($phone)) {
             return redirect()->route('client.home')->with('error', 'Sai định dạng số điện thoại, mời bạn nhập lại');
         } elseif (!auth('customers')->check()) {
             return redirect()->route('client.home')->with('error', 'Nhập số điện thoại tại đây');

@@ -273,9 +273,9 @@ h3{
     border: 1px solid #ccc;
     padding: 10px;
 }
-.expense-right table tr td:nth-child(1){
+/*.expense-right table tr td:nth-child(1){
     background: #eee;
-}
+}*/
 .order-detail tr td{
     padding: 5px;
 }

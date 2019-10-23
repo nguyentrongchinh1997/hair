@@ -257,12 +257,19 @@
                             Thời gian
                         </th>
                         <th>
-                            Tổng (vnd)
+                            Chuyển khoản (vnđ)
+                        </th>
+                        <th>
+                            Tổng (vnđ)
                         </th>
                     </tr>
-                    @php $stt = 0; $tongThu = 0; @endphp
+                    @php $stt = 0; $tongThu = 0; $transfer = 0; @endphp
                     <tr style="background: #fcf8e3; font-weight: bold;">
-                        <td class="tong" style="text-align: right; font-size: 20px" colspan="5">
+                        <td colspan="3"></td>
+                        <td class="transfer" style="text-align: right; font-size: 20px">
+                            
+                        </td>
+                        <td class="tong" style="text-align: right; font-size: 20px">
 
                         </td>
                     </tr>
@@ -282,6 +289,16 @@
                                 {{ date('d/m/Y', strtotime($bill->date)) }}
                             </td>
                             <td style="text-align: right;">
+                                @if ($bill->money_transfer != '')
+                                    {{ number_format($bill->money_transfer) }}<sup>đ</sup>
+                                    @php 
+                                        $transfer = $transfer + $bill->money_transfer
+                                    @endphp
+                                @else
+                                    0<sup>đ</sup>
+                                @endif
+                            </td>
+                            <td style="text-align: right;">
                                 {{ number_format($bill->total) }}<sup>đ</sup>
                             </td>
                             @php $tongThu = $tongThu + $bill->total @endphp
@@ -292,6 +309,15 @@
                                 TỔNG
                             </td>
                             <td id="tong" style="text-align: right; font-weight: bold; font-size: 20px">{{ number_format($tongThu) }}<sup>đ</sup></td>
+                        </tr>
+                        <tr style="display: none;">
+                            <td style="text-align: right; font-size: 20px" colspan="3">
+                                Tổng
+                            </td>
+                            <td id="transfer" style="text-align: right; font-size: 20px; font-weight: bold;">
+                                {{ number_format($transfer) }}<sup>đ</sup>
+                            </td>
+                            <td></td>
                         </tr>
                 </table>
             </div>
@@ -311,9 +337,9 @@
                         {{ number_format($tongThu2) }}<sup>đ</sup>
                     </td>
                 </tr>
-                <tr>
-                    <td style="font-size: 18px">
-                        Tổng thu <br> <span style="color: red">(tất cả)</span>
+                <tr style="background: #BBDEFB">
+                    <td style="font-size: 18px; background: #BBDEFB">
+                        Tổng thu <br> <!-- <span style="color: red">(tất cả)</span> -->
                     </td>
                     <td style="text-align: right; font-size: 25px">
                         {{ number_format($tongThu2 + $tongThu) }}<sup>đ</sup>
@@ -326,9 +352,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="font-size: 18px">Dư</td>
+                    <td style="font-size: 18px">Chuyển khoản</td>
                     <td style="text-align: right; font-size: 25px">
-                        {{ number_format($tongThu + $tongThu2 - $tongChi) }}<sup>đ</sup>
+                        {{ number_format($transfer) }}<sup>đ</sup>
+                    </td>
+                </tr>
+                <tr style="background: #BBDEFB">
+                    <td style="font-size: 18px; background: #BBDEFB">Dư</td>
+                    <td style="text-align: right; font-size: 25px">
+                        {{ number_format($tongThu + $tongThu2 - $tongChi - $transfer) }}<sup>đ</sup>
                     </td>
                 </tr>
             </table>
@@ -393,7 +425,7 @@
                             <tr>
                                 <td>Nội dung thu</td>
                                 <td>
-                                    <textarea required="required" placeholder="Nội dung chi tiêu" name="content" class="form-control"></textarea>
+                                    <textarea required="required" placeholder="Nội dung thu" name="content" class="form-control"></textarea>
                                 </td>
                             </tr>
                             <tr>

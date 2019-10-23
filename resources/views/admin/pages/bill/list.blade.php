@@ -95,9 +95,8 @@
                                 </td>
                                 <td class="tong" style="text-align: right; font-size: 20px; font-weight: bold;"></td>
                             </tr>
-                            @php $stt = $billList->count(); $total = 0; $transfer = 0@endphp
+                            @php $stt = $billList->count(); $total = 0; $transfer = 0; @endphp
                             @foreach ($billList as $bill)
-                                <!-- @if ($bill->order->date == $date) -->
                                     <tr title="click để xem chi tiết" style="cursor: pointer;" value="{{ $bill->id }}" class="list-bill" id="bill{{ $bill->id }}">        
                                         <td style="text-align: center; width: 7%">{{ $stt-- }}</td>  
                                         <td>
@@ -126,11 +125,11 @@
                                         </td>
                                         <td style="text-align: right; font-size: 18px">
                                             @php $tong = 0; @endphp
-                                                @foreach ($bill->billDetail as $servicePrice)
-                                                    @php 
-                                                        $tong = $tong + $servicePrice->sale_money; 
-                                                    @endphp
-                                                @endforeach
+                                            @foreach ($bill->billDetail as $servicePrice)
+                                                @php 
+                                                    $tong = $tong + $servicePrice->sale_money; 
+                                                @endphp
+                                            @endforeach
                                             @if ($bill->status == config('config.order.status.check-out'))
                                                 @php 
                                                     $total = $total + $tong - $bill->sale;
@@ -139,7 +138,6 @@
                                             {{ number_format($tong - $bill->sale) }}<sup>đ</sup>
                                         </td>  
                                     </tr>
-                                <!-- @endif -->
                             @endforeach
                             <tr style="display: none;">
                                 <td style="text-align: right; font-size: 20px" colspan="4">

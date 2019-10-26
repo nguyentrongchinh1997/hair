@@ -181,6 +181,7 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <table class="add-bill" style="width: 100%">
                         <tr>
+
                             <td>Số điện thoại</td>
                             <td>
                                 <input id="phone" required="required" placeholder="Số điện thoại khách hàng" type="text" class="form-control input-control" name="phone">
@@ -195,7 +196,8 @@
                         <tr>
                             <td>Dịch vụ</td>
                             <td>
-                                <select name="service_id" class="form-control input-control">
+                                <select class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="service_id">
+                                <!-- <select name="service_id" class="form-control input-control"> -->
                                     @foreach ($serviceList as $service)
                                         <option value="{{ $service->id }}">
                                             {{ $service->name }}
@@ -209,7 +211,8 @@
                                 Thợ chính
                             </td>
                             <td>
-                                <select id="employee_id" name="employee_id" class="form-control input-control">
+                                <select id="employee_id" class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="employee_id">
+                                <!-- <select id="employee_id" name="employee_id" class="form-control input-control"> -->
                                     <option value="0">Chọn thợ chính</option>
                                     @foreach ($employeeList as $employee)
                                         <option value="{{ $employee->id }}">
@@ -224,7 +227,8 @@
                                 Thợ phụ
                             </td>
                             <td>
-                                <select id="assistant_id" name="assistant_id" class="form-control input-control">
+                                <select id="assistant_id" class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="assistant_id">
+                                <!-- <select id="assistant_id" name="assistant_id" class="form-control input-control"> -->
                                     <option value="0">Chọn thợ phụ</option>
                                     @foreach ($employeeList as $employee)
                                         <option value="{{ $employee->id }}">

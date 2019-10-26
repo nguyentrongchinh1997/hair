@@ -495,3 +495,19 @@ $(function(){
         });
     })
 })
+function customerAdd()
+{
+    phone = $('#employee-phone').val();
+
+    if (isNaN(phone)) {
+        alert('Số điện thoại sai định dạng');
+
+        return false;
+    } else if (phone.length != 10) {
+        alert('Số điện thoại phải đủ 10 số');
+
+        return false;
+    } else {
+        return true;
+    }
+}

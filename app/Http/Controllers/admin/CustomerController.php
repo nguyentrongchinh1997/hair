@@ -37,4 +37,18 @@ class CustomerController extends Controller
         return view('admin.pages.customer.list_search', $this->customerService->customerSerachResult($phone));
     }
 
+    public function customerAdd(Request $request)
+    {
+        $this->validate($request,
+            [
+                'phone' => 'unique:customers,phone',
+            ],
+            [
+                'phone.unique' => 'Số điện thoại này đã được thêm',
+            ]
+        );
+        $this->customerService->customerAdd($request->all());
+        
+        return back()->with('thongbao', 'Thêm khách hàng thành công');
+    }
 }

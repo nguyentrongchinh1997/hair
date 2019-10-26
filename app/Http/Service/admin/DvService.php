@@ -72,10 +72,12 @@ class DvService
     {
         if ($serviceName != '') {
             $serviceList = $this->serviceModel->where('name', 'like', '%' . $serviceName . '%')
+                                              ->where('status', 1)
                                               ->orderBy('id', 'desc')
                                               ->get();
         } else {
             $serviceList = $this->serviceModel->where('name', 'like', '%' . $serviceName . '%')
+                                              ->where('status', 1)
                                               ->orderBy('id', 'desc')
                                               ->paginate(8);
         }

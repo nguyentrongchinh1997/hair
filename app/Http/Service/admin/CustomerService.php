@@ -24,7 +24,7 @@ class CustomerService
 
     public function customerListview()
     {
-        $customerList = $this->customerModel->paginate(10);
+        $customerList = $this->customerModel->orderBy('id', 'desc')->paginate(10);
         $data = [
             'customerList' => $customerList
         ];
@@ -75,5 +75,22 @@ class CustomerService
         ];
 
         return $data;
+    }
+
+    public function customerAdd($inputs)
+    {
+        $name = $inputs['full_name'];
+        $phone = $inputs['phone'];
+        $birthday = $inputs['birthday'];
+
+        return $this->customerModel->create(
+            [
+                'full_name' => $name,
+                'phone' => $phone,
+                'birthday' => $birthday,
+                'password' => bcrypt($phone),
+                'balance' => 0,
+            ]
+        );
     }
 }

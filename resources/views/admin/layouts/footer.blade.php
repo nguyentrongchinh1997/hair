@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-vi_VN.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.bundle.min.js"></script>
 <!-- end -->
-    <script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
+    
     <script src="{{ asset('js/admin/choosen.js') }}"></script>
     <script type="text/javascript">
         $(function(){
@@ -15,6 +15,7 @@
         })
         
     </script>
+    <script src="{{ asset('/js/bootstrap/js/bootstrap.min.js') }}"></script>
     @if(Request::is('admin/chi-tieu/danh-sach') || Request::is('admin/nhan-vien/danh-sach'))
     <script async src="{{ asset('/js/datepicker/js/button.js') }}"></script>
     <script src="{{ asset('/js/datepicker/js/moment.min.js') }}"></script>

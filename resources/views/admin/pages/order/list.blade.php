@@ -217,7 +217,7 @@
                                                 @foreach ($stylist as $stylist)
                                                     @if ($stylist->service_id == config('config.employee.type.stylist'))
                                                         <option value="{{ $stylist->id }}">
-                                                            {{ $stylist->id }}-{{ $stylist->full_name }}
+                                                            {{ $stylist->full_name }}
                                                         </option>
                                                     @endif
                                                 @endforeach
@@ -235,7 +235,7 @@
                                                 @foreach ($skinner as $skinner)
                                                     @if ($skinner->service_id == config('config.employee.type.skinner'))
                                                         <option value="{{ $skinner->id }}">
-                                                            {{ $skinner->id }}-{{ $skinner->full_name }}
+                                                            {{ $skinner->full_name }}
                                                         </option>
                                                     @endif
                                                 @endforeach

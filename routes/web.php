@@ -166,6 +166,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::get('chi-tiet/{id}', 'admin\CustomerController@viewDetailCustomer');
 
         Route::get('tim-kiem/{phone}', 'admin\CustomerController@customerSerachResult');
+
+        Route::post('them', 'admin\CustomerController@customerAdd')->name('customer.add');
     });
 
     Route::group(['prefix' => 'hoa-don'], function(){
@@ -199,6 +201,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
         Route::get('kiem-tra-the/{idBillDetail}/{cardId}', 'admin\BillController@cardCheck');
 
         Route::get('khoi-phuc/{idBillDetail}', 'admin\BillController@priceRestore');
+
+        Route::get('tho-chinh/phan-tram', 'admin\BillController@percentStylist');
+
+        Route::get('tho-phu/phan-tram', 'admin\BillController@percentStylist');
     });
 
     Route::group(['prefix' => 'danh-gia', 'middleware' => 'accessMiddleware'], function(){

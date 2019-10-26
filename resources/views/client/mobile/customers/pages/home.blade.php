@@ -39,7 +39,7 @@
                         </span>
                         
                     </div>
-                    <div class="col-5 col-lg-8" style="padding: 0px">
+                    <!-- <div class="col-5 col-lg-8" style="padding: 0px">
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 30%"></td>
@@ -49,7 +49,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-lg-12">
@@ -80,7 +80,7 @@
                         </span>
                         
                     </div>
-                    <div class="col-5 col-lg-8" style="padding: 0px">
+                    <!-- <div class="col-5 col-lg-8" style="padding: 0px">
                         <table style="width: 100%">
                             <tr>
                                 <td style="width: 30%"></td>
@@ -90,7 +90,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-lg-12">

@@ -11,7 +11,7 @@
         }
         return x1 + x2;
     }
-    $('#price-dif, #sale').keyup(function(event) {
+    $('#price-dif, #sale, #money-employee, #money-assistant').keyup(function(event) {
       // skip for arrow keys
       if(event.which >= 37 && event.which <= 40) return;
       // format number
@@ -194,6 +194,14 @@
                         </tr>
                         <tr>
                             <td>
+                                Giá dịch vụ
+                            </td>
+                            <td>
+                                <input type="text" id="price-dif" id="formattedNumberField" placeholder="Điền giá dịch vụ..." class="form-control input-control" name="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 Chọn thợ chính
                             </td>
                             <td>
@@ -219,11 +227,21 @@
                                     <tr>
                                         <td>
                                             <label style="margin-top: 8px; font-weight: bold">
+                                                Chiết khấu (vnd)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="money-employee" placeholder="số tiền cho thợ chính" type="text" class="form-control input-control" name="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label style="margin-top: 8px; font-weight: bold">
                                                 Chiết khấu (%)
                                             </label>
                                         </td>
                                         <td>
-                                            <input id="percent-employee" placeholder="% thợ chính" type="number" class="form-control input-control" name="">
+                                            <input id="percent-employee" placeholder="% thợ chính..." type="text" class="form-control input-control" name="">
                                         </td>
                                     </tr>
                                 </table>
@@ -254,24 +272,27 @@
                                     <tr>
                                         <td>
                                             <label style="margin-top: 8px; font-weight: bold">
+                                                Chiết khấu (vnd)
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input id="money-assistant" placeholder="Số tiền cho thợ chính..." type="text" class="input-control form-control" name="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label style="margin-top: 8px; font-weight: bold">
                                                 Chiết khấu (%)
                                             </label>
                                         </td>
                                         <td>
-                                            <input id="percent-assistant" placeholder="% thợ phụ" type="number" class="input-control form-control" name="">
+                                            <input id="percent-assistant" placeholder="% thợ phụ" type="text" class="input-control form-control" name="">
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                Giá dịch vụ
-                            </td>
-                            <td>
-                                <input type="text" id="price-dif" id="formattedNumberField" placeholder="Điền giá dịch vụ..." class="form-control input-control" name="">
-                            </td>
-                        </tr>
+                        
                         <tr>
                             <td></td>
                             <td>
@@ -323,12 +344,31 @@
                                             if (assistantId == 0) {
                                                 nameAssistant = '';
                                             }
-                                            $('#service-dif, #percent-employee, #percent-assistant, #price-dif').val('');
+                                            $('#service-dif, #percent-employee, #percent-assistant, #price-dif, #money-employee').val('');
                                             $('#list-table').append(data);
                                         } else {
                                             alert('Hóa đơn đã được thanh toán, bạn không thể thêm dịch vụ.');
                                         }
                                     });
+                                }
+                            })
+                            $('#money-employee, #price-dif').keyup(function(){
+                                moneyEmployee = $('#money-employee').val();
+                                priceDif = $('#price-dif').val();
+                                if (moneyEmployee != '') {
+                                    $.get('admin/hoa-don/tho-chinh/phan-tram?money=' + moneyEmployee + '&price=' + priceDif, function(data){
+                                        $('#percent-employee').val(data);
+                                    })
+                                }
+                                
+                            })
+                            $('#money-assistant, #price-dif').keyup(function(){
+                                moneyAssistant = $('#money-assistant').val();
+                                priceDif = $('#price-dif').val();
+                                if (moneyAssistant != '') {
+                                    $.get('admin/hoa-don/tho-phu/phan-tram?money=' + moneyAssistant + '&price=' + priceDif, function(data){
+                                        $('#percent-assistant').val(data);
+                                    })
                                 }
                             })
                         </script>
@@ -398,7 +438,7 @@
                                         <option value="0">Chọn thợ phụ (nếu cần)</option>
                                     @foreach ($employeeList as $employee)
                                             <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
-                                                {{ $employee->id }}-{{ $employee->full_name }}
+                                                {{ $employee->full_name }}
                                             </option>
                                     @endforeach
                                 </select>

@@ -117,4 +117,18 @@ class BillController extends Controller
     {
         echo $this->billService->priceRestore($idBillDetail);
     }
+
+    public function percentStylist(Request $request) {
+        $money = str_replace(',', '', $request->get('money'));
+        $price = str_replace(',', '', $request->get('price'));
+        $percent = ($money/$price) * 100;
+        echo number_format((float)$percent, 1);
+    }
+
+    public function percentSkinner(Request $request) {
+        $money = str_replace(',', '', $request->get('money'));
+        $price = str_replace(',', '', $request->get('price'));
+        $percent = ($money/$price) * 100;
+        echo number_format((float)$percent, 1);
+    }
 }

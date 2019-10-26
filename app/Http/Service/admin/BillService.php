@@ -254,26 +254,7 @@ class BillService
         $date = date('Y-m-d');
         $bill = $this->billModel->findOrFail($billId);
         $service = $this->serviceModel->findOrFail($serviceId);
-    //     $checkMembership = $this->membershipModel->where('customer_id', $bill->order->customer_id)
-    //                                             ->first();
-    // /*kiểm tra thẻ hội viên*/
-    //     if (isset($checkMembership)) {
-    //         $detailCard = $this->cardDetailModel->where('card_id', $checkMembership->card_id)
-    //                                           ->where('service_id', $serviceId)
-    //                                           ->first();
-    //         if (strtotime($date) <= strtotime($checkMembership->end_time) && isset($detailCard)) {
-    //             $cardName = $checkMembership->card->card_name;
-    //             $saleMoney = $service->price - ($service->price * $detailCard->percent/100);
-    //         } else {
-    //             $saleMoney = $service->price;
-    //             $cardName = '';
-    //         }
-    //     } else {
-    //         $saleMoney = $service->price;
-    //         $cardName = '';
-    //     }
-    // /*end*/
-
+    
         if ($assistantId == 0) {
             $assistantId = NULL;
         }
@@ -301,7 +282,7 @@ class BillService
                     'employee_id' => $employeeId,
                     'bill_detail_id' => $id,
                     'percent' => $percent,
-                    'date' => date('Y-m-d'),
+                    'date' => $bill->date,
                 ]
             );
             if ($assistantId != 0) {
@@ -392,7 +373,7 @@ class BillService
                     'employee_id' => $employeeId,
                     'bill_detail_id' => $id,
                     'percent' => $percentEmployee,
-                    'date' => date('Y-m-d'),
+                    'date' => $bill->date,
                 ]
             );
             if ($assistantId != 0) {

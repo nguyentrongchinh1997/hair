@@ -291,7 +291,7 @@ class BillService
                         'employee_id' => $assistantId,
                         'bill_detail_id' => $id,
                         'percent' => $service->assistant_percent,
-                        'date' => date('Y-m-d'),
+                        'date' => $bill->date,
                     ]
                 );
             }
@@ -382,7 +382,7 @@ class BillService
                         'employee_id' => $assistantId,
                         'bill_detail_id' => $id,
                         'percent' => $percentAssistant,
-                        'date' => date('Y-m-d'),
+                        'date' => $bill->date,
                     ]
                 );
             }
@@ -502,7 +502,7 @@ class BillService
                     'employee_id' => $request->assistant_id,
                     'bill_detail_id' => $billDetailId,
                     'percent' => $percentAssistant,
-                    'date' => date('Y-m-d'),
+                    'date' => $date,
                 ]
             );
         }
@@ -513,7 +513,7 @@ class BillService
                 'employee_id' => $request->employee_id,
                 'bill_detail_id' => $billDetailId,
                 'percent' => $percentEmployee,
-                'date' => date('Y-m-d'),
+                'date' => $date,
             ]
         );
 

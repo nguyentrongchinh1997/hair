@@ -74,13 +74,6 @@ class BillController extends Controller
         return view('admin.ajax.add_service_other', ['data' => $data]);
     }
 
-    // public function pay(Request $request, $billId)
-    // {
-    //     $this->adminService->pay($billId, $request->price_service);
-
-    //     return back();
-    // }
-
     public function updateCashier($billId)
     {
         $this->billService->updateCashier($billId);
@@ -130,5 +123,12 @@ class BillController extends Controller
         $price = str_replace(',', '', $request->get('price'));
         $percent = ($money/$price) * 100;
         echo number_format((float)$percent, 1);
+    }
+
+    public function addBillHand(Request $request)
+    {
+        $this->billService->addBillHand($request);
+
+        return back()->with('thongbao', 'thêm hóa đơn thành công');
     }
 }

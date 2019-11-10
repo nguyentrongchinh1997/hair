@@ -88,6 +88,8 @@ class OrderService
         $bill_id = $this->billModel->insertGetId([
             'customer_id' => $order->customer_id,
             'order_id' => $orderId,
+            'time_id' => $order->time_id,
+            'request' => $order->request,
             'date' => $order->date,
             'created_at' => date('Y-m-d H:i:s'),
             'status' => config('config.order.status.check-in'),

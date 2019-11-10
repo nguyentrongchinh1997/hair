@@ -14,7 +14,7 @@ class UpdateOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dateTime('date')->after('time')->comment('Ngày khách đặt lịch');
+            $table->dateTime('date')->after('time_id')->comment('Ngày khách đặt lịch');
         });
     }
 

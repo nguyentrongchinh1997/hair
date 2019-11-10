@@ -194,6 +194,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
 
         Route::post('them', 'admin\BillController@addBill')->name('bill.add');
 
+        Route::post('them-tay', 'admin\BillController@addBillHand')->name('bill.add.hand');
+
         Route::get('danh-gia/{billId}', 'admin\BillController@rateUpdate');
 
         Route::get('in/{id}', 'admin\BillController@printBill')->name('bill.print');

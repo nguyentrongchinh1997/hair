@@ -101,13 +101,15 @@ class BillService
                 'money_transfer' => $moneyTransfer,
             ]
         );
-
-        $this->orderModel->updateOrCreate(
-            ['id' => $bill->order_id],
-            [
-                'status' => 2,
-            ]
-        );
+        if ($bill->order_id != '') {
+            $this->orderModel->updateOrCreate(
+                ['id' => $bill->order_id],
+                [
+                    'status' => 2,
+                ]
+            );
+        }
+        
         return $this->customerModel->updateOrCreate(
             ['id' => $bill->customer_id],
             ['balance' => $balanceUpdate]
@@ -659,5 +661,61 @@ class BillService
         );
 
         return number_format($billDetail->money) . '<sup>đ</sup>';
+    }
+
+    public function addBillHand($request)
+    {
+        $price = str_replace(',', '', $request->price);
+        $employeeId = $request->employee_id;
+        $customerId = $this->customerModel->updateOrCreate(
+            ['phone' => $request->phone],
+            [
+                'full_name' => $request->full_name,
+            ]
+        );
+        $bill = $this->billModel->create(
+            [
+                'customer_id' => $customerId->id,
+                'price' => $price,
+                'status' => config('config.order.status.check-in'),
+                'date' => $request->date,
+                'time_id' => $request->time_id,
+                'request' => $request->requirement,
+            ]
+        );
+
+        if ($request->assistant_id == 0) {
+            $assistantId = NULL;
+        } else {
+            $assistantId = $request->assistant_id;
+        }
+        $billDetail = $this->billDetailModel->create(
+            [
+                'bill_id' => $bill->id,
+                'employee_id' => $employeeId,
+                'assistant_id' => $assistantId,
+                'money' => $price,
+                'sale_money' => $price,
+                'other_service' => $request->name_service,
+                'date' => $request->date,
+            ]
+        );
+        if ($request->assistant_id != 0) {
+            $this->employeeCommisionModel->create(
+                [
+                    'employee_id' => $assistantId,
+                    'bill_detail_id' => $billDetail->id,
+                    'percent' => $request->percent_assistant,
+                ]
+            );
+        }
+        return $this->employeeCommisionModel->create(
+            [
+                'employee_id' => $employeeId,
+                'bill_detail_id' => $billDetail->id,
+                'percent' => $request->percent_employee,
+            ]
+        );
+
     }
 }

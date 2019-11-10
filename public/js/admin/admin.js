@@ -139,6 +139,44 @@ function validateBillAdd()
 
     return false;
 }
+function validateBillAddHand()
+{
+  employee_id = $('#employee-id').val();
+  assistant_id = $('#assistant_id_hand').val();
+  percent_assistant = $('#percent-assistant').val();
+  noRequest = $('.no-request:radio:checked').length;
+  request = $('.request:radio:checked').length;
+  phone = document.getElementById('phone-hand').value;
+    if (isNaN(phone)) {
+      alert('Số điện thoại không đúng định dạng');
+
+    return false;
+    } else if (phone.length != 10) {
+      alert('Số điện thoại phải đủ 10 số');
+
+      return false;
+    } else if (employee_id == 0) {
+      alert('Chưa chọn thợ chính');
+
+      return false;
+    } else if (noRequest == 0 && request == 0) {
+      alert('Cần tích yêu cầu hoặc không yêu cầu');
+
+      return false;
+    } else if (assistant_id != 0 && percent_assistant == '') {
+        alert('Cần điền chiết khấu % cho thợ phụ');
+
+        return false;
+    } else if (percent_assistant > 0 && assistant_id == 0) {
+        alert('Cần chọn thợ phụ');
+
+        return false;
+    } else {
+        return true;
+    }
+
+    return false;
+}
 
 function editService(id)
 {
@@ -358,14 +396,16 @@ function validateEmployeeEdit()
 $('#name-employee').keyup(function(){
     type = $('#type').val();
     date = $('#date-search').val();
+    today = $('#today').val();
+    numberDays = $('#number-day').val();
     employeeName = $('#name-employee').val();
 
     if (employeeName != '') {
-        $.get('admin/nhan-vien/tim-kiem?name=' + employeeName + '&type=' + type + '&date=' + date, function(data){
+        $.get('admin/nhan-vien/tim-kiem?name=' + employeeName + '&type=' + type + '&date=' + date + '&number=' + numberDays + '&today=' + today, function(data){
             $('#result-search').html(data);
         })  
     } else {
-        $.get('admin/nhan-vien/tim-kiem?name=null' + '&type=' + type + '&date=' + date, function(data){
+        $.get('admin/nhan-vien/tim-kiem?name=null' + '&type=' + type + '&date=' + date + '&number=' + numberDays + '&today=' + today, function(data){
             $('#result-search').html(data);
         })
     }
@@ -430,6 +470,10 @@ function check3()
 }
 $(function(){
     $('.tong').html($('#tong').html());
+    $('.revenue').html($('#revenue').html());
+    $('.cam-ve').html($('#cam-ve').html());
+    $('.salary').html($('#salary').html());
+    $('.profit').html($('#profit').html());
     $('.transfer').html($('#transfer').html());
     $('.tong-chi').html($('#tong-chi').html());
     $('.tong-thu').html($('#tong-thu').html());
@@ -487,6 +531,12 @@ $(function(){
             $('#name-customer').val(data);
         })
     })
+    $('#phone-hand').keyup(function(){
+        phone = $('#phone-hand').val();
+        $.get('admin/dat-lich/tim-kiem/khach-hang?phone=' + phone, function(data){
+            $('#name-customer-hand').val(data);
+        })
+    })
 
     $('#name-service').keyup(function(){
         nameService = $('#name-service').val();
@@ -511,3 +561,45 @@ function customerAdd()
         return true;
     }
 }
+function addCommas(nStr)
+    {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+$(function(){
+    $('#percent-employee, .service-price-hand, #percent-assistant').keyup(function(){
+        price = $('.service-price-hand').val();
+        priceFormat = price.replace(/[,]/g,'');
+        percent = $('#percent-employee').val();
+        percentAssistant = $('#percent-assistant').val();
+        moneyEmployee = parseFloat(percent/100 * priceFormat);
+        moneyAssistant = parseFloat(percentAssistant/100 * priceFormat);
+        if (price != '') {
+            $('#money-hand').val(addCommas(parseFloat(moneyEmployee).toFixed(0)));
+            $('#money-assistant-hand').val(addCommas(parseFloat(moneyAssistant).toFixed(0)));
+        } else {
+            $('#money-hand').val('');
+            $('#money-assistant-hand').val('');
+        }
+        
+    })
+    $('#money-assistant-hand, #money-hand').keyup(function(){
+        price = $('.service-price-hand').val();
+        priceFormat = price.replace(/[,]/g,'');
+        moneyAssistant = $('#money-assistant-hand').val();
+        moneyAssistantFormat = moneyAssistant.replace(/[,]/g,'');
+        moneyEmployee = $('#money-hand').val();
+        moneyEmployeeFormat = moneyEmployee.replace(/[,]/g,'');
+        percentAssistant = parseFloat(moneyAssistantFormat/priceFormat * 100);
+        percentEmployee = parseFloat(moneyEmployeeFormat/priceFormat * 100);
+        $('#percent-assistant').val(addCommas(parseFloat(percentAssistant).toFixed(1)));
+        $('#percent-employee').val(addCommas(parseFloat(percentEmployee).toFixed(1)));
+    })
+})

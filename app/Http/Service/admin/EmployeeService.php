@@ -53,7 +53,9 @@ class EmployeeService
                             ->orderBy('created_at', 'desc')
                             ->get();
         $serviceList = $this->serviceModel->all();
+        $numberDays = cal_days_in_month(CAL_GREGORIAN, $month, $year); // đếm số ngày
         $data = [
+            'today' => $today,
             'type' => $type,
             'date_start' => '',
             'date_end' => '',
@@ -61,6 +63,7 @@ class EmployeeService
             'month' => $month,
             'employeeList' => $employeeList,
             'serviceList' => $serviceList,
+            'numberDays' => $numberDays,
         ];
 
         return $data;
@@ -79,7 +82,9 @@ class EmployeeService
                                 ->orderBy('created_at', 'desc')
                                 ->get();
             $serviceList = $this->serviceModel->all();
+            $numberDays = cal_days_in_month(CAL_GREGORIAN, $month, $year); // đếm số ngày
             $data = [
+                'today' => $today,
                 'date_end' => '',
                 'date_start' => '',
                 'type' => $type,
@@ -87,6 +92,7 @@ class EmployeeService
                 'month' => $month,
                 'employeeList' => $employeeList,
                 'serviceList' => $serviceList,
+                'numberDays' => $numberDays,
             ];
         } else if ($type == 'between') {
             $month = date('m');
@@ -95,6 +101,14 @@ class EmployeeService
             $startTimeFormat = date('Y-m-d', strtotime($startTime));
             $endTime = str_replace('/', '-', $request->date_end);
             $endTimeFormat = date('Y-m-d', strtotime($endTime));
+            $today = $startTimeFormat . '@@@' . $endTimeFormat;
+        // đếm số ngày
+            $startTimeStamp = strtotime($startTimeFormat);
+            $endTimeStamp = strtotime($endTimeFormat);
+            $timeDiff = abs($endTimeStamp - $startTimeStamp);
+            $numberDays = $timeDiff/86400;  // 86400 seconds in one day
+            $numberDays = intval($numberDays) + 1;
+        //end
             $employeeList = $this->employeeModel
                                 ->with(['employeeCommision' => function($q) use ($startTimeFormat, $endTimeFormat){
                                     $q->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
@@ -103,6 +117,7 @@ class EmployeeService
                                 ->get();
             $serviceList = $this->serviceModel->all();
             $data = [
+                'today' => $today,
                 'date_end' => $request->date_end,
                 'date_start' => $request->date_start,
                 'type' => $type,
@@ -110,6 +125,7 @@ class EmployeeService
                 'month' => $month,
                 'employeeList' => $employeeList,
                 'serviceList' => $serviceList,
+                'numberDays' => $numberDays,
             ];
         }
         
@@ -209,7 +225,14 @@ class EmployeeService
                                           ->with(['bill' => function($query) use ($date){
                                                 $query->where('date', 'like', $date . '%');
                                               }])
-                                          ->get();            
+                                          ->get();  
+            $billId = $this->billDetailModel->where('date', 'like', $date . '%')
+                                                  ->where(function($query) use ($employeeId){
+                                                        $query->where('employee_id', $employeeId)
+                                                              ->orWhere('assistant_id', $employeeId);
+                                                  })
+                                                  ->get()
+                                                  ->groupBy('bill_id');
         } elseif ($type == 'between') {
             $startTime = explode('-', $date)[0];
             $startTimeFormat = date('Y-m-d', strtotime(str_replace('/', '-', $startTime)));
@@ -227,6 +250,13 @@ class EmployeeService
                                             $query->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
                                           }])
                                           ->get();
+            $billId = $this->billDetailModel->whereBetween('date', [$startTimeFormat, $endTimeFormat])
+                                                  ->where(function($query) use ($employeeId){
+                                                        $query->where('employee_id', $employeeId)
+                                                              ->orWhere('assistant_id', $employeeId);
+                                                  })
+                                                  ->get()
+                                                  ->groupBy('bill_id');
         }
         /*đêm đánh giá*/
             $rate1 = $rate2 = $rate3 = 0;
@@ -250,6 +280,7 @@ class EmployeeService
             'employee' => $employee,
             'date' => $date,
             'commisionList' => $commisionList,
+            'billId' => $billId,
         ];
 
         return $data;
@@ -259,6 +290,8 @@ class EmployeeService
     {
         $employeeName = $request->get('name');
         $type = $request->get('type');
+        $today = $request->get('today');
+        $numberDays = $request->get('number');
         $date = $request->date;
 
         if ($employeeName == 'null') {
@@ -308,6 +341,8 @@ class EmployeeService
         $data = [
             'type' => $type,
             'employeeList' => $employeeList,
+            'numberDays' => $numberDays,
+            'today' => $today,
         ];
 
         return $data;

@@ -14,7 +14,7 @@ class AddPercentColumnInCardDetailsTable extends Migration
     public function up()
     {
         Schema::table('card_details', function (Blueprint $table) {
-            $table->float('percent', 15, 2)->after('card_id')->comment('% chiết khấu dịch vụ thẻ hội viên')->default(0);
+            $table->float('percent', 15, 2)->after('card_id')->comment('% chiết khấu dịch vụ thẻ hội viên')->default(0)->change();
         });
     }
 

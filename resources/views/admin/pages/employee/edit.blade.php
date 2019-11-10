@@ -72,7 +72,7 @@
         <tr>
             <td></td>
             <td>
-                <input class="btn btn-primary input-control" value="Sửa" type="submit" name="">
+                <input class="btn btn-primary input-control" value="XONG" type="submit" name="">
             </td>
         </tr>
     </table>

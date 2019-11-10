@@ -15,4 +15,9 @@ class Time extends Model
     {
     	return $this->hasMany(Order::class);
     }
+
+    public function bill()
+    {
+    	return $this->hasMany(Bill::class);
+    }
 }

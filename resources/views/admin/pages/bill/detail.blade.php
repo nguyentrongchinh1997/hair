@@ -56,7 +56,7 @@
                     <td>:</td>
                     <td style="text-align: right;">
                         <span style="font-weight: bold;">
-                            {{ $bill->order->customer->full_name }}
+                            {{ $bill->customer->full_name }}
                         </span>
                     </td>
                 </tr>
@@ -66,7 +66,7 @@
                     </td>
                     <td>:</td>
                     <td style="text-align: right; font-weight: bold;">
-                        <span>{{ number_format($bill->order->customer->balance) }}</span><sup>đ</sup>
+                        <span>{{ number_format($bill->customer->balance) }}</span><sup>đ</sup>
                     </td>
                 </tr>
                 <tr>
@@ -85,7 +85,7 @@
     </div><hr>
     <div class="col-lg-12">
         <input type="hidden" id="bill_id" value="{{ $bill->id }}" class="id-order" name="">
-        <input type="hidden" id="employee_id" value="{{ $bill->order->employee_id }}" class="customer-id">
+        
         <input type="hidden" id="price_total" value="{{ $moneyServiceTotal }}" name="">
         <table style="width: 100%" class="list-table">
             @if ($bill->customer->membership->count() > 0)
@@ -176,7 +176,7 @@
             </button>
         @endif
         <div class="modal fade" id="service-other">
-            <div class="modal-dialog">
+            <div class="modal-dialog" style="max-width: 600px">
               <div class="modal-content">
                 <div class="modal-header">
                   <h3 class="modal-title">Thêm dịch vụ khác</h3>
@@ -189,7 +189,7 @@
                                 Tên dịch vụ
                             </td>
                             <td>
-                                <input type="text" id="service-dif" placeholder="Nhập tên dịch vụ..." class="form-control input-control" name="">
+                                <input autofocus type="text" id="service-dif" placeholder="Nhập tên dịch vụ..." class="form-control input-control" name="">
                             </td>
                         </tr>
                         <tr>
@@ -217,7 +217,7 @@
                                             <select onchange="employeeForServiceOther()" id="employeeForServiceOther" class="option-employee form-control input-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
-                                                    <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                    <option value="{{ $employee->id }}">
                                                         {{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
@@ -262,7 +262,7 @@
                                             <select onchange="employeeAssistantForServiceOther()" id="employee-assistant-for-service-other" class="option-employee form-control input-control">
                                                 <option value="0">Chọn thợ</option>
                                                 @foreach ($employeeList as $employee)
-                                                    <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                                    <option value="{{ $employee->id }}">
                                                             {{ $employee->full_name }}
                                                     </option>
                                                 @endforeach
@@ -419,7 +419,7 @@
                                 <select onchange="optionEmployee()" id="option-employee" class="option-employee form-control input-control">
                                         <option value="0">Chọn thợ chính</option>
                                     @foreach ($employeeList as $employee)
-                                            <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                            <option value="{{ $employee->id }}">
                                                 {{ $employee->full_name }}
                                             </option>
                                     @endforeach
@@ -437,7 +437,7 @@
                                 <select onchange="optionAssistant()" class="assistant form-control input-control">
                                         <option value="0">Chọn thợ phụ (nếu cần)</option>
                                     @foreach ($employeeList as $employee)
-                                            <option @if ($employee->id == $bill->order->employee_id) {{ 'selected' }} @endif value="{{ $employee->id }}">
+                                            <option value="{{ $employee->id }}">
                                                 {{ $employee->full_name }}
                                             </option>
                                     @endforeach

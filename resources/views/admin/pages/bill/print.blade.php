@@ -2,13 +2,13 @@
 
 	<p>Ngày: {{ date('d/m/Y', strtotime($bill->date)) }}</p>
 	<p>
-		KH: {{ $bill->order->customer->full_name }}
+		KH: {{ $bill->customer->full_name }}
 	</p>
 	<p>
-		SĐT: {{ $bill->order->customer->phone }}
+		SĐT: {{ $bill->customer->phone }}
 	</p>
 	<p>
-		Giờ book: {{ $bill->order->time->time }}
+		Giờ book: {{ $bill->time->time }}
 	</p>
 
 	<table>

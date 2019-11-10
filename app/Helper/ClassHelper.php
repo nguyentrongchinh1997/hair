@@ -7,6 +7,7 @@ use App\Model\BillDetail;
 use App\Model\OrderDetail;
 use App\Model\Order;
 use App\Model\Card;
+use App\Model\EmployeeCommision;
 
 class ClassHelper
 {
@@ -21,6 +22,7 @@ class ClassHelper
                             ->first();
         return $customerName;
     }
+
 /*Lấy những hóa đơn đã check-in (đang hoạt động)*/
     public static function getBillId()
     {
@@ -148,5 +150,44 @@ class ClassHelper
 
         return $card->count();
     }
-}
 
+    public static function revenueMonth($employeeId, $date)
+    {
+        $revenue = 0;
+        $commision = EmployeeCommision::where('date', 'like', $date . '%')
+                                        ->where('employee_id', $employeeId)
+                                        ->get();
+        foreach ($commision as $commision) {
+            $revenue = $revenue + $commision->billDetail->money;
+        }
+
+        return $revenue;
+    }
+
+    public static function revenueDay($employeeId, $date)
+    {
+        $revenue = 0;
+        $dateStart = explode('@@@', $date)[0];
+        $dateEnd = explode('@@@', $date)[1];
+        $commision = EmployeeCommision::whereBetween('date', [$dateStart, $dateEnd])
+                                        ->where('employee_id', $employeeId)
+                                        ->get();
+        foreach ($commision as $commision) {
+            $revenue = $revenue + $commision->billDetail->money;
+        }
+
+        return $revenue;
+    }
+/*khách số*/
+    public static function countCustomer($billId)
+    {
+        $customer = Bill::findOrFail($billId);
+
+        if ($customer->request == config('config.request.yes')) {
+            return 1;
+        } else if ($customer->request == config('config.request.no')) {
+            return 0;
+        }
+    }
+/*end*/
+}

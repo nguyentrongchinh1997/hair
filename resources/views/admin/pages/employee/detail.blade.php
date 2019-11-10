@@ -29,6 +29,41 @@
 			</tr>
 		</table><hr>
 		<h3 style="text-align: center; margin-bottom: 20px">
+			Thống kê khách<br> (
+				<span style="color: #007bff">
+					@if ($type == 'month')
+						{{ date('m/Y', strtotime($date)) }}
+					@else
+						<span style="color: #000">từ</span> {{ explode('-', $date)[0] }}<span style="color: #000"> đến </span>{{ explode('-', $date)[1] }}
+					@endif
+				</span>)
+		</h3>
+		<table class="list-table">
+			<tr style="background: #BBDEFB">
+				<th style="text-align: center;">Khách số</th>
+				<th style="text-align: center;">Khách quen</th>
+				
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					@php 
+						$khachSo = 0; $khachQuen = 0;
+					@endphp
+					@foreach ($billId as $id => $billDetail)
+						@if (\App\Helper\ClassHelper::countCustomer($id) == 1)
+							@php $khachQuen++; @endphp
+						@else
+							@php $khachSo++; @endphp
+						@endif
+					@endforeach
+					{{ $khachSo }}
+				</td>
+				<td style="text-align: center;">
+					{{ $khachQuen }}
+				</td>
+			</tr>
+		</table><br>
+		<h3 style="text-align: center; margin-bottom: 20px">
 			Đánh giá của khách<br> (
 				<span style="color: #007bff">
 					@if ($type == 'month')
@@ -98,7 +133,7 @@
 							{{ $commision->percent }}%
 						</td>
 						<td>
-							{{ date('d/m/Y', strtotime($commision->billDetail->bill->order->date)) }}
+							{{ date('d/m/Y', strtotime($commision->billDetail->date)) }}
 						</td>
 						<td style="text-align: right; font-size: 20px; font-weight: bold;">
 							{{ number_format($commision->percent/100 * $commision->billDetail->money) }}<sup>đ</sup>

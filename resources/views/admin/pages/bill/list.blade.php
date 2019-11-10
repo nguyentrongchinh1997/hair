@@ -59,7 +59,7 @@
                     </table>
                 </form><br>
                 <div class="row">
-                    <div class="col-lg-8" style="padding-left: 0px">
+                    <div class="col-lg-7" style="padding-left: 0px">
                         <h3>Tìm kiếm tại đây:</h3>
                         <div class="input-group">
                             <input type="text" id="key-search" class="form-control" placeholder="Nhập số điện thoại hoặc tên khách hàng...">
@@ -70,7 +70,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" style="padding-right: 0px">
+                    <div class="col-lg-3" style="padding-right: 0px">
+                        <button style=" margin-top: 30px" type="button" class="button-control btn btn-primary" data-toggle="modal" data-target="#billhand">Thêm tay</button><br>
+                    </div>
+                    <div class="col-lg-2" style="padding-right: 0px">
                         <button style="float: right; margin-top: 30px" type="button" class="button-control btn btn-primary" data-toggle="modal" data-target="#billAdd">Thêm hóa đơn</button><br>
                     </div><br>
                 </div>
@@ -184,7 +187,7 @@
 
                             <td>Số điện thoại</td>
                             <td>
-                                <input id="phone" required="required" placeholder="Số điện thoại khách hàng" type="text" class="form-control input-control" name="phone">
+                                <input autofocus id="phone" required="required" placeholder="Số điện thoại khách hàng" type="text" class="form-control input-control" name="phone">
                             </td>
                         </tr>
                         <tr>
@@ -197,9 +200,10 @@
                             <td>Dịch vụ</td>
                             <td>
                                 <select class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="service_id">
+                                    <option value="0">Chọn dịch vụ</option>
                                 <!-- <select name="service_id" class="form-control input-control"> -->
                                     @foreach ($serviceList as $service)
-                                        <option value="{{ $service->id }}">
+                                        <option percent="{{ $service->percent }}" value="{{ $service->id }}">
                                             {{ $service->name }}
                                         </option>
                                     @endforeach
@@ -219,7 +223,7 @@
                                             {{ $employee->full_name }}
                                         </option>
                                     @endforeach
-                                </select>
+                                </select><br>
                             </td>
                         </tr>
                         <tr>
@@ -276,6 +280,159 @@
           <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+  </div>
+</div>
+<div class="modal fade" id="billhand">
+    <div class="modal-dialog" style="max-width: 600px !important">
+        <div class="modal-content">
+      <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">THÊM HÓA ĐƠN THỦ CÔNG</h3>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+          <!-- Modal body -->
+            <div class="modal-body">
+                <form onsubmit = "return validateBillAddHand()" method="post" action="{{ route('bill.add.hand') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <table class="add-bill" style="width: 100%">
+                        <tr>
+
+                            <td>Số điện thoại</td>
+                            <td>
+                                <input autofocus id="phone-hand" required="required" placeholder="Số điện thoại khách hàng" type="text" class="form-control input-control" name="phone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tên khách hàng</td>
+                            <td>
+                                <input id="name-customer-hand" placeholder="Nhập tên khách hàng..." type="text" required="required" class="form-control input-control" name="full_name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tên dịch vụ</td>
+                            <td>
+                                <input required="required" placeholder="Tên dịch vụ..." type="text" class="form-control input-control" name="name_service">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Giá (vnd)</td>
+                            <td>
+                                <input required="required" id="formattedNumberField" type="text" placeholder="Giá dịch vụ..." class="service-price-hand form-control input-control" name="price">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Thợ chính
+                            </td>
+                            <td>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td>Thợ chính</td>
+                                        <td>
+                                            <select id="employee-id" class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="employee_id">
+                                            <!-- <select id="employee_id" name="employee_id" class="form-control input-control"> -->
+                                                <option value="0">Chọn thợ chính</option>
+                                                @foreach ($employeeList as $employee)
+                                                    <option value="{{ $employee->id }}">
+                                                        {{ $employee->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chiết khấu (%)</td>
+                                        <td>
+                                            <input  id="percent-employee" required="required" placeholder="Phần trăm chiết khấu thợ" type="text" class="form-control input-control" name="percent_employee">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chiết khấu (vnd)</td>
+                                        <td>
+
+                                            <input id="money-hand" placeholder="Số tiền chiết khấu thợ..." type="text" class="form-control input-control formattedNumberField" name="">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Thợ phụ
+                            </td>
+                            <td>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td>Thợ phụ</td>
+                                        <td>
+                                            <select id="assistant_id_hand" class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="assistant_id">
+                                            <!-- <select id="assistant_id" name="assistant_id" class="form-control input-control"> -->
+                                                <option value="0">Chọn thợ phụ</option>
+                                                @foreach ($employeeList as $employee)
+                                                    <option value="{{ $employee->id }}">
+                                                        {{ $employee->full_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chiết khấu (%)</td>
+                                        <td>
+                                            <input id="percent-assistant" type="text" placeholder="Phần trăm chiết khấu thợ" class="form-control input-control" name="percent_assistant">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chiết khấu (vnd)</td>
+                                        <td>
+                                            <input id="money-assistant-hand" type="text" placeholder="Số tiền chiết khấu thợ" class="form-control input-control formattedNumberField" name="">
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Giờ phục vụ</td>
+                            <td>
+                                <select name="time_id" class="form-control input-control">
+                                    @foreach ($timeList as $time)
+                                        <option value="{{ $time->id }}">
+                                            {{ $time->time }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Yêu cầu khách hàng</td>
+                            <td>
+                                <input class="no-request" checked="checked" type="radio" value="0" name="requirement"> Không
+                                <input class="request" type="radio" value="1" name="requirement"> Có
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày lập hóa đơn</td>
+                            <td>
+                                <input type="date" name="date" value="{{ date('Y-m-d') }}" class="form-control input-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input class="btn btn-primary button-control" type="submit" value="Thêm hóa đơn" name="">
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </form>
+            </div>
+          <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Thoát</button>
             </div>
 
         </div>

@@ -351,7 +351,7 @@
                         {{ number_format($tongChi) }}<sup>đ</sup>
                     </td>
                 </tr>
-                <tr>
+                <tr style="display: none;">
                     <td style="font-size: 18px">Chuyển khoản</td>
                     <td style="text-align: right; font-size: 25px">
                         {{ number_format($transfer) }}<sup>đ</sup>
@@ -361,6 +361,16 @@
                     <td style="font-size: 18px; background: #BBDEFB">Dư</td>
                     <td style="text-align: right; font-size: 25px">
                         {{ number_format($tongThu + $tongThu2 - $tongChi - $transfer) }}<sup>đ</sup>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-2 expense-right" style="padding: 0px">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="font-size: 18px">Chuyển khoản</td>
+                    <td style="text-align: right; font-size: 25px">
+                        {{ number_format($transfer) }}<sup>đ</sup>
                     </td>
                 </tr>
             </table>

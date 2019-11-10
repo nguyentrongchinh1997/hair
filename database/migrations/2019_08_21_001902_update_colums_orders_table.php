@@ -15,7 +15,7 @@ class UpdateColumsOrdersTable extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->integer('service_id')->comment('id dịch vụ');
-            $table->integer('time_id')->comment('id thời gian khách đặt');
+            $table->integer('time_id')->comment('id thời gian khách đặt')->change();
             $table->date('date')->change()->comment('ngày tháng năm đặt');
         });
     }

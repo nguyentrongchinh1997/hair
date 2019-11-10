@@ -16,14 +16,15 @@ class Bill extends Model
         'sale',
         'sale_detail',
         'comment',
-        'time',
+        'time_id',
         'status',
         'cashier',
         'rate_status',
         'date',
         'created_at',
         'updated_at',
-        'money_transfer'
+        'money_transfer',
+        'request',
     ];
 
     public function customer()
@@ -50,4 +51,10 @@ class Bill extends Model
     {
         return $this->belongsTo('App\Model\Employee', 'cashier', 'id');
     }
+
+    public function time()
+    {
+        return $this->belongsTo(Time::class);
+    }
 }
+

@@ -128,6 +128,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminMiddleware'], function(
     });
 
     Route::group(['prefix' => 'dat-lich'], function(){
+        Route::get('convert', 'admin\OrderController@convert');
+
         Route::post('check/{orderId}', 'admin\OrderController@checkIn')->name('check-in');
         
         Route::get('danh-sach', 'admin\OrderController@orderListView')->name('order.list');

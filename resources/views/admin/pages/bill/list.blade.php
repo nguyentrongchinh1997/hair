@@ -200,7 +200,6 @@
                             <td>Dịch vụ</td>
                             <td>
                                 <select class="selectpicker form-control" data-live-search="true" data-width="fit" tabindex="-98" name="service_id">
-                                    <option value="0">Chọn dịch vụ</option>
                                 <!-- <select name="service_id" class="form-control input-control"> -->
                                     @foreach ($serviceList as $service)
                                         <option percent="{{ $service->percent }}" value="{{ $service->id }}">

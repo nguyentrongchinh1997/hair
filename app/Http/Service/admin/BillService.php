@@ -466,6 +466,8 @@ class BillService
             'price' => $service->price,
             'date' => $date,
             'status' => config('config.order.status.check-in'),
+            'time_id' => $time,
+            'request' => $request->requirement,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 

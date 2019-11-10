@@ -5,8 +5,6 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Service\admin\OrderService;
-use App\Model\Bill;
-use App\Model\Order;
 
 class OrderController extends Controller
 {
@@ -94,13 +92,5 @@ class OrderController extends Controller
     public function customerName(Request $request)
     {
         echo $this->orderService->customerName($request->get('phone'));
-    }
-
-    public function convert()
-    {
-        $order = Order::all();
-        foreach ($order as $order) {
-            Bill::where('id', $order->bill_id)->update(['request' => $order->request]);
-        }
     }
 }

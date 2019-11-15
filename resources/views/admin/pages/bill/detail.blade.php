@@ -494,7 +494,7 @@
                         {{ number_format($service->sale_money) }}<sup>đ</sup>
                     </td>
                     <td>
-                        @if ($bill->status < config('config.order.status.check-out'))
+                        @if ($bill->status < config('config.order.status.check-out') && $service->service_id != '')
                             <select onchange="service({{ $service->id }})" id="card{{$service->id}}" class="form-control input-control">
                                 <option value="0">
                                     Chọn thẻ

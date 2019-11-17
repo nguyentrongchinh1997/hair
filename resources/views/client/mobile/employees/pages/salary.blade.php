@@ -240,7 +240,7 @@
                         <td colspan="3"></td>
                         <td></td>
                         <td id="revenue-yesterday" style="text-align: right; font-weight: bold;">
-                            {{ $revenueYesterday }}<sup>đ</sup>
+                            {{ number_format($revenueYesterday) }}<sup>đ</sup>
                         </td>
                         <td style="text-align: right; font-weight: bold;">
                             {{ number_format($luongCung) }}<sup>đ</sup>

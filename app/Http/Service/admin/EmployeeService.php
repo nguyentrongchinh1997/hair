@@ -216,7 +216,7 @@ class EmployeeService
         if ($type == 'month') {
             $commisionList = $this->employeeCommisionModel
                               ->where('employee_id', $employeeId)
-                              ->where('created_at', 'like', $date . '%')
+                              ->where('date', 'like', $date . '%')
                               ->get();
             $rate = $this->billDetailModel->where(function($query) use ($employeeId){
                                                 $query->where('employee_id', $employeeId)

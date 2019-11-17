@@ -49,9 +49,9 @@
 						$khachSo = 0; $khachQuen = 0;
 					@endphp
 					@foreach ($billId as $id => $billDetail)
-						@if (\App\Helper\ClassHelper::countCustomer($id) == 1)
+						@if (\App\Helper\ClassHelper::countCustomer($id) == 1 && \App\Helper\ClassHelper::checkBillFinish($id) == 1)
 							@php $khachQuen++; @endphp
-						@elseif (\App\Helper\ClassHelper::countCustomer($billId) == 0 && \App\Helper\ClassHelper::checkBillFinish($billId) == 1)
+						@elseif (\App\Helper\ClassHelper::countCustomer($id) == 0 && \App\Helper\ClassHelper::checkBillFinish($id) == 1)
 							@php $khachSo++; @endphp
 						@endif
 					@endforeach

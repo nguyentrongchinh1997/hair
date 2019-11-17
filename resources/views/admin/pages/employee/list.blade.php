@@ -229,7 +229,7 @@
                             <th scope="col">Tên</th>
                             <!-- <th scope="col">Vị trí</th> -->
                             <!-- <th scope="col">Trạng thái</th> -->
-                            <th scope="col">Doanh thu</th>
+                            <th scope="col">Doanh số</th>
                             <th scope="col">Hoa hồng</th>
                             <th scope="col">Lương cứng</th>
                             <th scope="col">Tổng lương</th>
@@ -300,7 +300,7 @@
                                 <td style="text-align: right; font-weight: bold;">
                                     @if ($type == 'between')
                                         @php
-                                            $salary = ($employee->salary/30) * $numberDays;
+                                            $salary = ($employee->salary/config('config.full')) * $numberDays;
                                         @endphp
                                     @elseif ($type == 'month')
                                         @php

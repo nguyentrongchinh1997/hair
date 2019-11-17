@@ -75,6 +75,11 @@ class EmployeeService
 							->where('employee_id', $employeeId)
 							->get();
 		$data = [
+			'employeeId' => $employeeId,
+			'today' => $today,
+			'lastMonth' => $lastMonth,
+			'yesterday' => $yesterday,
+			'month' => $month,
 			'salaryYesterday' => $salaryYesterday,
 			'salaryToday' => $salaryToday,
 			'salaryLastMonth' => $salaryLastMonth,
@@ -91,12 +96,23 @@ class EmployeeService
 		$dateFromFormat = date('Y-m-d', strtotime($date_start));
 		$dateToFormat = date('Y-m-d', strtotime($date_end));
 		$employeeId = auth('employees')->user()->id;
+	//đếm ngày
+		$startTimeStamp = strtotime($dateFromFormat);
+        $endTimeStamp = strtotime($dateToFormat);
+        $timeDiff = abs($endTimeStamp - $startTimeStamp);
+        $numberDays = $timeDiff/86400 + 1;  // 86400 seconds in one day
+	//end
+
 		$salary = $this->employeeCommisionModel
 						->whereBetween('date', [$dateFromFormat, $dateToFormat])
 						->where('employee_id', $employeeId)
 						->get();
 		$data = [
+			'employeeId' => $employeeId,
+			'dateFromFormat' => $dateFromFormat,
+			'dateToFormat' => $dateToFormat,
 			'salary' => $salary,
+			'numberDays' => $numberDays,
 		];
 
 		return $data;

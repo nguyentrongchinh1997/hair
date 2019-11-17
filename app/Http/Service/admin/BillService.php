@@ -422,15 +422,15 @@ class BillService
 
         $checkPhone = $this->customerModel->where('phone', $phone)->first();
         $service = $this->serviceModel->findOrFail($service_id);
-        
-        if (!isset($checkPhone)) {
-            $customer_id = $this->customerModel->insertGetId([
-                'full_name' => $request->full_name,
+        $customer = $this->customerModel->updateOrCreate(
+            [
                 'phone' => $phone,
-            ]);
-        } else {
-            $customer_id = $checkPhone->id;
-        }
+            ],
+            [
+                'full_name' => $request->full_name,
+            ]
+        );
+        $customer_id = $customer->id;
     /*thêm vào bảng order*/
         $orderId = $this->orderModel->insertGetId([
             'customer_id' => $customer_id,

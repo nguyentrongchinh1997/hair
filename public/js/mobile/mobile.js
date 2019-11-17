@@ -192,4 +192,11 @@ $(function(){
     $('.total-month').html($('#total-month').html());
     $('.total-last-month').html($('#total-last-month').html());
     $('.total-yesterday').html($('#total-yesterday').html());
+    $('.revenue-yesterday').html($('#revenue-yesterday').html());
+    $('.revenue-month').html($('#revenue-month').html());
+    $('.revenue-last-month').html($('#revenue-last-month').html());
+    $('.revenue').html($('#revenue').html());
+    // $('.cam-ve').html($('#cam-ve').html());
+    $('.salary').html($('#salary').html());
+    // $('.profit').html($('#profit').html());
 })

@@ -190,4 +190,39 @@ class ClassHelper
         }
     }
 /*end*/
+    
+    public static function groupByBillId($date, $employeeId)
+    {
+        $billId = BillDetail::where('date', 'like', $date . '%')
+                            ->where(function($query) use ($employeeId){
+                                $query->where('employee_id', $employeeId)
+                                      ->orWhere('assistant_id', $employeeId);
+                            })
+                            ->get()
+                            ->groupBy('bill_id');
+        return $billId;
+    }
+
+    public static function groupByBillIdNumberDate($dateFrom, $dateTo, $employeeId)
+    {
+        $billId = BillDetail::whereBetween('date', [$dateFrom, $dateTo])
+                            ->where(function($query) use ($employeeId){
+                                $query->where('employee_id', $employeeId)
+                                      ->orWhere('assistant_id', $employeeId);
+                            })
+                            ->get()
+                            ->groupBy('bill_id');
+        return $billId;
+    }
+
+    public static function checkBillFinish($billId)
+    {
+        $bill = Bill::findOrFail($billId);
+
+        if ($bill->status == config('config.order.status.check-out')) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

@@ -227,12 +227,12 @@ class EmployeeService
                                               }])
                                           ->get();  
             $billId = $this->billDetailModel->where('date', 'like', $date . '%')
-                                                  ->where(function($query) use ($employeeId){
-                                                        $query->where('employee_id', $employeeId)
-                                                              ->orWhere('assistant_id', $employeeId);
-                                                  })
-                                                  ->get()
-                                                  ->groupBy('bill_id');
+                                            ->where(function($query) use ($employeeId){
+                                                $query->where('employee_id', $employeeId)
+                                                      ->orWhere('assistant_id', $employeeId);
+                                            })
+                                            ->get()
+                                            ->groupBy('bill_id');
         } elseif ($type == 'between') {
             $startTime = explode('-', $date)[0];
             $startTimeFormat = date('Y-m-d', strtotime(str_replace('/', '-', $startTime)));

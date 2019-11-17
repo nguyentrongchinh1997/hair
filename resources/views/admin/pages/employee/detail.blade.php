@@ -42,7 +42,6 @@
 			<tr style="background: #BBDEFB">
 				<th style="text-align: center;">Khách số</th>
 				<th style="text-align: center;">Khách quen</th>
-				
 			</tr>
 			<tr>
 				<td style="text-align: center;">
@@ -52,7 +51,7 @@
 					@foreach ($billId as $id => $billDetail)
 						@if (\App\Helper\ClassHelper::countCustomer($id) == 1)
 							@php $khachQuen++; @endphp
-						@else
+						@elseif (\App\Helper\ClassHelper::countCustomer($billId) == 0 && \App\Helper\ClassHelper::checkBillFinish($billId) == 1)
 							@php $khachSo++; @endphp
 						@endif
 					@endforeach

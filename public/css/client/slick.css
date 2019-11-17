@@ -14,7 +14,7 @@ button.slick-next, button.slick-next:hover {
     right: -15px;
     width: 20px;
     height: 27px;
-    background: url(http://moviee.vn/public/img/arrow-point-to-right1.png) 1px 0;
+    background: url('../../image/arrow-point-to-right1.png') 1px 0;
     background-size: 15px;
     background-repeat: no-repeat;
 }
@@ -25,7 +25,7 @@ button.slick-prev, button.slick-prev:hover {
   z-index: 1;
   width: 13px;
   height: 27px;
-  background: url(http://moviee.vn/public/img/left-arrow.png) 1px 0;
+  background: url('../../image/left-arrow.png') 1px 0;
   background-size: 15px;
   background-repeat: no-repeat;
       /*background-position-x: right;*/

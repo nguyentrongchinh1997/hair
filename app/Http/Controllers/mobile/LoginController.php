@@ -38,7 +38,8 @@ class LoginController extends Controller
         if ($login == true) {
             return redirect()->route('mobile.employee.home');
         } else {
-            return back();
+            return back()->with('thongbao', 'Đăng nhập sai, vui lòng đăng nhập lại');
         }
     }
 }
+

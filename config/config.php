@@ -46,5 +46,6 @@ return [
     'card' => [
         'hoi_vien' => 0,
         'so_lan' => 1,
-    ]
+    ],
+    'full' => 27,
 ];

@@ -4,9 +4,9 @@
 <div class="row" style="margin-top: 92px !important; margin-bottom: 100px !important">
 <!-- Lương hôm nay -->
     <div class="col-12 tab" id="today" style="text-align: center; padding: 15px 5px;">
-        <h4>CHÚC MỪNG</h4>
+        <!-- <h4>CHÚC MỪNG</h4> -->
         <h5 style="font-weight: bold;">
-            TOP THU NHẬP THÁNG {{ date('m/Y', strtotime($date)) }}
+            Bảng Xếp Hạng Tháng {{ date('m/Y', strtotime($date)) }}
         </h5><br>
         @php $stt = 0; @endphp
         @foreach ($salaryList as $employee)

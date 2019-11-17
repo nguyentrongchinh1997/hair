@@ -13,6 +13,11 @@
                             Welcome
                         </h6>
                     </div><br>
+                    @if(session('thongbao'))
+                        <div class="alert alert-danger">
+                            {{ session('thongbao') }}
+                        </div>
+                    @endif
                     <center>
                         <form action="{{ route('mobile.employee.post.login') }}" method="post" onsubmit="return validatePhone()">
                             @csrf

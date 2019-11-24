@@ -48,9 +48,9 @@ class EmployeeService
         $year =date('Y');
         $employeeList = $this->employeeModel
                             ->with(['employeeCommision' => function($q) use ($today){
-                                $q->where('created_at', 'like', $today . '%');
+                                $q->where('date', 'like', $today . '%');
                             }])
-                            ->orderBy('created_at', 'desc')
+                            ->orderBy('id', 'desc')
                             ->get();
         $serviceList = $this->serviceModel->all();
         $numberDays = cal_days_in_month(CAL_GREGORIAN, $month, $year); // đếm số ngày
@@ -77,9 +77,9 @@ class EmployeeService
             $today = $year . '-' . $month;
             $employeeList = $this->employeeModel
                                 ->with(['employeeCommision' => function($q) use ($today){
-                                    $q->where('created_at', 'like', $today . '%');
+                                    $q->where('date', 'like', $today . '%');
                                 }])
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('id', 'desc')
                                 ->get();
             $serviceList = $this->serviceModel->all();
             $numberDays = cal_days_in_month(CAL_GREGORIAN, $month, $year); // đếm số ngày
@@ -113,7 +113,7 @@ class EmployeeService
                                 ->with(['employeeCommision' => function($q) use ($startTimeFormat, $endTimeFormat){
                                     $q->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
                                 }])
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('id', 'desc')
                                 ->get();
             $serviceList = $this->serviceModel->all();
             $data = [

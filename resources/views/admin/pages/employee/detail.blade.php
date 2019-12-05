@@ -125,7 +125,7 @@
 								{{ $commision->billDetail->service->name }}
 							@endif
 						</td>
-						<td>
+						<td style="text-align: right;">
 							{{ number_format($commision->billDetail->money) }}<sup>đ</sup>
 						</td>
 						<td style="text-align: center;">

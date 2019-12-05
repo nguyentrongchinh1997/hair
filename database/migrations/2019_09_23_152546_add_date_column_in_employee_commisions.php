@@ -14,8 +14,7 @@ class AddDateColumnInEmployeeCommisions extends Migration
     public function up()
     {
         Schema::table('employee_commisions', function (Blueprint $table) {
-            $date = date('Y-m-d');
-            $table->date('date')->after('percent')->default($date);
+            $table->date('date')->after('percent');
         });
     }
 

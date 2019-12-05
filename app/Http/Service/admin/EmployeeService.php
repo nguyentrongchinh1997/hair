@@ -298,9 +298,9 @@ class EmployeeService
             if ($type == 'month') {
                 $employeeList = $this->employeeModel
                                      ->with(['employeeCommision' => function($q) use ($date){
-                                        $q->where('created_at', 'like', $date . '%');
+                                        $q->where('date', 'like', $date . '%');
                                      }])
-                                     ->orderBy('created_at', 'desc')
+                                     ->orderBy('id', 'desc')
                                      ->get();
             } elseif ($type == 'between') {
                 $date_start = str_replace('/', '-', explode('-', $date)[0]);
@@ -311,7 +311,7 @@ class EmployeeService
                                      ->with(['employeeCommision' => function($q) use ($startTimeFormat, $endTimeFormat){
                                         $q->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
                                      }])
-                                     ->orderBy('created_at', 'desc')
+                                     ->orderBy('id', 'desc')
                                      ->get();
             }
         } else {
@@ -319,9 +319,9 @@ class EmployeeService
                 $employeeList = $this->employeeModel
                                      ->where('full_name', 'like', '%' . $employeeName . '%')  
                                      ->with(['employeeCommision' => function($q) use ($date){
-                                        $q->where('created_at', 'like', $date . '%');
+                                        $q->where('date', 'like', $date . '%');
                                      }])
-                                     ->orderBy('created_at', 'desc')
+                                     ->orderBy('id', 'desc')
                                      ->get();
             } elseif ($type == 'between') {
                 $date_start = str_replace('/', '-', explode('-', $date)[0]);
@@ -333,7 +333,7 @@ class EmployeeService
                                      ->with(['employeeCommision' => function($q) use ($startTimeFormat, $endTimeFormat){
                                         $q->whereBetween('date', [$startTimeFormat, $endTimeFormat]);
                                      }])
-                                     ->orderBy('created_at', 'desc')
+                                     ->orderBy('id', 'desc')
                                      ->get();
             }
         }
